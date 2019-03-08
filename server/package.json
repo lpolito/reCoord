@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "watch": "nodemon --exec babel-node ./src/index.mjs",
     "start": "yarn run prod",
-    "server": "babel-node ./src/index",
-    "server:prod": "node ./dist/index",
+    "server": "babel-node ./src/index.mjs",
+    "server:prod": "node ./dist/index.js",
     "dev": "NODE_ENV=development npm-run-all server",
     "clean": "rimraf dist",
     "build": "babel ./src --out-dir dist",
@@ -26,6 +27,7 @@
     "@babel/preset-env": "^7.3.4",
     "eslint": "^5.15.1",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0"
+    "eslint-plugin-import": "^2.16.0",
+    "nodemon": "^1.18.10"
   }
 }
