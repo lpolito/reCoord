@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import routes from './routes.mjs';
+import routes from './routes.js';
 
 
 const app = express();

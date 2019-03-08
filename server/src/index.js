@@ -5,7 +5,7 @@
 import debugLib from 'debug';
 import http from 'http';
 
-import app from './app.mjs';
+import app from './app.js';
 
 const debug = debugLib('server:server');
 
@@ -86,3 +86,5 @@ app.set('port', port);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+console.log('URL: http://localhost:3001/');

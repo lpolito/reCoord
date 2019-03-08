@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "watch": "nodemon --exec babel-node ./src/index.mjs",
+    "watch": "nodemon --exec babel-node ./src/index.js",
     "start": "yarn run prod",
-    "server": "babel-node ./src/index.mjs",
-    "server:prod": "node ./build/index.mjs",
+    "server": "babel-node ./src/index.js",
+    "server:prod": "node ./build/index.js",
     "dev": "NODE_ENV=development npm-run-all server",
     "clean": "rimraf build",
     "build": "babel ./src --out-dir build --keep-file-extension",
