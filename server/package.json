@@ -6,10 +6,10 @@
     "watch": "nodemon --exec babel-node ./src/index.mjs",
     "start": "yarn run prod",
     "server": "babel-node ./src/index.mjs",
-    "server:prod": "node ./dist/index.mjs",
+    "server:prod": "node ./build/index.mjs",
     "dev": "NODE_ENV=development npm-run-all server",
-    "clean": "rimraf dist",
-    "build": "babel ./src --out-dir dist --keep-file-extension",
+    "clean": "rimraf build",
+    "build": "babel ./src --out-dir build --keep-file-extension",
     "prod": "NODE_ENV=production npm-run-all clean build server:prod"
   },
   "dependencies": {
