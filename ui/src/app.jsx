@@ -3,6 +3,10 @@ import styled from '@emotion/styled';
 import {Global} from '@emotion/core';
 
 import ReactPlayer from 'react-player';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import {ThemeProvider} from './theme';
 
 import {globalStyles} from './global-styles';
 
@@ -32,20 +36,22 @@ export const App = () => {
     const [video, setVideo] = React.useState(VIDEOS[0]);
 
     return (
-        <AppBody>
-            <Global styles={globalStyles} />
-            <AppContent>
-                <ReactPlayer
-                    url={video}
-                    playing
-                    onProgress={(prog) => console.log(prog)}
-                />
-                <select onChange={(e) => setVideo(e.target.value)}>
-                    {VIDEOS.map((v) => (
-                        <option key={v} value={v}>{v}</option>
-                    ))}
-                </select>
-            </AppContent>
-        </AppBody>
+        <ThemeProvider>
+            <AppBody>
+                <Global styles={globalStyles} />
+                <AppContent>
+                    <ReactPlayer
+                        url={video}
+                        playing
+                        onProgress={(prog) => console.log(prog)}
+                    />
+                    <Select value={video} onChange={(e) => setVideo(e.target.value)}>
+                        {VIDEOS.map((v) => (
+                            <MenuItem key={v} value={v}>{v}</MenuItem>
+                        ))}
+                    </Select>
+                </AppContent>
+            </AppBody>
+        </ThemeProvider>
     );
 };
