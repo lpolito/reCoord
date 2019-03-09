@@ -11,7 +11,9 @@
         "react/jsx-indent-props": ["error", 4],
         "react/jsx-one-expression-per-line": 0,
         "import/prefer-default-export": 0,
-        "object-curly-spacing": [2, "never"]
+        "object-curly-spacing": [2, "never"],
+        "jsx-quotes":["error", "prefer-single"],
+        "arrow-parens":["error", "always"]
     },
     "globals": {
         "window": false,
