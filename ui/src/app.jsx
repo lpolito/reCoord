@@ -25,7 +25,7 @@ const AppContent = styled.div`
 const COORD = {
     id: 1,
     name: '',
-    length: 500,
+    length: 194,
     clips: [{
         id: 1,
         url: 'https://www.youtube.com/watch?v=6Y0WE625Mo4',
@@ -40,7 +40,7 @@ const COORD = {
         duration: 159,
         title: '2', // 'Gorillaz - \'Superfast Jellyfish\' @ Fox theatre, Detroit 2017',
         thumbnails: {},
-        xPosition: 100,
+        xPosition: 32,
     },
     {
         id: 3,
@@ -48,31 +48,7 @@ const COORD = {
         duration: 22,
         title: '3', // 'Gorillaz - Superfast Jellfish live in Detroit',
         thumbnails: {},
-        xPosition: 250,
-    },
-    {
-        id: 4,
-        url: 'https://www.youtube.com/watch?v=6Y0WE625Mo4',
-        duration: 50,
-        title: '4', // 'Gorillaz - Superfast Jellyfish (Live in Detroit 2017)',
-        thumbnails: {},
-        xPosition: 50,
-    },
-    {
-        id: 5,
-        url: 'https://www.youtube.com/watch?v=FJokA_4L5sk',
-        duration: 175,
-        title: '5', // 'Gorillaz - \'Superfast Jellyfish\' @ Fox theatre, Detroit 2017',
-        thumbnails: {},
-        xPosition: 300,
-    },
-    {
-        id: 6,
-        url: 'https://www.youtube.com/watch?v=SYO_uzvATJc',
-        duration: 320,
-        title: '6', // 'Gorillaz - Superfast Jellfish live in Detroit',
-        thumbnails: {},
-        xPosition: 400,
+        xPosition: 24,
     }],
 };
 
