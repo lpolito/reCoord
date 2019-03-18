@@ -62,12 +62,13 @@ export const App = () => {
                 <Global styles={globalStyles} />
                 <AppContent>
                     <Player videoUrl={COORD.clips[0].url}>
-                        {({progress, onChange}) => (
+                        {({progress, onChange, url}) => (
                             <Timeline
                                 length={length}
                                 clips={clips}
                                 progress={progress}
                                 onChange={onChange}
+                                url={url}
                             />
                         )}
                     </Player>

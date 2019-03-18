@@ -15,7 +15,7 @@ export const Player = ({videoUrl, children}) => {
                 controls
                 // playing
             />
-            {children({progress, onChange: setUrl})}
+            {children({progress, onChange: setUrl, url})}
         </div>
     );
 };

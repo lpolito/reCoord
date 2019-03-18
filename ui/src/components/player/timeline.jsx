@@ -28,6 +28,7 @@ const Clip = styled.div`
     margin: 2px;
     margin-left: ${(({length, xPosition}) => `${xFactor(length) * xPosition}px`)};
 
+    position: relative;
     background-color: ${grey[100]};
     color: ${grey[800]};
     border-radius: 4px;
@@ -37,8 +38,16 @@ const Clip = styled.div`
     text-overflow: ellipsis;
 `;
 
+const ClipIndicator = styled.div`
+    width: 2px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background-color: red;
+`;
+
 export const Timeline = ({
-    length, clips, progress, onChange,
+    length, clips, progress, onChange, url: nowPlayingUrl,
 }) => (
     <TimelineContainer>
         <Progress>{progress.playedSeconds}</Progress>
@@ -53,6 +62,9 @@ export const Timeline = ({
                 onClick={() => onChange(url)}
             >
                 {title}
+                {nowPlayingUrl === url && (
+                    <ClipIndicator style={{left: `${progress.played * 100}%`}} />
+                )}
             </Clip>
         ))}
     </TimelineContainer>
@@ -72,4 +84,5 @@ Timeline.propTypes = {
         playedSeconds: PropTypes.number,
     }).isRequired,
     onChange: PropTypes.func.isRequired,
+    url: PropTypes.string.isRequired,
 };
