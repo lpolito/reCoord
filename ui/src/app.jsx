@@ -63,12 +63,15 @@ export const App = () => {
                 <Global styles={globalStyles} />
                 <AppContent>
                     <Player videoUrl={COORD.clips[0].url}>
-                        {({clipProgress, onChange, url}) => (
+                        {({
+                            overallProgress, clipProgress, onChange, url,
+                        }) => (
                             <>
-                                <ProgressBar length={length} />
+                                <ProgressBar length={length} overallProgress={overallProgress} />
                                 <Timeline
                                     length={length}
                                     clips={clips}
+                                    overallProgress={overallProgress}
                                     clipProgress={clipProgress}
                                     onChange={onChange}
                                     url={url}

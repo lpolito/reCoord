@@ -1528,6 +1528,10 @@ atob@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
 
+autobind-decorator@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/autobind-decorator/-/autobind-decorator-2.4.0.tgz#ea9e1c98708cf3b5b356f7cf9f10f265ff18239c"
+
 autoprefixer@^9.4.2:
   version "9.4.10"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-9.4.10.tgz#e1be61fc728bacac8f4252ed242711ec0dcc6a7b"
@@ -7720,6 +7724,13 @@ react-jss@^8.6.1:
 react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+
+react-player-controls@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-player-controls/-/react-player-controls-1.1.0.tgz#7e2eb3319db2567994a56c0e4b6d51fccfb4b5f4"
+  dependencies:
+    autobind-decorator "^2.4.0"
+    prop-types "^15.6.2"
 
 react-player@^1.9.3:
   version "1.9.3"

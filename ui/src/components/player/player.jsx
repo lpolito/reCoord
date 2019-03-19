@@ -14,18 +14,27 @@ const PlayerContainer = styled.div`
 
 
 export const Player = ({videoUrl, children}) => {
+    const [overallProgress, setOverallProgress] = React.useState(0);
     const [playerProgress, setPlayerProgress] = React.useState({});
     const [url, setUrl] = React.useState(videoUrl);
+
+    const updateProgress = (progress) => {
+        setPlayerProgress(progress);
+
+        setOverallProgress((last) => (last + 1));
+    };
 
     return (
         <PlayerContainer>
             <ReactPlayer
                 url={url}
-                onProgress={setPlayerProgress}
+                onProgress={updateProgress}
                 controls
                 // playing
             />
-            {children({clipProgress: playerProgress.played, onChange: setUrl, url})}
+            {children({
+                overallProgress, clipProgress: playerProgress.played || 0, onChange: setUrl, url,
+            })}
         </PlayerContainer>
     );
 };
