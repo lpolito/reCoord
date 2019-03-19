@@ -19,10 +19,6 @@ const TimelineContainer = styled.div`
     width: 640px;
 `;
 
-const Progress = styled.div`
-    color: white;
-`;
-
 const Clip = styled.div`
     width: ${({length, duration}) => `${xFactor(length) * duration}px`};
     margin: 2px;
@@ -47,10 +43,9 @@ const ClipIndicator = styled.div`
 `;
 
 export const Timeline = ({
-    length, clips, progress, onChange, url: nowPlayingUrl,
+    length, clips, clipProgress, onChange, url: nowPlayingUrl,
 }) => (
     <TimelineContainer>
-        <Progress>{progress.playedSeconds}</Progress>
         {clips.map(({
             id, url, duration, xPosition, title,
         }) => (
@@ -63,7 +58,7 @@ export const Timeline = ({
             >
                 {title}
                 {nowPlayingUrl === url && (
-                    <ClipIndicator style={{left: `${progress.played * 100}%`}} />
+                    <ClipIndicator style={{left: `${clipProgress * 100}%`}} />
                 )}
             </Clip>
         ))}
@@ -79,10 +74,7 @@ Timeline.propTypes = {
         xPosition: PropTypes.number,
         title: PropTypes.string,
     })).isRequired,
-    progress: PropTypes.shape({
-        played: PropTypes.number, // will be useful for positioning indicator in clip
-        playedSeconds: PropTypes.number,
-    }).isRequired,
+    clipProgress: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
     url: PropTypes.string.isRequired,
 };

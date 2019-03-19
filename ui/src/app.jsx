@@ -6,6 +6,7 @@ import {ThemeProvider} from './theme';
 import {globalStyles} from './global-styles';
 
 import {Player} from './components/player/player';
+import {ProgressBar} from './components/player/progressbar';
 import {Timeline} from './components/player/timeline';
 
 
@@ -62,14 +63,17 @@ export const App = () => {
                 <Global styles={globalStyles} />
                 <AppContent>
                     <Player videoUrl={COORD.clips[0].url}>
-                        {({progress, onChange, url}) => (
-                            <Timeline
-                                length={length}
-                                clips={clips}
-                                progress={progress}
-                                onChange={onChange}
-                                url={url}
-                            />
+                        {({clipProgress, onChange, url}) => (
+                            <>
+                                <ProgressBar length={length} />
+                                <Timeline
+                                    length={length}
+                                    clips={clips}
+                                    clipProgress={clipProgress}
+                                    onChange={onChange}
+                                    url={url}
+                                />
+                            </>
                         )}
                     </Player>
                 </AppContent>
