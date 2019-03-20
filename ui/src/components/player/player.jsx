@@ -15,13 +15,19 @@ const PlayerContainer = styled.div`
 
 export const Player = ({videoUrl, children}) => {
     const [overallProgress, setOverallProgress] = React.useState(0);
-    const [playerProgress, setPlayerProgress] = React.useState({});
+    const [playerProgress, setPlayerProgress] = React.useState({
+        played: 0,
+        playedSeconds: 0,
+    });
     const [url, setUrl] = React.useState(videoUrl);
 
-    const updateProgress = (progress) => {
-        setPlayerProgress(progress);
+    const updateProgress = (updatedProgress) => {
+        const playerProgressChange = updatedProgress.playedSeconds - playerProgress.playedSeconds;
 
-        setOverallProgress((last) => (last + 1));
+        setPlayerProgress(updatedProgress);
+
+        // add the same time change in player's progress to overall progress
+        setOverallProgress(overallProgress + playerProgressChange);
     };
 
     return (
