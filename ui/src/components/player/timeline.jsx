@@ -43,21 +43,21 @@ const ClipIndicator = styled.div`
 `;
 
 export const Timeline = ({
-    length, clips, clipProgress, onChange, url: nowPlayingUrl,
+    length, clips, clipProgress, onChange, currentClipId,
 }) => (
     <TimelineContainer>
         {clips.map(({
-            id, url, duration, xPosition, title,
+            id, duration, xPosition, title,
         }) => (
             <Clip
                 key={id}
                 duration={duration}
                 length={length}
                 xPosition={xPosition}
-                onClick={() => onChange(url)}
+                onClick={() => onChange(id)}
             >
                 {title}
-                {nowPlayingUrl === url && (
+                {currentClipId === id && (
                     <ClipIndicator style={{left: `${clipProgress * 100}%`}} />
                 )}
             </Clip>
@@ -69,12 +69,11 @@ Timeline.propTypes = {
     length: PropTypes.number.isRequired,
     clips: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number,
-        url: PropTypes.string,
         duration: PropTypes.number,
         xPosition: PropTypes.number,
         title: PropTypes.string,
     })).isRequired,
     clipProgress: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
-    url: PropTypes.string.isRequired,
+    currentClipId: PropTypes.number.isRequired,
 };
