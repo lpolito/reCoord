@@ -17,12 +17,13 @@ const TimelineContainer = styled.div`
     flex-align: start;
 
     width: 640px;
+    padding: 8px 0;
 `;
 
 const Clip = styled.div`
-    width: ${({length, duration}) => `${xFactor(length) * duration}px`};
-    margin: 2px;
-    margin-left: ${(({length, xPosition}) => `${xFactor(length) * xPosition}px`)};
+    width: ${({width}) => `${width}px`};
+    margin: 2px 0;
+    transform: ${({clipXPos}) => `translateX(${clipXPos}px)`};
 
     position: relative;
     background-color: ${grey[100]};
@@ -48,20 +49,26 @@ export const Timeline = ({
     <TimelineContainer>
         {clips.map(({
             id, duration, xPosition, title,
-        }) => (
-            <Clip
-                key={id}
-                duration={duration}
-                length={length}
-                xPosition={xPosition}
-                onClick={() => onChange(id)}
-            >
-                {title}
-                {currentClipId === id && (
-                    <ClipIndicator style={{left: `${clipProgress * 100}%`}} />
-                )}
-            </Clip>
-        ))}
+        }) => {
+            const clipWidth = xFactor(length) * duration;
+            const clipXPos = xFactor(length) * xPosition;
+
+            return (
+                <Clip
+                    key={id}
+                    width={clipWidth}
+                    clipXPos={clipXPos}
+                    onClick={() => onChange(id)}
+                >
+                    {title}
+                    {currentClipId === id && (
+                        <ClipIndicator
+                            style={{transform: `translateX(${clipWidth * clipProgress}px)`}}
+                        />
+                    )}
+                </Clip>
+            );
+        })}
     </TimelineContainer>
 );
 
