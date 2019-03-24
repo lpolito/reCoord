@@ -1,12 +1,13 @@
 {
     "extends": "airbnb",
-    "plugins": ["emotion", "jest"],
+    "plugins": ["emotion", "jest", "react-hooks"],
     "env": {
         "jest/globals": true
     },
     "rules": {
         "jsx-a11y/click-events-have-key-events": 0,
         "indent": ["error", 4],
+        "react-hooks/rules-of-hooks": ["error"],
         "react/jsx-indent": ["error", 4],
         "react/jsx-indent-props": ["error", 4],
         "react/jsx-one-expression-per-line": 0,
