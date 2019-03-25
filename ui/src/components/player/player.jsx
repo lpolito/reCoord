@@ -20,52 +20,82 @@ const INITIAL_PLAYER_PROGRESS = {
     playedSeconds: 0,
 };
 
+// reference for controlling react-player
+let player;
+const playerRef = (playerr) => {
+    player = playerr;
+};
 
 export const Player = ({coord}) => {
-    const [overallProgress, setOverallProgress] = React.useState(0);
+    const [isPlaying, setPlaying] = React.useState(false);
+    const [overallTime, setOverallTime] = React.useState(0);
     const [playerProgress, setPlayerProgress] = React.useState(INITIAL_PLAYER_PROGRESS);
-    const [playingClip, setPlayingClip] = React.useState(coord.clips[0]);
-
-    const {length, clips} = coord;
-    const {id, url} = playingClip;
+    const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
 
     const updateProgress = (updatedProgress) => {
-        const playerProgressChange = updatedProgress.playedSeconds - playerProgress.playedSeconds;
+        const playerTimeChange = updatedProgress.playedSeconds - playerProgress.playedSeconds;
 
         setPlayerProgress(updatedProgress);
 
         // add the same time change in player's progress to overall progress
-        setOverallProgress(overallProgress + playerProgressChange);
+        setOverallTime(overallTime + playerTimeChange);
     };
 
-    const changeClip = (clipId) => {
-        if (clipId === playingClip.id) return;
+    const onChangeClip = (clipId) => {
+        if (clipId === currentClip.id) return;
 
         const changedClip = coord.clips.find((clip) => clip.id === clipId);
-        setPlayingClip(changedClip);
+        setCurrentClip(changedClip);
 
-        setOverallProgress(changedClip.xPosition);
+        setOverallTime(changedClip.timePosition);
 
         // reset player progress
         setPlayerProgress(INITIAL_PLAYER_PROGRESS);
     };
 
+    /**
+     * @param {number} intent decimal of current progress bar's length
+     */
+    const onSeek = (intent) => {
+        // get time position of intent
+        const newTimePosition = intent * coord.length;
+
+        const curClipRelTimePosition = (newTimePosition - currentClip.timePosition);
+
+        if (curClipRelTimePosition > currentClip.duration) {
+            // skip to next clip
+            console.log('go to next');
+        } else if (curClipRelTimePosition < 0) {
+            // go to previous clip
+            console.log('go to previous');
+        } else {
+            // seek current clip to new position
+            player.seekTo(curClipRelTimePosition);
+        }
+    };
+
     return (
         <PlayerContainer>
             <ReactPlayer
-                url={url}
+                ref={playerRef}
+                url={currentClip.url}
                 onProgress={updateProgress}
+                onPlay={() => (!isPlaying ? setPlaying(true) : null)}
+                onPause={() => (isPlaying ? setPlaying(false) : null)}
+                playing={isPlaying}
                 controls
-                // playing
             />
-            <ProgressBar length={length} overallProgress={overallProgress} />
+            <ProgressBar
+                length={coord.length}
+                overallTime={overallTime}
+                onSeek={onSeek}
+            />
             <Timeline
-                length={length}
-                clips={clips}
-                overallProgress={overallProgress}
-                clipProgress={playerProgress.played}
-                onChange={changeClip}
-                currentClipId={id}
+                length={coord.length}
+                clips={coord.clips}
+                currentClipId={currentClip.id}
+                currentClipProgress={playerProgress.played}
+                onChangeClip={onChangeClip}
             />
         </PlayerContainer>
     );

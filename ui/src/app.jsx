@@ -31,7 +31,7 @@ const COORD = {
         duration: 194,
         title: 'Gorillaz - Superfast Jellyfish (Live in Detroit 2017)',
         thumbnails: {},
-        xPosition: 0,
+        timePosition: 0,
     },
     {
         id: 2,
@@ -39,7 +39,7 @@ const COORD = {
         duration: 159,
         title: 'Gorillaz - \'Superfast Jellyfish\' @ Fox theatre, Detroit 2017',
         thumbnails: {},
-        xPosition: 32,
+        timePosition: 32,
     },
     {
         id: 3,
@@ -47,7 +47,7 @@ const COORD = {
         duration: 22,
         title: 'Gorillaz - Superfast Jellfish live in Detroit',
         thumbnails: {},
-        xPosition: 24,
+        timePosition: 24,
     }],
 };
 

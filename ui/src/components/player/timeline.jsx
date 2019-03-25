@@ -6,6 +6,7 @@ import {grey} from '@material-ui/core/colors';
 
 // factor by which widths & positions of clips needs to be multiplied by to fit in timeline width
 // x = width of timeline / length of coord
+// pixels over time
 const xFactor = (coordLength) => 640 / coordLength;
 
 // width = width of player
@@ -44,26 +45,26 @@ const ClipIndicator = styled.div`
 `;
 
 export const Timeline = ({
-    length, clips, clipProgress, onChange, currentClipId,
+    length, clips, currentClipId, currentClipProgress, onChangeClip,
 }) => (
     <TimelineContainer>
         {clips.map(({
-            id, duration, xPosition, title,
+            id, duration, timePosition, title,
         }) => {
             const clipWidth = xFactor(length) * duration;
-            const clipXPos = xFactor(length) * xPosition;
+            const clipXPos = xFactor(length) * timePosition;
 
             return (
                 <Clip
                     key={id}
                     width={clipWidth}
                     clipXPos={clipXPos}
-                    onClick={() => onChange(id)}
+                    onClick={() => onChangeClip(id)}
                 >
                     {title}
                     {currentClipId === id && (
                         <ClipIndicator
-                            style={{transform: `translateX(${clipWidth * clipProgress}px)`}}
+                            style={{transform: `translateX(${clipWidth * currentClipProgress}px)`}}
                         />
                     )}
                 </Clip>
@@ -77,10 +78,10 @@ Timeline.propTypes = {
     clips: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number,
         duration: PropTypes.number,
-        xPosition: PropTypes.number,
+        timePosition: PropTypes.number,
         title: PropTypes.string,
     })).isRequired,
-    clipProgress: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
     currentClipId: PropTypes.number.isRequired,
+    currentClipProgress: PropTypes.number.isRequired,
+    onChangeClip: PropTypes.func.isRequired,
 };

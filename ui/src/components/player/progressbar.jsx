@@ -41,14 +41,15 @@ const IntentIndicator = styled.div`
     opacity: 0.6;
 `;
 
-export const ProgressBar = ({length, overallProgress}) => {
+export const ProgressBar = ({length, overallTime, onSeek}) => {
     const [active, setActive] = React.useState(false);
+    // intent is decimal of current progress bar's length
     const [intent, setIntent] = React.useState(null);
     const [dragging, setDragging] = React.useState(false);
 
-    const onProgressChange = () => {
+    const changeTimePosition = () => {
         setDragging(false);
-        console.table({active, intent, dragging});
+        onSeek(intent);
     };
 
     return (
@@ -56,15 +57,15 @@ export const ProgressBar = ({length, overallProgress}) => {
             <PB
                 direction={Direction.HORIZONTAL}
                 isEnabled
-                onIntent={(pos) => console.log('onIntent') || setIntent(pos)}
-                onIntentStart={() => console.log('onIntentStart') || setActive(true)}
-                onIntentEnd={() => console.log('onIntentEnd') || setActive(false)}
-                onChange={(pos) => console.log('onChange') || (dragging ? setIntent(pos) : null)}
-                onChangeStart={() => console.log('onChangeStart') || setDragging(true)}
-                onChangeEnd={onProgressChange}
+                onIntent={(pos) => setIntent(pos)}
+                onIntentStart={() => setActive(true)}
+                onIntentEnd={() => setActive(false)}
+                onChange={(pos) => (dragging ? setIntent(pos) : null)}
+                onChangeStart={() => setDragging(true)}
+                onChangeEnd={changeTimePosition}
                 active={active}
             >
-                <Progress style={{transform: `scaleX(${overallProgress / length})`}} />
+                <Progress style={{transform: `scaleX(${overallTime / length})`}} />
                 {active && <IntentIndicator style={{transform: `scaleX(${intent})`}} />}
             </PB>
         </ProgressBarContainer>
@@ -73,9 +74,10 @@ export const ProgressBar = ({length, overallProgress}) => {
 
 ProgressBar.propTypes = {
     length: PropTypes.number.isRequired,
-    overallProgress: PropTypes.number,
+    overallTime: PropTypes.number,
+    onSeek: PropTypes.func.isRequired,
 };
 
 ProgressBar.defaultProps = {
-    overallProgress: 0,
+    overallTime: 0,
 };
