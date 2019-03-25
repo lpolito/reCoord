@@ -20,6 +20,11 @@ const INITIAL_PLAYER_PROGRESS = {
     playedSeconds: 0,
 };
 
+const getPlayableClipIds = (clips, givenTime) => clips.filter((clip) => (
+    // overallTime falls within the bounds of a clip
+    clip.timePosition <= givenTime && (clip.timePosition + clip.duration) > givenTime
+)).map((clip) => clip.id);
+
 // reference for controlling react-player
 let player;
 const playerRef = (playerr) => {
@@ -32,25 +37,37 @@ export const Player = ({coord}) => {
     const [playerProgress, setPlayerProgress] = React.useState(INITIAL_PLAYER_PROGRESS);
     const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
 
-    const updateProgress = (updatedProgress) => {
-        const playerTimeChange = updatedProgress.playedSeconds - playerProgress.playedSeconds;
-
-        setPlayerProgress(updatedProgress);
-
-        // add the same time change in player's progress to overall progress
-        setOverallTime(overallTime + playerTimeChange);
-    };
-
     const onChangeClip = (clipId) => {
         if (clipId === currentClip.id) return;
 
         const changedClip = coord.clips.find((clip) => clip.id === clipId);
         setCurrentClip(changedClip);
 
-        setOverallTime(changedClip.timePosition);
-
         // reset player progress
         setPlayerProgress(INITIAL_PLAYER_PROGRESS);
+
+        // TODO figure out best way to start at middle of clip if overallTime falls in middle of clip
+    };
+
+    const updateProgress = (updatedProgress) => {
+        const playerTimeChange = updatedProgress.playedSeconds - playerProgress.playedSeconds;
+
+        setPlayerProgress(updatedProgress);
+
+        // add the same time change in player's progress to overall progress
+        const newOverallTime = overallTime + playerTimeChange;
+        setOverallTime(newOverallTime);
+
+        // calculate if the current clip can still play
+        const curClipRelTimePosition = (newOverallTime - currentClip.timePosition);
+
+        if (curClipRelTimePosition > currentClip.duration || curClipRelTimePosition < 0) {
+            // newOverallTime is outside of bounds of current clip, change clips
+
+            // just grab and use first playable clip for now
+            const nextClipId = getPlayableClipIds(coord.clips, newOverallTime)[0];
+            onChangeClip(nextClipId);
+        }
     };
 
     /**
@@ -58,21 +75,26 @@ export const Player = ({coord}) => {
      */
     const onSeek = (intent) => {
         // get time position of intent
-        const newTimePosition = intent * coord.length;
+        const newOverallTime = intent * coord.length;
 
-        const curClipRelTimePosition = (newTimePosition - currentClip.timePosition);
+        const curClipRelTimePosition = (newOverallTime - currentClip.timePosition);
 
-        if (curClipRelTimePosition > currentClip.duration) {
-            // skip to next clip
-            console.log('go to next');
-        } else if (curClipRelTimePosition < 0) {
-            // go to previous clip
-            console.log('go to previous');
+        if (curClipRelTimePosition > currentClip.duration || curClipRelTimePosition < 0) {
+            // newOverallTime is outside of bounds of current clip, change clips
+
+            // just grab and use first playable clip for now
+            const nextClipId = getPlayableClipIds(coord.clips, newOverallTime)[0];
+            onChangeClip(nextClipId);
+
+            setOverallTime(newOverallTime);
         } else {
             // seek current clip to new position
+            // don't update overallTime here, the player will force an update itself once it seeks
             player.seekTo(curClipRelTimePosition);
         }
     };
+
+    const playableClipIds = getPlayableClipIds(coord.clips, overallTime);
 
     return (
         <PlayerContainer>
@@ -83,7 +105,6 @@ export const Player = ({coord}) => {
                 onPlay={() => (!isPlaying ? setPlaying(true) : null)}
                 onPause={() => (isPlaying ? setPlaying(false) : null)}
                 playing={isPlaying}
-                controls
             />
             <ProgressBar
                 length={coord.length}
@@ -93,6 +114,7 @@ export const Player = ({coord}) => {
             <Timeline
                 length={coord.length}
                 clips={coord.clips}
+                playableClipIds={playableClipIds}
                 currentClipId={currentClip.id}
                 currentClipProgress={playerProgress.played}
                 onChangeClip={onChangeClip}
