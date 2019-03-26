@@ -37,6 +37,8 @@ export const Player = ({coord}) => {
     const [playerProgress, setPlayerProgress] = React.useState(INITIAL_PLAYER_PROGRESS);
     const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
 
+    const [startTime, setStartTime] = React.useState(0);
+
     const onChangeClip = (clipId) => {
         if (clipId === currentClip.id) return;
 
@@ -46,7 +48,9 @@ export const Player = ({coord}) => {
         // reset player progress
         setPlayerProgress(INITIAL_PLAYER_PROGRESS);
 
-        // TODO figure out best way to start at middle of clip if overallTime falls in middle of clip
+        const nextStartTime = overallTime - changedClip.timePosition;
+        // player.seekTo(startTime);
+        setStartTime(nextStartTime);
     };
 
     const updateProgress = (updatedProgress) => {
@@ -96,11 +100,16 @@ export const Player = ({coord}) => {
 
     const playableClipIds = getPlayableClipIds(coord.clips, overallTime);
 
+    let url = currentClip.url;
+    if (startTime) {
+        url += `&t=${Math.floor(startTime)}`;
+    }
+
     return (
         <PlayerContainer>
             <ReactPlayer
                 ref={playerRef}
-                url={currentClip.url}
+                url={url}
                 onProgress={updateProgress}
                 onPlay={() => (!isPlaying ? setPlaying(true) : null)}
                 onPause={() => (isPlaying ? setPlaying(false) : null)}
