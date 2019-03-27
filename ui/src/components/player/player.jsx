@@ -6,7 +6,9 @@ import ReactPlayer from 'react-player';
 
 import {ProgressBar} from './progressbar';
 import {Timeline} from './timeline';
+import {useInterval} from '../../hooks/use-interval';
 
+const TIME_REFRESH_SECONDS = 1;
 
 const PlayerContainer = styled.div`
     display: flex;
@@ -31,6 +33,10 @@ export const Player = ({coord}) => {
     const [overallTime, setOverallTime] = React.useState(0);
     const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
     const [startTime, setStartTime] = React.useState(null);
+
+    useInterval(() => {
+        setOverallTime(overallTime + TIME_REFRESH_SECONDS);
+    }, isPlaying ? TIME_REFRESH_SECONDS * 1000 : null);
 
     const onChangeClip = (clipId) => {
         if (clipId === currentClip.id) return;
@@ -83,8 +89,8 @@ export const Player = ({coord}) => {
             <ReactPlayer
                 ref={playerRef}
                 url={url}
-                onPlay={() => (!isPlaying ? setPlaying(true) : null)}
-                onPause={() => (isPlaying ? setPlaying(false) : null)}
+                onPlay={() => setPlaying(true)}
+                onPause={() => setPlaying(false)}
                 playing={isPlaying}
             />
             <ProgressBar
