@@ -45,7 +45,7 @@ const ClipIndicator = styled.div`
 `;
 
 export const Timeline = ({
-    length, clips, playableClipIds, currentClipId, currentClipProgress, onChangeClip,
+    length, clips, overallTime, playableClipIds, currentClipId, onChangeClip,
 }) => (
     <TimelineContainer>
         {clips.map(({
@@ -54,7 +54,12 @@ export const Timeline = ({
             const clipWidth = xFactor(length) * duration;
             const clipXPos = xFactor(length) * timePosition;
 
+            const isPlaying = currentClipId === id;
             const isPlayable = playableClipIds.includes(id);
+
+            const currentClipProgress = isPlaying
+                ? (overallTime - timePosition) / duration
+                : 0;
 
             return (
                 <Clip
@@ -65,7 +70,7 @@ export const Timeline = ({
                     isPlayable={isPlayable}
                 >
                     {title}
-                    {currentClipId === id && (
+                    {isPlaying && (
                         <ClipIndicator
                             style={{transform: `translateX(${clipWidth * currentClipProgress}px)`}}
                         />
@@ -84,8 +89,8 @@ Timeline.propTypes = {
         timePosition: PropTypes.number,
         title: PropTypes.string,
     })).isRequired,
+    overallTime: PropTypes.number.isRequired,
     playableClipIds: PropTypes.arrayOf(PropTypes.number).isRequired,
     currentClipId: PropTypes.number.isRequired,
-    currentClipProgress: PropTypes.number.isRequired,
     onChangeClip: PropTypes.func.isRequired,
 };
