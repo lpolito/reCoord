@@ -29,37 +29,21 @@ const playerRef = (playerr) => {
 export const Player = ({coord}) => {
     const [isPlaying, setPlaying] = React.useState(false);
     const [overallTime, setOverallTime] = React.useState(0);
-    const [playerTime, setPlayerTime] = React.useState(0);
     const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
-
-    const [startTime, setStartTime] = React.useState(0);
+    const [startTime, setStartTime] = React.useState(null);
 
     const onChangeClip = (clipId) => {
         if (clipId === currentClip.id) return;
 
-        const changedClip = coord.clips.find((clip) => clip.id === clipId);
-        setCurrentClip(changedClip);
+        const newCurrentClip = coord.clips.find((clip) => clip.id === clipId);
+        setCurrentClip(newCurrentClip);
 
-        // Reset player progress.
-        setPlayerTime(0);
-
-        const nextStartTime = overallTime - changedClip.timePosition;
-        setStartTime(nextStartTime);
-    };
-
-    const updateProgress = ({playedSeconds: newPlayerTime}) => {
-        if (!isPlaying) return;
-
-        const playerTimeChange = newPlayerTime - playerTime;
-        // console.log({playerTimeChange});
-
-        if (playerTimeChange === 0) return;
-
-        setPlayerTime(newPlayerTime);
-
-        // Add the same time change in player's progress to overall progress.
-        const newOverallTime = overallTime + playerTimeChange;
-        setOverallTime(newOverallTime);
+        const nextStartTime = overallTime - newCurrentClip.timePosition;
+        if (nextStartTime > 1) {
+            setStartTime(nextStartTime);
+        } else {
+            setStartTime(null);
+        }
     };
 
     /**
@@ -68,13 +52,12 @@ export const Player = ({coord}) => {
     const onSeek = (intent) => {
         // Convert intent to overallTime.
         const newOverallTime = intent * coord.length;
-        // setOverallTime(newOverallTime);
+        setOverallTime(newOverallTime);
 
         const curClipRelTimePosition = (newOverallTime - currentClip.timePosition);
-        // Only seek if newOverallTime falls within the current clip.
+        // Only seek player if curClipRelTimePosition falls within the current clip.
         // Otherwise useEffect will automatically change the clip to the correct startTime.
         if (curClipRelTimePosition < currentClip.duration && curClipRelTimePosition > 0) {
-            // Seek current clip to new position.
             player.seekTo(curClipRelTimePosition);
         }
     };
@@ -93,14 +76,13 @@ export const Player = ({coord}) => {
 
     const playableClipIds = getPlayableClipIds(coord.clips, overallTime);
 
-    const url = `${currentClip.url}&t=${Math.floor(startTime)}`;
+    const url = startTime ? `${currentClip.url}&t=${Math.floor(startTime)}` : currentClip.url;
 
     return (
         <PlayerContainer>
             <ReactPlayer
                 ref={playerRef}
                 url={url}
-                onProgress={updateProgress}
                 onPlay={() => (!isPlaying ? setPlaying(true) : null)}
                 onPause={() => (isPlaying ? setPlaying(false) : null)}
                 playing={isPlaying}
