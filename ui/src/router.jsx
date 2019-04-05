@@ -8,13 +8,21 @@ import {
 
 
 import {PlayerPage} from './pages/player-page';
+import {EditorPage} from './pages/editor-page';
 
 
-const routes = [{
-    component: PlayerPage,
-    path: '/',
-    exact: true,
-}];
+const routes = [
+    {
+        component: PlayerPage,
+        path: '/',
+        exact: true,
+    },
+    {
+        component: EditorPage,
+        path: '/editor',
+        exact: true,
+    },
+];
 
 
 export const RoutedContent = () => (
