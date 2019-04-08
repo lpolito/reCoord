@@ -38,7 +38,7 @@ const COORD = {
 export const EditorPage = () => (
     <TimelineProvider>
         <EditorProvider coord={COORD}>
-            <Editor coord={COORD} />
+            <Editor />
         </EditorProvider>
     </TimelineProvider>
 );

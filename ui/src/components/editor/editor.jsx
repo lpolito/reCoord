@@ -110,7 +110,3 @@ export const Editor = () => {
         </EditorContainer>
     );
 };
-
-Editor.propTypes = {
-    coord: PropTypes.shape({}).isRequired,
-};
