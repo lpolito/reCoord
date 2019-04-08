@@ -12,7 +12,7 @@ export const EditorProvider = ({coord, children}) => {
         )));
     };
 
-    const shiftClip = (id, dir = 'left') => {
+    const shiftClip = (id, dir = 'left', distance = 1) => {
         setEditorClips((oldClips) => oldClips.map((oldClip) => {
             if (oldClip.id !== id) return oldClip;
 
@@ -21,8 +21,8 @@ export const EditorProvider = ({coord, children}) => {
             return {
                 ...oldClip,
                 timePosition: dir === 'left'
-                    ? oldClip.timePosition - 1
-                    : oldClip.timePosition + 1,
+                    ? oldClip.timePosition - distance
+                    : oldClip.timePosition + distance,
             };
         }));
     };
