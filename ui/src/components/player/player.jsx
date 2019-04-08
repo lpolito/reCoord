@@ -4,11 +4,10 @@ import styled from '@emotion/styled';
 
 import ReactPlayer from 'react-player';
 
+import {TimelineContext} from '../timeline-context';
+
 import {ProgressBar} from './progressbar';
 import {Timeline} from './timeline';
-import {useInterval} from '../../hooks/use-interval';
-
-const TIME_REFRESH_SECONDS = 1;
 
 const PlayerContainer = styled.div`
     display: flex;
@@ -29,20 +28,21 @@ const playerRef = (playerr) => {
 };
 
 export const Player = ({coord}) => {
-    const [isPlaying, setPlaying] = React.useState(false);
-    const [overallTime, setOverallTime] = React.useState(0);
-    const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
+    const {
+        isPlaying, setPlaying,
+        overallTime, setOverallTime,
+        // Default currentClipId is the first clip on the coord.
+        currentClipId = coord.clips[0].id, setCurrentClipId,
+    } = React.useContext(TimelineContext);
+
     const [startTime, setStartTime] = React.useState(null);
 
-    useInterval(() => {
-        setOverallTime(overallTime + TIME_REFRESH_SECONDS);
-    }, isPlaying ? TIME_REFRESH_SECONDS * 1000 : null);
-
     const onChangeClip = (clipId) => {
-        if (clipId === currentClip.id) return;
+        if (clipId === currentClipId) return;
+
+        setCurrentClipId(clipId);
 
         const newCurrentClip = coord.clips.find((clip) => clip.id === clipId);
-        setCurrentClip(newCurrentClip);
 
         const nextStartTime = overallTime - newCurrentClip.timePosition;
         if (nextStartTime > 1) {
@@ -51,6 +51,10 @@ export const Player = ({coord}) => {
             setStartTime(null);
         }
     };
+
+    const currentClip = React.useMemo(() => (
+        coord.clips.find((clip) => clip.id === currentClipId)
+    ), [currentClipId]);
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
@@ -103,7 +107,7 @@ export const Player = ({coord}) => {
                 clips={coord.clips}
                 overallTime={overallTime}
                 playableClipIds={playableClipIds}
-                currentClipId={currentClip.id}
+                currentClipId={currentClipId}
                 onChangeClip={onChangeClip}
             />
         </PlayerContainer>

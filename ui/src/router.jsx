@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 
-import {PlayerPage} from './pages/player-page';
+import {PlayerPage} from './components/player/player-page';
 import {EditorPage} from './components/editor/editor-page';
 
 

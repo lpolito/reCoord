@@ -1,6 +1,9 @@
 import React from 'react';
 
-import {Player} from '../components/player/player';
+import {TimelineProvider} from '../timeline-context';
+
+import {Player} from './player';
+
 
 const COORD = {
     id: 1,
@@ -33,5 +36,7 @@ const COORD = {
 };
 
 export const PlayerPage = () => (
-    <Player coord={COORD} />
+    <TimelineProvider>
+        <Player coord={COORD} />
+    </TimelineProvider>
 );

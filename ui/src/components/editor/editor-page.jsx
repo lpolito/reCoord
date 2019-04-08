@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {EditorProvider} from './editor-context';
+import {TimelineProvider} from '../timeline-context';
 
 import {Editor} from './editor';
 
@@ -35,7 +36,9 @@ const COORD = {
 };
 
 export const EditorPage = () => (
-    <EditorProvider coord={COORD}>
-        <Editor coord={COORD} />
-    </EditorProvider>
+    <TimelineProvider>
+        <EditorProvider coord={COORD}>
+            <Editor coord={COORD} />
+        </EditorProvider>
+    </TimelineProvider>
 );

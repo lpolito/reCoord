@@ -5,12 +5,10 @@ import styled from '@emotion/styled';
 import ReactPlayer from 'react-player';
 
 import {EditorContext} from './editor-context';
+import {TimelineContext} from '../timeline-context';
 import {ProgressBar} from '../player/progressbar';
 import {Timeline} from './timeline';
-import {useInterval} from '../../hooks/use-interval';
 
-
-const TIME_REFRESH_SECONDS = 1;
 
 const EditorContainer = styled.div`
     display: flex;
@@ -28,11 +26,6 @@ const TimelineFixedWidth = styled.div`
     width: 640px;
 `;
 
-// const getPlayableClipIds = (clips, givenTime) => clips.filter((clip) => (
-//     // overallTime falls within the bounds of a clip.
-//     clip.timePosition <= givenTime && (clip.timePosition + clip.duration) > givenTime
-// )).map((clip) => clip.id);
-
 // Reference for controlling react-player.
 let playerA;
 const playerRefA = (playerrA) => {
@@ -46,20 +39,19 @@ const playerRefB = (playerrB) => {
 
 export const Editor = () => {
     const {coord, editorClips} = React.useContext(EditorContext);
+    const {
+        isPlaying, setPlaying,
+        overallTime, setOverallTime,
+        // Default the currentClipIds to a tuple of which clips editor is displaying.
+        currentClipId: currentClipIds = [editorClips[0].id, editorClips[1].id],
+    } = React.useContext(TimelineContext);
 
-    const [isPlaying, setPlaying] = React.useState(false);
-    const [overallTime, setOverallTime] = React.useState(0);
-
-    const [currentClipIdA, setCurrentClipIdA] = React.useState(editorClips[0].id);
-    const [currentClipIdB, setCurrentClipIdB] = React.useState(editorClips[1].id);
-
-
-    useInterval(() => {
-        setOverallTime(overallTime + TIME_REFRESH_SECONDS);
-    }, isPlaying ? TIME_REFRESH_SECONDS * 1000 : null);
-
-    const currentClipA = editorClips.find((clip) => clip.id === currentClipIdA);
-    const currentClipB = editorClips.find((clip) => clip.id === currentClipIdB);
+    const currentClipA = React.useMemo(() => (
+        editorClips.find((clip) => clip.id === currentClipIds[0])
+    ), [currentClipIds]);
+    const currentClipB = React.useMemo(() => (
+        editorClips.find((clip) => clip.id === currentClipIds[1])
+    ), [currentClipIds]);
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
@@ -85,8 +77,6 @@ export const Editor = () => {
             playerB.seekTo(curClipRelTimePositionB);
         }
     };
-
-    const selectedClips = [currentClipIdA, currentClipIdB];
 
     return (
         <EditorContainer>
@@ -114,7 +104,7 @@ export const Editor = () => {
                 />
                 <Timeline
                     overallTime={overallTime}
-                    selectedClips={selectedClips}
+                    selectedClips={currentClipIds}
                 />
             </TimelineFixedWidth>
         </EditorContainer>
