@@ -8,7 +8,7 @@ import {
 
 
 import {PlayerPage} from './pages/player-page';
-import {EditorPage} from './pages/editor-page';
+import {EditorPage} from './components/editor/editor-page';
 
 
 const routes = [

@@ -7,6 +7,8 @@ import {grey, red} from '@material-ui/core/colors';
 import ArrowLeft from '@material-ui/icons/ArrowLeft';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 
+import {EditorContext} from './editor-context';
+
 // factor by which widths & positions of clips needs to be multiplied by to fit in timeline width
 // x = width of timeline / length of coord
 // pixels over time
@@ -74,63 +76,65 @@ const Right = styled(ArrowRight)`
 
 
 export const Timeline = ({
-    length, clips, overallTime, selectedClips,
-}) => (
-    <TimelineContainer>
-        {clips.map(({
-            id, duration, timePosition, title,
-        }) => {
-            const clipWidth = xFactor(length) * duration;
-            const clipXPos = xFactor(length) * timePosition;
+    overallTime, selectedClips,
+}) => {
+    const {coord, editorClips, shiftClip} = React.useContext(EditorContext);
 
-            const isPlaying = selectedClips.includes(id);
+    return (
+        <TimelineContainer>
+            {editorClips.map(({
+                id, duration, timePosition, title,
+            }) => {
+                const clipWidth = xFactor(coord.length) * duration;
+                const clipXPos = xFactor(coord.length) * timePosition;
 
-            const currentClipProgress = isPlaying
-                ? (overallTime - timePosition) / duration
-                : 0;
+                const isPlaying = selectedClips.includes(id);
 
-            return (
-                <Clip
-                    key={id}
-                    width={clipWidth}
-                    clipXPos={clipXPos}
-                    isPlaying={isPlaying}
-                >
-                    {isPlaying && (
-                        <>
+                const currentClipProgress = isPlaying
+                    ? (overallTime - timePosition) / duration
+                    : 0;
+
+                return (
+                    <Clip
+                        key={id}
+                        width={clipWidth}
+                        clipXPos={clipXPos}
+                        isPlaying={isPlaying}
+                    >
+                        {isPlaying && (
+                            <>
+                                <ClipContents>
+                                    <Left
+                                        color='action'
+                                        onClick={() => shiftClip(id, 'left')}
+                                    />
+
+                                    <span>{title}</span>
+
+                                    <Right
+                                        onClick={() => shiftClip(id, 'right')}
+                                    />
+                                </ClipContents>
+
+                                <ClipIndicator
+                                    style={{transform: `translateX(${clipWidth * currentClipProgress}px)`}}
+                                />
+                            </>
+                        )}
+
+                        {!isPlaying && (
                             <ClipContents>
-                                <Left color='action' />
-
                                 <span>{title}</span>
-
-                                <Right />
                             </ClipContents>
-
-                            <ClipIndicator
-                                style={{transform: `translateX(${clipWidth * currentClipProgress}px)`}}
-                            />
-                        </>
-                    )}
-
-                    {!isPlaying && (
-                        <ClipContents>
-                            <span>{title}</span>
-                        </ClipContents>
-                    )}
-                </Clip>
-            );
-        })}
-    </TimelineContainer>
-);
+                        )}
+                    </Clip>
+                );
+            })}
+        </TimelineContainer>
+    );
+};
 
 Timeline.propTypes = {
-    length: PropTypes.number.isRequired,
-    clips: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number,
-        duration: PropTypes.number,
-        timePosition: PropTypes.number,
-        title: PropTypes.string,
-    })).isRequired,
     overallTime: PropTypes.number.isRequired,
     selectedClips: PropTypes.arrayOf(PropTypes.number).isRequired,
 };

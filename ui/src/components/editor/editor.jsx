@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 import ReactPlayer from 'react-player';
 
+import {EditorContext} from './editor-context';
 import {ProgressBar} from '../player/progressbar';
 import {Timeline} from './timeline';
 import {useInterval} from '../../hooks/use-interval';
@@ -43,18 +44,22 @@ const playerRefB = (playerrB) => {
     playerB = playerrB;
 };
 
-export const Editor = ({coord}) => {
+export const Editor = () => {
+    const {coord, editorClips} = React.useContext(EditorContext);
+
     const [isPlaying, setPlaying] = React.useState(false);
     const [overallTime, setOverallTime] = React.useState(0);
-    const [startTime, setStartTime] = React.useState(null);
 
-    const [currentClipA, setCurrentClipA] = React.useState(coord.clips[0]);
-    const [currentClipB, setCurrentClipB] = React.useState(coord.clips[1]);
+    const [currentClipIdA, setCurrentClipIdA] = React.useState(editorClips[0].id);
+    const [currentClipIdB, setCurrentClipIdB] = React.useState(editorClips[1].id);
 
 
     useInterval(() => {
         setOverallTime(overallTime + TIME_REFRESH_SECONDS);
     }, isPlaying ? TIME_REFRESH_SECONDS * 1000 : null);
+
+    const currentClipA = editorClips.find((clip) => clip.id === currentClipIdA);
+    const currentClipB = editorClips.find((clip) => clip.id === currentClipIdB);
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
@@ -81,7 +86,7 @@ export const Editor = ({coord}) => {
         }
     };
 
-    const selectedClips = [currentClipA.id, currentClipB.id];
+    const selectedClips = [currentClipIdA, currentClipIdB];
 
     return (
         <EditorContainer>
@@ -108,13 +113,8 @@ export const Editor = ({coord}) => {
                     onSeek={onSeek}
                 />
                 <Timeline
-                    length={coord.length}
-                    clips={coord.clips}
                     overallTime={overallTime}
                     selectedClips={selectedClips}
-                    // playableClipIds={playableClipIds}
-                    // currentClipId={currentClip.id}
-                    // onChangeClip={onChangeClip}
                 />
             </TimelineFixedWidth>
         </EditorContainer>
