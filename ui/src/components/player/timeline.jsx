@@ -15,7 +15,6 @@ const TimelineContainer = styled.div`
 
     display: flex;
     flex-direction: column;
-    flex-align: start;
 
     width: 640px;
     padding: 8px 0;
@@ -23,6 +22,7 @@ const TimelineContainer = styled.div`
 
 const Clip = styled.div`
     width: ${({width}) => `${width}px`};
+    height: 15px;
     margin: 2px 0;
     transform: ${({clipXPos}) => `translateX(${clipXPos}px)`};
 

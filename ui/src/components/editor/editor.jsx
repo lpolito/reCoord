@@ -6,7 +6,8 @@ import ReactPlayer from 'react-player';
 import {EditorContext} from './editor-context';
 import {TimelineContext} from '../timeline-context';
 import {ProgressBar} from '../player/progressbar';
-import {Timeline} from './timeline';
+import {Timeline} from '../player/timeline';
+import {TimelineEditor} from './timeline-editor';
 
 
 const EditorContainer = styled.div`
@@ -101,10 +102,16 @@ export const Editor = () => {
                     overallTime={overallTime}
                     onSeek={onSeek}
                 />
-                <Timeline
-                    overallTime={overallTime}
-                    selectedClips={currentClipIds}
-                />
+                <TimelineEditor>
+                    <Timeline
+                        length={coord.length}
+                        clips={editorClips}
+                        overallTime={overallTime}
+                        playableClipIds={[]}
+                        // currentClipId={currentClipId}
+                        // onChangeClip={onChangeClip}
+                    />
+                </TimelineEditor>
             </TimelineFixedWidth>
         </EditorContainer>
     );
