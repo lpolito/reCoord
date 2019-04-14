@@ -38,19 +38,20 @@ const playerRefB = (playerrB) => {
 };
 
 export const Editor = () => {
-    const {coord, editorClips} = React.useContext(EditorContext);
+    const {coord} = React.useContext(EditorContext);
+
     const {
         isPlaying, setPlaying,
         overallTime, setOverallTime,
         // Default the currentClipIds to a tuple of which clips editor is displaying.
-        currentClipId: currentClipIds = [editorClips[0].id, editorClips[1].id],
+        currentClipId: currentClipIds = [coord.clips[0].id, coord.clips[1].id],
     } = React.useContext(TimelineContext);
 
     const currentClipA = React.useMemo(() => (
-        editorClips.find((clip) => clip.id === currentClipIds[0])
+        coord.clips.find((clip) => clip.id === currentClipIds[0])
     ), [currentClipIds]);
     const currentClipB = React.useMemo(() => (
-        editorClips.find((clip) => clip.id === currentClipIds[1])
+        coord.clips.find((clip) => clip.id === currentClipIds[1])
     ), [currentClipIds]);
 
     /**
@@ -105,7 +106,7 @@ export const Editor = () => {
                 <TimelineEditor>
                     <Timeline
                         length={coord.length}
-                        clips={editorClips}
+                        clips={coord.clips}
                         overallTime={overallTime}
                         playableClipIds={[]}
                         // currentClipId={currentClipId}

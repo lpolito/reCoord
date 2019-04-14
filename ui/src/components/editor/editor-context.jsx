@@ -3,35 +3,52 @@ import PropTypes from 'prop-types';
 
 export const EditorContext = React.createContext();
 
-export const EditorProvider = ({coord, children}) => {
-    const [editorClips, setEditorClips] = React.useState(coord.clips);
+const coordReducer = (prevState, {type, payload}) => {
+    switch (type) {
+    case 'updateClip':
+        return {
+            ...prevState,
+            clips: prevState.clips.map((clip) => {
+                const {id, ...rest} = payload;
 
-    const updateClip = (index, clip) => {
-        setEditorClips((oldClips) => oldClips.map((oldClip, x) => (
-            x === index ? clip : oldClip
-        )));
+                if (clip.id !== id) {
+                    return clip;
+                }
+
+                return {
+                    ...clip,
+                    ...rest,
+                };
+            }),
+        };
+
+    default:
+        return prevState;
+    }
+};
+
+const useCoordEditor = ({initialCoord}) => {
+    const [coord, dispatch] = React.useReducer(coordReducer, initialCoord);
+
+    const updateClip = (clip) => {
+        dispatch({
+            type: 'updateClip',
+            payload: clip,
+        });
     };
 
-    const shiftClip = (id, dir = 'left', distance = 1) => {
-        setEditorClips((oldClips) => oldClips.map((oldClip) => {
-            if (oldClip.id !== id) return oldClip;
-
-            if (!['left', 'right'].includes(dir)) return oldClip;
-
-            return {
-                ...oldClip,
-                timePosition: dir === 'left'
-                    ? oldClip.timePosition - distance
-                    : oldClip.timePosition + distance,
-            };
-        }));
+    return {
+        coord,
+        updateClip,
     };
+};
+
+export const EditorProvider = ({coord: initialCoord, children}) => {
+    const {coord, updateClip} = useCoordEditor({initialCoord});
 
     const providerValues = {
         coord,
-        editorClips,
         updateClip,
-        shiftClip,
     };
 
     return (
