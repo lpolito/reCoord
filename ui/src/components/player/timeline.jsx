@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 import {grey} from '@material-ui/core/colors';
 
+
 // factor by which widths & positions of clips needs to be multiplied by to fit in timeline width
 // x = width of timeline / length of coord
 // pixels over time
@@ -21,10 +22,8 @@ const TimelineContainer = styled.div`
 `;
 
 const Clip = styled.div`
-    width: ${({width}) => `${width}px`};
     height: 15px;
     margin: 2px 0;
-    transform: ${({clipXPos}) => `translateX(${clipXPos}px)`};
 
     position: relative;
     background-color: ${({isPlayable}) => (isPlayable ? grey[100] : grey[500])};
@@ -64,10 +63,12 @@ export const Timeline = ({
             return (
                 <Clip
                     key={id}
-                    width={clipWidth}
-                    clipXPos={clipXPos}
                     onClick={() => (isPlayable ? onChangeClip(id) : null)}
                     isPlayable={isPlayable}
+                    style={{
+                        width: `${clipWidth}px`,
+                        transform: `translateX(${clipXPos}px)`,
+                    }}
                 >
                     {title}
                     {isPlaying && (

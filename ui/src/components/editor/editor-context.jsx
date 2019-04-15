@@ -14,18 +14,15 @@ const calcTimelineInfo = ({clips}) => (
         const start = (acc.start === undefined || clip.timePosition < acc.start)
             ? clip.timePosition : acc.start;
 
-        const length = end - start;
         return {
             start,
             end,
-            length,
-            startDiff: Math.abs(start),
+            length: end - start,
         };
     }, {
         start: undefined,
         end: undefined,
         length: 0,
-        startDiff: 0,
     })
 );
 
@@ -50,12 +47,17 @@ const coordReducer = (prevCoord, {type, payload}) => {
             };
         });
 
-        // Update the length of the coord.
-        const {length} = calcTimelineInfo({clips});
+        const {start, length} = calcTimelineInfo({clips});
+
+        // Shift clips so the earliest clip is always at timePosition: 0.
+        const shiftedClips = clips.map((clip) => ({
+            ...clip,
+            timePosition: clip.timePosition - start,
+        }));
 
         return {
             ...prevCoord,
-            clips,
+            clips: shiftedClips,
             length,
         };
     }
@@ -66,8 +68,6 @@ const coordReducer = (prevCoord, {type, payload}) => {
 
 const useCoordEditor = ({initialCoord}) => {
     const [coord, dispatch] = React.useReducer(coordReducer, initialCoord);
-
-    const {startDiff} = calcTimelineInfo(coord);
 
     const updateCoord = (newCoord) => {
         dispatch({
@@ -85,7 +85,6 @@ const useCoordEditor = ({initialCoord}) => {
 
     return {
         coord,
-        startDiff,
         updateCoord,
         updateClip,
     };
