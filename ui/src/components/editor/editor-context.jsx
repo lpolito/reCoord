@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export const EditorContext = React.createContext();
 
-const calculateLength = ({clips}) => (
+const calcTimelineInfo = ({clips}) => (
     clips.reduce((acc, clip) => {
         const coordEnd = clip.timePosition + clip.duration;
         // Earliest starting point of coord.
@@ -29,32 +29,52 @@ const calculateLength = ({clips}) => (
     })
 );
 
-const coordReducer = (prevState, {type, payload}) => {
+const coordReducer = (prevCoord, {type, payload}) => {
     switch (type) {
-    case 'updateClip':
+    case 'updateCoord':
         return {
-            ...prevState,
-            clips: prevState.clips.map((clip) => {
-                const {id, ...rest} = payload;
-
-                if (clip.id !== id) {
-                    return clip;
-                }
-
-                return {
-                    ...clip,
-                    ...rest,
-                };
-            }),
+            ...prevCoord,
+            ...payload,
         };
+    case 'updateClip': {
+        const clips = prevCoord.clips.map((clip) => {
+            const {id, ...rest} = payload;
 
+            if (clip.id !== id) {
+                return clip;
+            }
+
+            return {
+                ...clip,
+                ...rest,
+            };
+        });
+
+        // Update the length of the coord.
+        const {length} = calcTimelineInfo({clips});
+
+        return {
+            ...prevCoord,
+            clips,
+            length,
+        };
+    }
     default:
-        return prevState;
+        return prevCoord;
     }
 };
 
 const useCoordEditor = ({initialCoord}) => {
     const [coord, dispatch] = React.useReducer(coordReducer, initialCoord);
+
+    const {startDiff} = calcTimelineInfo(coord);
+
+    const updateCoord = (newCoord) => {
+        dispatch({
+            type: 'updateCoord',
+            payload: newCoord,
+        });
+    };
 
     const updateClip = (clip) => {
         dispatch({
@@ -65,6 +85,8 @@ const useCoordEditor = ({initialCoord}) => {
 
     return {
         coord,
+        startDiff,
+        updateCoord,
         updateClip,
     };
 };
@@ -76,8 +98,6 @@ export const EditorProvider = ({coord: initialCoord, children}) => {
         coord,
         updateClip,
     };
-
-    console.log('length', calculateLength(coord));
 
     return (
         <EditorContext.Provider value={providerValues}>
