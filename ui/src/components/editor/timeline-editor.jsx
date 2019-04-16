@@ -35,7 +35,7 @@ const Right = styled(ArrowRight)`
 
 
 export const TimelineEditor = ({
-    children,
+    children, onChange,
 }) => {
     const {coord, updateClip} = React.useContext(EditorContext);
 
@@ -48,6 +48,8 @@ export const TimelineEditor = ({
                 ? clip.timePosition - distance
                 : clip.timePosition + distance,
         });
+
+        onChange();
     };
 
     return (
@@ -77,4 +79,5 @@ export const TimelineEditor = ({
 
 TimelineEditor.propTypes = {
     children: PropTypes.node.isRequired,
+    onChange: PropTypes.func.isRequired,
 };
