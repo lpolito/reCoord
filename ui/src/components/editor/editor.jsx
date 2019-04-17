@@ -72,12 +72,7 @@ export const Editor = () => {
         coord.clips.find((clip) => clip.id === currentClipIds[1])
     ), [currentClipIds]);
 
-    React.useEffect(() => {
-        // Set initial overallTime to the latest clip.
-        const newOverallTime = Math.max(currentClipA.timePosition, currentClipB.timePosition);
-        setOverallTime(newOverallTime);
-
-        // Start clips at appropriate times.
+    const updateStartTime = (newOverallTime) => {
         const nextStartTimeA = newOverallTime - currentClipA.timePosition;
         const nextStartTimeB = newOverallTime - currentClipB.timePosition;
 
@@ -85,6 +80,14 @@ export const Editor = () => {
             nextStartTimeA > 1 ? nextStartTimeA : null,
             nextStartTimeB > 1 ? nextStartTimeB : null,
         ]);
+    };
+
+    React.useEffect(() => {
+        // Set initial overallTime to the latest clip.
+        const newOverallTime = Math.max(currentClipA.timePosition, currentClipB.timePosition);
+        setOverallTime(newOverallTime);
+
+        updateStartTime(newOverallTime);
     }, []);
 
     /**
@@ -95,11 +98,15 @@ export const Editor = () => {
         const newOverallTime = intent * coord.length;
         setOverallTime(newOverallTime);
 
-        seekPlayers({
-            overallTime: newOverallTime,
-            clipA: currentClipA,
-            clipB: currentClipB,
-        });
+        if (isPlaying) {
+            seekPlayers({
+                overallTime: newOverallTime,
+                clipA: currentClipA,
+                clipB: currentClipB,
+            });
+        } else {
+            updateStartTime(newOverallTime);
+        }
     };
 
     const urlA = startTimes[0] ? `${currentClipA.url}&t=${Math.floor(startTimes[0])}` : currentClipA.url;
