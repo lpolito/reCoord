@@ -91,7 +91,13 @@ Timeline.propTypes = {
         title: PropTypes.string,
     })).isRequired,
     overallTime: PropTypes.number.isRequired,
-    playableClipIds: PropTypes.arrayOf(PropTypes.number).isRequired,
-    currentClipId: PropTypes.number.isRequired,
-    onChangeClip: PropTypes.func.isRequired,
+    playableClipIds: PropTypes.arrayOf(PropTypes.number),
+    currentClipId: PropTypes.number,
+    onChangeClip: PropTypes.func,
+};
+
+Timeline.defaultProps = {
+    playableClipIds: [],
+    currentClipId: undefined,
+    onChangeClip: () => {},
 };

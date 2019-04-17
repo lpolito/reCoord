@@ -147,9 +147,6 @@ export const Editor = () => {
                         length={coord.length}
                         clips={coord.clips}
                         overallTime={overallTime}
-                        playableClipIds={[]}
-                        // currentClipId={currentClipId}
-                        // onChangeClip={onChangeClip}
                     />
                 </TimelineEditor>
             </TimelineFixedWidth>
