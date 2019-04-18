@@ -17,7 +17,7 @@ const PlayerContainer = styled.div`
 `;
 
 const getPlayableClipIds = (clips, givenTime) => clips.filter((clip) => (
-    // overallTime falls within the bounds of a clip.
+    // playbackTime falls within the bounds of a clip.
     clip.timePosition <= givenTime && (clip.timePosition + clip.duration) > givenTime
 )).map((clip) => clip.id);
 
@@ -30,7 +30,7 @@ const playerRef = (playerr) => {
 export const Player = ({coord}) => {
     const {
         isPlaying, setPlaying,
-        overallTime, setOverallTime,
+        playbackTime, setPlaybackTime,
         // Default currentClipId is the first clip on the coord.
         currentClipId = coord.clips[0].id, setCurrentClipId,
     } = React.useContext(TimelineContext);
@@ -44,7 +44,7 @@ export const Player = ({coord}) => {
 
         const newCurrentClip = coord.clips.find((clip) => clip.id === clipId);
 
-        const nextStartTime = overallTime - newCurrentClip.timePosition;
+        const nextStartTime = playbackTime - newCurrentClip.timePosition;
         if (nextStartTime > 1) {
             setStartTime(nextStartTime);
         } else {
@@ -60,11 +60,11 @@ export const Player = ({coord}) => {
      * @param {number} intent Decimal of current progress bar's length.
      */
     const onSeek = (intent) => {
-        // Convert intent to overallTime.
-        const newOverallTime = intent * coord.length;
-        setOverallTime(newOverallTime);
+        // Convert intent to playbackTime.
+        const newPlaybackTime = intent * coord.length;
+        setPlaybackTime(newPlaybackTime);
 
-        const curClipRelTimePosition = (newOverallTime - currentClip.timePosition);
+        const curClipRelTimePosition = (newPlaybackTime - currentClip.timePosition);
         // Only seek player if curClipRelTimePosition falls within the current clip.
         // Otherwise useEffect will automatically change the clip to the correct startTime.
         if (curClipRelTimePosition < currentClip.duration && curClipRelTimePosition > 0) {
@@ -72,19 +72,19 @@ export const Player = ({coord}) => {
         }
     };
 
-    // Track overallTime and update if clips need to be changed or the player needs to seek.
+    // Track playbackTime and update if clips need to be changed or the player needs to seek.
     React.useEffect(() => {
-        const curClipRelTimePosition = (overallTime - currentClip.timePosition);
+        const curClipRelTimePosition = (playbackTime - currentClip.timePosition);
 
         if (curClipRelTimePosition > currentClip.duration || curClipRelTimePosition < 0) {
-            // overallTime is outside of bounds of current clip, change clips.
+            // playbackTime is outside of bounds of current clip, change clips.
             // Just grab and use first playable clip for now.
-            const nextClipId = getPlayableClipIds(coord.clips, overallTime)[0];
+            const nextClipId = getPlayableClipIds(coord.clips, playbackTime)[0];
             onChangeClip(nextClipId);
         }
-    }, [overallTime, currentClip]);
+    }, [playbackTime, currentClip]);
 
-    const playableClipIds = getPlayableClipIds(coord.clips, overallTime);
+    const playableClipIds = getPlayableClipIds(coord.clips, playbackTime);
 
     const url = startTime ? `${currentClip.url}&t=${Math.floor(startTime)}` : currentClip.url;
 
@@ -99,13 +99,13 @@ export const Player = ({coord}) => {
             />
             <ProgressBar
                 length={coord.length}
-                overallTime={overallTime}
+                playbackTime={playbackTime}
                 onSeek={onSeek}
             />
             <Timeline
                 length={coord.length}
                 clips={coord.clips}
-                overallTime={overallTime}
+                playbackTime={playbackTime}
                 playableClipIds={playableClipIds}
                 currentClipId={currentClipId}
                 onChangeClip={onChangeClip}

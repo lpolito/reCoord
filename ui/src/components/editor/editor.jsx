@@ -37,16 +37,16 @@ const playerRefB = (playerrB) => {
     playerB = playerrB;
 };
 
-const seekPlayers = ({overallTime, clipA, clipB}) => {
+const seekPlayers = ({playbackTime, clipA, clipB}) => {
     // playerA
-    const curClipRelTimePositionA = (overallTime - clipA.timePosition);
+    const curClipRelTimePositionA = (playbackTime - clipA.timePosition);
     // Seek player if curClipRelTimePosition falls within the current clip.
     if (curClipRelTimePositionA < clipA.duration && curClipRelTimePositionA > 0) {
         playerA.seekTo(curClipRelTimePositionA);
     }
 
     // playerB
-    const curClipRelTimePositionB = (overallTime - clipB.timePosition);
+    const curClipRelTimePositionB = (playbackTime - clipB.timePosition);
     // Seek player if curClipRelTimePosition falls within the current clip.
     if (curClipRelTimePositionB < clipB.duration && curClipRelTimePositionB > 0) {
         playerB.seekTo(curClipRelTimePositionB);
@@ -58,7 +58,7 @@ export const Editor = () => {
 
     const {
         isPlaying, setPlaying,
-        overallTime, setOverallTime,
+        playbackTime, setPlaybackTime,
         // Default the currentClipIds to a tuple of which clips editor is displaying.
         currentClipId: currentClipIds = [coord.clips[0].id, coord.clips[1].id],
     } = React.useContext(TimelineContext);
@@ -72,9 +72,9 @@ export const Editor = () => {
         coord.clips.find((clip) => clip.id === currentClipIds[1])
     ), [currentClipIds]);
 
-    const updateStartTime = (newOverallTime) => {
-        const nextStartTimeA = newOverallTime - currentClipA.timePosition;
-        const nextStartTimeB = newOverallTime - currentClipB.timePosition;
+    const updateStartTime = (newPlaybackTime) => {
+        const nextStartTimeA = newPlaybackTime - currentClipA.timePosition;
+        const nextStartTimeB = newPlaybackTime - currentClipB.timePosition;
 
         setStartTimes([
             nextStartTimeA > 1 ? nextStartTimeA : null,
@@ -83,29 +83,29 @@ export const Editor = () => {
     };
 
     React.useEffect(() => {
-        // Set initial overallTime to the latest clip.
-        const newOverallTime = Math.max(currentClipA.timePosition, currentClipB.timePosition);
-        setOverallTime(newOverallTime);
+        // Set initial playbackTime to the latest clip.
+        const newPlaybackTime = Math.max(currentClipA.timePosition, currentClipB.timePosition);
+        setPlaybackTime(newPlaybackTime);
 
-        updateStartTime(newOverallTime);
+        updateStartTime(newPlaybackTime);
     }, []);
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
      */
     const onSeek = (intent) => {
-        // Convert intent to overallTime.
-        const newOverallTime = intent * coord.length;
-        setOverallTime(newOverallTime);
+        // Convert intent to playbackTime.
+        const newPlaybackTime = intent * coord.length;
+        setPlaybackTime(newPlaybackTime);
 
         if (isPlaying) {
             seekPlayers({
-                overallTime: newOverallTime,
+                playbackTime: newPlaybackTime,
                 clipA: currentClipA,
                 clipB: currentClipB,
             });
         } else {
-            updateStartTime(newOverallTime);
+            updateStartTime(newPlaybackTime);
         }
     };
 
@@ -133,12 +133,12 @@ export const Editor = () => {
             <TimelineFixedWidth>
                 <ProgressBar
                     length={coord.length}
-                    overallTime={overallTime}
+                    playbackTime={playbackTime}
                     onSeek={onSeek}
                 />
                 <TimelineEditor
                     onChange={() => seekPlayers({
-                        overallTime,
+                        playbackTime,
                         clipA: currentClipA,
                         clipB: currentClipB,
                     })}
@@ -146,7 +146,7 @@ export const Editor = () => {
                     <Timeline
                         length={coord.length}
                         clips={coord.clips}
-                        overallTime={overallTime}
+                        playbackTime={playbackTime}
                     />
                 </TimelineEditor>
             </TimelineFixedWidth>

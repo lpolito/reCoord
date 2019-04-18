@@ -44,7 +44,7 @@ const ClipIndicator = styled.div`
 `;
 
 export const Timeline = ({
-    length, clips, overallTime, playableClipIds, currentClipId, onChangeClip,
+    length, clips, playbackTime, playableClipIds, currentClipId, onChangeClip,
 }) => (
     <TimelineContainer>
         {clips.map(({
@@ -57,7 +57,7 @@ export const Timeline = ({
             const isPlayable = playableClipIds.includes(id);
 
             const currentClipProgress = isPlaying
-                ? (overallTime - timePosition) / duration
+                ? (playbackTime - timePosition) / duration
                 : 0;
 
             return (
@@ -90,7 +90,7 @@ Timeline.propTypes = {
         timePosition: PropTypes.number,
         title: PropTypes.string,
     })).isRequired,
-    overallTime: PropTypes.number.isRequired,
+    playbackTime: PropTypes.number.isRequired,
     playableClipIds: PropTypes.arrayOf(PropTypes.number),
     currentClipId: PropTypes.number,
     onChangeClip: PropTypes.func,

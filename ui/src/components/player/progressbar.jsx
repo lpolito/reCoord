@@ -41,7 +41,7 @@ const IntentIndicator = styled.div`
     opacity: 0.6;
 `;
 
-export const ProgressBar = ({length, overallTime, onSeek}) => {
+export const ProgressBar = ({length, playbackTime, onSeek}) => {
     const [active, setActive] = React.useState(false);
     // intent is decimal of current progress bar's length
     const [intent, setIntent] = React.useState(null);
@@ -65,7 +65,7 @@ export const ProgressBar = ({length, overallTime, onSeek}) => {
                 onChangeEnd={changeTimePosition}
                 active={active}
             >
-                <Progress style={{transform: `scaleX(${overallTime / length})`}} />
+                <Progress style={{transform: `scaleX(${playbackTime / length})`}} />
                 {active && <IntentIndicator style={{transform: `scaleX(${intent})`}} />}
             </PB>
         </ProgressBarContainer>
@@ -74,10 +74,10 @@ export const ProgressBar = ({length, overallTime, onSeek}) => {
 
 ProgressBar.propTypes = {
     length: PropTypes.number.isRequired,
-    overallTime: PropTypes.number,
+    playbackTime: PropTypes.number,
     onSeek: PropTypes.func.isRequired,
 };
 
 ProgressBar.defaultProps = {
-    overallTime: 0,
+    playbackTime: 0,
 };
