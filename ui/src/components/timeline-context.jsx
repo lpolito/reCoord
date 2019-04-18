@@ -8,8 +8,6 @@ const TIME_REFRESH_SECONDS = 1;
 export const TimelineContext = React.createContext();
 
 export const TimelineProvider = ({children}) => {
-    // const {initialClip = coord.clips[0]} = options;
-
     const [isPlaying, setPlaying] = React.useState(false);
     const [playbackTime, setPlaybackTime] = React.useState(0);
     const [currentClipId, setCurrentClipId] = React.useState();
