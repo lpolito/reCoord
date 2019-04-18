@@ -93,13 +93,17 @@ const useCoordEditor = ({initialCoord}) => {
 export const EditorProvider = ({coord: initialCoord, children}) => {
     const {coord, updateClip} = useCoordEditor({initialCoord});
 
-    const providerValues = {
+    // useMemo around Provider context as good practice.
+    const context = React.useMemo(() => ({
         coord,
         updateClip,
-    };
+    }), [
+        coord,
+        updateClip,
+    ]);
 
     return (
-        <EditorContext.Provider value={providerValues}>
+        <EditorContext.Provider value={context}>
             {children}
         </EditorContext.Provider>
     );

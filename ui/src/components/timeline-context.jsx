@@ -16,7 +16,10 @@ export const TimelineProvider = ({children}) => {
         setPlaybackTime(playbackTime + TIME_REFRESH_SECONDS);
     }, isPlaying ? TIME_REFRESH_SECONDS * 1000 : null);
 
-    const providerValues = {
+    // Normally we'd want to useMemo around provider context.
+    // Not doing this here because it has to change values frequently. It'll probably be
+    // more expensive to memoize every render than to just recompute on its own (assumption).
+    const context = {
         isPlaying,
         setPlaying,
         playbackTime,
@@ -26,7 +29,7 @@ export const TimelineProvider = ({children}) => {
     };
 
     return (
-        <TimelineContext.Provider value={providerValues}>
+        <TimelineContext.Provider value={context}>
             {children}
         </TimelineContext.Provider>
     );
