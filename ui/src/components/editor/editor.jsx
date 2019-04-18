@@ -77,8 +77,8 @@ export const Editor = () => {
         const nextStartTimeB = newPlaybackTime - currentClipB.timePosition;
 
         setStartTimes([
-            nextStartTimeA > 1 ? nextStartTimeA : null,
-            nextStartTimeB > 1 ? nextStartTimeB : null,
+            nextStartTimeA > 1 ? Math.floor(nextStartTimeA) : null,
+            nextStartTimeB > 1 ? Math.floor(nextStartTimeB) : null,
         ]);
     };
 
@@ -109,8 +109,13 @@ export const Editor = () => {
         }
     };
 
-    const urlA = startTimes[0] ? `${currentClipA.url}&t=${Math.floor(startTimes[0])}` : currentClipA.url;
-    const urlB = startTimes[1] ? `${currentClipB.url}&t=${Math.floor(startTimes[1])}` : currentClipB.url;
+    const urlA = React.useMemo(() => (
+        startTimes[0] ? `${currentClipA.url}&t=${startTimes[0]}` : currentClipA.url
+    ), [startTimes, currentClipA]);
+
+    const urlB = React.useMemo(() => (
+        startTimes[1] ? `${currentClipB.url}&t=${startTimes[1]}` : currentClipB.url
+    ), [startTimes, currentClipB]);
 
     return (
         <EditorContainer>
