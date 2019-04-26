@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import {css} from '@emotion/core';
 
 import ReactPlayer from 'react-player';
+import {red, green} from '@material-ui/core/colors';
 
 import {EditorContext} from './editor-context';
 import {TimelineContext} from '../timeline-context';
@@ -24,6 +26,14 @@ const PlayerSideBySide = styled.div`
 
 const TimelineFixedWidth = styled.div`
     width: 640px;
+`;
+
+const PlayerA = styled(ReactPlayer)`
+    border: 1px solid ${red[200]};
+`;
+
+const PlayerB = styled(ReactPlayer)`
+    border: 1px solid ${green[200]};
 `;
 
 // Reference for controlling react-player.
@@ -120,14 +130,14 @@ export const Editor = () => {
     return (
         <EditorContainer>
             <PlayerSideBySide>
-                <ReactPlayer
+                <PlayerA
                     ref={playerRefA}
                     url={urlA}
                     onPlay={() => setPlaying(true)}
                     onPause={() => setPlaying(false)}
                     playing={isPlaying}
                 />
-                <ReactPlayer
+                <PlayerB
                     ref={playerRefB}
                     url={urlB}
                     onPlay={() => setPlaying(true)}
@@ -152,6 +162,10 @@ export const Editor = () => {
                         length={coord.length}
                         clips={coord.clips}
                         playbackTime={playbackTime}
+                        clipStyle={({id}) => css`
+                            background-color: ${id === currentClipA.id ? red[200] : undefined};
+                            background-color: ${id === currentClipB.id ? green[200] : undefined};
+                        `}
                     />
                 </TimelineEditor>
             </TimelineFixedWidth>

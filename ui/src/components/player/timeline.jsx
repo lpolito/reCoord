@@ -33,6 +33,7 @@ const Clip = styled.div`
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
+    ${({clipStyle}) => clipStyle}
 `;
 
 const ClipIndicator = styled.div`
@@ -44,7 +45,7 @@ const ClipIndicator = styled.div`
 `;
 
 export const Timeline = ({
-    length, clips, playbackTime, playableClipIds, currentClipId, onChangeClip,
+    length, clips, playbackTime, playableClipIds, currentClipId, onChangeClip, clipStyle,
 }) => (
     <TimelineContainer>
         {clips.map(({
@@ -69,6 +70,8 @@ export const Timeline = ({
                         width: `${clipWidth}px`,
                         transform: `translateX(${clipXPos}px)`,
                     }}
+                    id={id}
+                    clipStyle={clipStyle}
                 >
                     {title}
                     {isPlaying && (
@@ -94,10 +97,12 @@ Timeline.propTypes = {
     playableClipIds: PropTypes.arrayOf(PropTypes.number),
     currentClipId: PropTypes.number,
     onChangeClip: PropTypes.func,
+    clipStyle: PropTypes.instanceOf(Object),
 };
 
 Timeline.defaultProps = {
     playableClipIds: [],
     currentClipId: undefined,
     onChangeClip: () => {},
+    clipStyle: {},
 };
