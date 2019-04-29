@@ -31,18 +31,18 @@ export const Player = ({coord}) => {
     const {
         isPlaying, setPlaying,
         playbackTime, setPlaybackTime,
-        // Default currentClipId is the first clip on the coord.
-        currentClipId = coord.clips[0].id, setCurrentClipId,
+        // Default currentClip is the first clip on the coord.
+        currentClip = coord.clips[0], setCurrentClip,
     } = React.useContext(TimelineContext);
 
     const [startTime, setStartTime] = React.useState(null);
 
     const onChangeClip = (clipId) => {
-        if (clipId === currentClipId) return;
-
-        setCurrentClipId(clipId);
+        if (clipId === currentClip.id) return;
 
         const newCurrentClip = coord.clips.find((clip) => clip.id === clipId);
+
+        setCurrentClip(newCurrentClip);
 
         const nextStartTime = playbackTime - newCurrentClip.timePosition;
         if (nextStartTime > 1) {
@@ -51,10 +51,6 @@ export const Player = ({coord}) => {
             setStartTime(null);
         }
     };
-
-    const currentClip = React.useMemo(() => (
-        coord.clips.find((clip) => clip.id === currentClipId)
-    ), [currentClipId]);
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
@@ -107,7 +103,7 @@ export const Player = ({coord}) => {
                 clips={coord.clips}
                 playbackTime={playbackTime}
                 playableClipIds={playableClipIds}
-                currentClipId={currentClipId}
+                currentClipId={currentClip.id}
                 onChangeClip={onChangeClip}
             />
         </PlayerContainer>

@@ -69,22 +69,15 @@ export const Editor = () => {
     const {
         isPlaying, setPlaying,
         playbackTime, setPlaybackTime,
-        // Default the currentClipIds to a tuple of which clips editor is displaying.
-        currentClipId: currentClipIds = [coord.clips[0].id, coord.clips[1].id],
+        // Default the currentClips to a tuple of which clips editor is displaying.
+        currentClip: currentClips = [coord.clips[0], coord.clips[1]],
     } = React.useContext(TimelineContext);
 
     const [startTimes, setStartTimes] = React.useState([null, null]);
 
-    const currentClipA = React.useMemo(() => (
-        coord.clips.find((clip) => clip.id === currentClipIds[0])
-    ), [currentClipIds]);
-    const currentClipB = React.useMemo(() => (
-        coord.clips.find((clip) => clip.id === currentClipIds[1])
-    ), [currentClipIds]);
-
     const updateStartTime = (newPlaybackTime) => {
-        const nextStartTimeA = newPlaybackTime - currentClipA.timePosition;
-        const nextStartTimeB = newPlaybackTime - currentClipB.timePosition;
+        const nextStartTimeA = newPlaybackTime - currentClips[0].timePosition;
+        const nextStartTimeB = newPlaybackTime - currentClips[1].timePosition;
 
         setStartTimes([
             nextStartTimeA > 1 ? Math.floor(nextStartTimeA) : null,
@@ -94,7 +87,7 @@ export const Editor = () => {
 
     React.useEffect(() => {
         // Set initial playbackTime to the latest clip.
-        const newPlaybackTime = Math.max(currentClipA.timePosition, currentClipB.timePosition);
+        const newPlaybackTime = Math.max(currentClips[0].timePosition, currentClips[1].timePosition);
         setPlaybackTime(newPlaybackTime);
 
         updateStartTime(newPlaybackTime);
@@ -111,8 +104,8 @@ export const Editor = () => {
         if (isPlaying) {
             seekPlayers({
                 playbackTime: newPlaybackTime,
-                clipA: currentClipA,
-                clipB: currentClipB,
+                clipA: currentClips[0],
+                clipB: currentClips[1],
             });
         } else {
             updateStartTime(newPlaybackTime);
@@ -120,12 +113,14 @@ export const Editor = () => {
     };
 
     const urlA = React.useMemo(() => (
-        startTimes[0] ? `${currentClipA.url}&t=${startTimes[0]}` : currentClipA.url
-    ), [startTimes, currentClipA]);
+        startTimes[0] ? `${currentClips[0].url}&t=${startTimes[0]}` : currentClips[0].url
+    ), [startTimes, currentClips[0]]);
 
     const urlB = React.useMemo(() => (
-        startTimes[1] ? `${currentClipB.url}&t=${startTimes[1]}` : currentClipB.url
-    ), [startTimes, currentClipB]);
+        startTimes[1] ? `${currentClips[1].url}&t=${startTimes[1]}` : currentClips[1].url
+    ), [startTimes, currentClips[1]]);
+
+    const clipIds = React.useMemo(() => coord.clips.map((clip) => clip.id), [coord.clips]);
 
     return (
         <EditorContainer>
@@ -154,8 +149,8 @@ export const Editor = () => {
                 <TimelineEditor
                     onChange={() => seekPlayers({
                         playbackTime,
-                        clipA: currentClipA,
-                        clipB: currentClipB,
+                        clipA: currentClips[0],
+                        clipB: currentClips[1],
                     })}
                 >
                     <Timeline
@@ -163,9 +158,11 @@ export const Editor = () => {
                         clips={coord.clips}
                         playbackTime={playbackTime}
                         clipStyle={({id}) => css`
-                            background-color: ${id === currentClipA.id ? red[200] : undefined};
-                            background-color: ${id === currentClipB.id ? green[200] : undefined};
+                            background-color: ${id === currentClips[0].id ? red[200] : undefined};
+                            background-color: ${id === currentClips[1].id ? green[200] : undefined};
                         `}
+                        playableClipIds={clipIds}
+                        onChangeClip={(id) => console.log({id})}
                     />
                 </TimelineEditor>
             </TimelineFixedWidth>
