@@ -15,7 +15,8 @@
         "object-curly-spacing": [2, "never"],
         "jsx-quotes":["error", "prefer-single"],
         "arrow-parens":["error", "always"],
-        "prefer-destructuring": 0
+        "prefer-destructuring": 0,
+        "max-len": ["error", { "code": 120}]
     },
     "globals": {
         "window": false,
