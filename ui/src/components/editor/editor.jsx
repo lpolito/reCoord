@@ -6,7 +6,7 @@ import ReactPlayer from 'react-player';
 import {red, green} from '@material-ui/core/colors';
 
 import {EditorContext} from './editor-context';
-import {TimelineContext} from '../timeline-context';
+import {usePlaying, usePlaybackTime, useCurrentClip} from '../timeline-context';
 import {ProgressBar} from '../player/progressbar';
 import {Timeline} from '../player/timeline';
 import {TimelineEditor} from './timeline-editor';
@@ -66,12 +66,10 @@ const seekPlayers = ({playbackTime, clipA, clipB}) => {
 export const Editor = () => {
     const {coord} = React.useContext(EditorContext);
 
-    const {
-        isPlaying, setPlaying,
-        playbackTime, setPlaybackTime,
-        // Default the currentClips to a tuple of which clips editor is displaying.
-        currentClip: currentClips = [coord.clips[0], coord.clips[1]],
-    } = React.useContext(TimelineContext);
+    const [isPlaying, setPlaying] = usePlaying();
+    const [playbackTime, setPlaybackTime] = usePlaybackTime();
+    // Default the currentClips to a tuple of which clips editor is displaying.
+    const [currentClips = [coord.clips[0], coord.clips[1]]] = useCurrentClip();
 
     const [startTimes, setStartTimes] = React.useState([null, null]);
 

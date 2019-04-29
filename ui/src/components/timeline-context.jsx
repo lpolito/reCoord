@@ -1,13 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {useInterval} from '../hooks/use-interval';
 
 const TIME_REFRESH_SECONDS = 1;
 
-export const TimelineContext = React.createContext();
+const TimelineContext = React.createContext();
 
-export const TimelineProvider = ({children}) => {
+export const TimelineProvider = (props) => {
     const [isPlaying, setPlaying] = React.useState(false);
     const [playbackTime, setPlaybackTime] = React.useState(0);
     const [currentClip, setCurrentClip] = React.useState();
@@ -29,12 +28,20 @@ export const TimelineProvider = ({children}) => {
     };
 
     return (
-        <TimelineContext.Provider value={context}>
-            {children}
-        </TimelineContext.Provider>
+        <TimelineContext.Provider value={context} {...props} />
     );
 };
 
-TimelineProvider.propTypes = {
-    children: PropTypes.node.isRequired,
+export const usePlaying = () => {
+    const {isPlaying, setPlaying} = React.useContext(TimelineContext);
+    return [isPlaying, setPlaying];
+};
+
+export const usePlaybackTime = () => {
+    const {playbackTime, setPlaybackTime} = React.useContext(TimelineContext);
+    return [playbackTime, setPlaybackTime];
+};
+export const useCurrentClip = () => {
+    const {currentClip, setCurrentClip} = React.useContext(TimelineContext);
+    return [currentClip, setCurrentClip];
 };

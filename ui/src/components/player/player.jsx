@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import ReactPlayer from 'react-player';
 
-import {TimelineContext} from '../timeline-context';
+import {usePlaying, usePlaybackTime, useCurrentClip} from '../timeline-context';
 
 import {ProgressBar} from './progressbar';
 import {Timeline} from './timeline';
@@ -28,12 +28,10 @@ const playerRef = (playerr) => {
 };
 
 export const Player = ({coord}) => {
-    const {
-        isPlaying, setPlaying,
-        playbackTime, setPlaybackTime,
-        // Default currentClip is the first clip on the coord.
-        currentClip = coord.clips[0], setCurrentClip,
-    } = React.useContext(TimelineContext);
+    const [isPlaying, setPlaying] = usePlaying();
+    const [playbackTime, setPlaybackTime] = usePlaybackTime();
+    // Default currentClip is the first clip on the coord.
+    const [currentClip = coord.clips[0], setCurrentClip] = useCurrentClip();
 
     const [startTime, setStartTime] = React.useState(null);
 
