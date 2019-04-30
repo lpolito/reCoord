@@ -6,7 +6,7 @@ import ReactPlayer from 'react-player';
 import {red, green} from '@material-ui/core/colors';
 
 import {EditorContext} from './editor-context';
-import {usePlaying, usePlaybackTime, useCurrentClip} from '../timeline-context';
+import {usePlaying, usePlaybackTime} from '../timeline-context';
 import {ProgressBar} from '../player/progressbar';
 import {Timeline} from '../player/timeline';
 import {TimelineEditor} from './timeline-editor';
@@ -68,14 +68,14 @@ export const Editor = () => {
 
     const [isPlaying, setPlaying] = usePlaying();
     const [playbackTime, setPlaybackTime] = usePlaybackTime();
-    // Default the currentClips to a tuple of which clips editor is displaying.
-    const [currentClips = [coord.clips[0], coord.clips[1]]] = useCurrentClip();
+    const [clipA] = React.useState(coord.clips[0]);
+    const [clipB] = React.useState(coord.clips[1]);
 
     const [startTimes, setStartTimes] = React.useState([null, null]);
 
     const updateStartTime = (newPlaybackTime) => {
-        const nextStartTimeA = newPlaybackTime - currentClips[0].timePosition;
-        const nextStartTimeB = newPlaybackTime - currentClips[1].timePosition;
+        const nextStartTimeA = newPlaybackTime - clipA.timePosition;
+        const nextStartTimeB = newPlaybackTime - clipB.timePosition;
 
         setStartTimes([
             nextStartTimeA > 1 ? Math.floor(nextStartTimeA) : null,
@@ -85,7 +85,7 @@ export const Editor = () => {
 
     React.useEffect(() => {
         // Set initial playbackTime to the latest clip.
-        const newPlaybackTime = Math.max(currentClips[0].timePosition, currentClips[1].timePosition);
+        const newPlaybackTime = Math.max(clipA.timePosition, clipB.timePosition);
         setPlaybackTime(newPlaybackTime);
 
         updateStartTime(newPlaybackTime);
@@ -100,23 +100,19 @@ export const Editor = () => {
         setPlaybackTime(newPlaybackTime);
 
         if (isPlaying) {
-            seekPlayers({
-                playbackTime: newPlaybackTime,
-                clipA: currentClips[0],
-                clipB: currentClips[1],
-            });
+            seekPlayers({playbackTime: newPlaybackTime, clipA, clipB});
         } else {
             updateStartTime(newPlaybackTime);
         }
     };
 
     const urlA = React.useMemo(() => (
-        startTimes[0] ? `${currentClips[0].url}&t=${startTimes[0]}` : currentClips[0].url
-    ), [startTimes, currentClips[0]]);
+        startTimes[0] ? `${clipA.url}&t=${startTimes[0]}` : clipA.url
+    ), [startTimes, clipA]);
 
     const urlB = React.useMemo(() => (
-        startTimes[1] ? `${currentClips[1].url}&t=${startTimes[1]}` : currentClips[1].url
-    ), [startTimes, currentClips[1]]);
+        startTimes[1] ? `${clipB.url}&t=${startTimes[1]}` : clipB.url
+    ), [startTimes, clipB]);
 
     const clipIds = React.useMemo(() => coord.clips.map((clip) => clip.id), [coord.clips]);
 
@@ -145,19 +141,15 @@ export const Editor = () => {
                     onSeek={onSeek}
                 />
                 <TimelineEditor
-                    onChange={() => seekPlayers({
-                        playbackTime,
-                        clipA: currentClips[0],
-                        clipB: currentClips[1],
-                    })}
+                    onChange={() => seekPlayers({playbackTime, clipA, clipB})}
                 >
                     <Timeline
                         length={coord.length}
                         clips={coord.clips}
                         playbackTime={playbackTime}
                         clipStyle={({id}) => css`
-                            background-color: ${id === currentClips[0].id ? red[200] : undefined};
-                            background-color: ${id === currentClips[1].id ? green[200] : undefined};
+                            background-color: ${id === clipA.id ? red[200] : undefined};
+                            background-color: ${id === clipB.id ? green[200] : undefined};
                         `}
                         playableClipIds={clipIds}
                         onChangeClip={(id) => console.log({id})}

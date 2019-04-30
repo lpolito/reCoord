@@ -9,7 +9,6 @@ const TimelineContext = React.createContext();
 export const TimelineProvider = (props) => {
     const [isPlaying, setPlaying] = React.useState(false);
     const [playbackTime, setPlaybackTime] = React.useState(0);
-    const [currentClip, setCurrentClip] = React.useState();
 
     useInterval(() => {
         setPlaybackTime(playbackTime + TIME_REFRESH_SECONDS);
@@ -23,8 +22,6 @@ export const TimelineProvider = (props) => {
         setPlaying,
         playbackTime,
         setPlaybackTime,
-        currentClip,
-        setCurrentClip,
     };
 
     return (
@@ -40,8 +37,4 @@ export const usePlaying = () => {
 export const usePlaybackTime = () => {
     const {playbackTime, setPlaybackTime} = React.useContext(TimelineContext);
     return [playbackTime, setPlaybackTime];
-};
-export const useCurrentClip = () => {
-    const {currentClip, setCurrentClip} = React.useContext(TimelineContext);
-    return [currentClip, setCurrentClip];
 };

@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import ReactPlayer from 'react-player';
 
-import {usePlaying, usePlaybackTime, useCurrentClip} from '../timeline-context';
+import {usePlaying, usePlaybackTime} from '../timeline-context';
 
 import {ProgressBar} from './progressbar';
 import {Timeline} from './timeline';
@@ -30,8 +30,7 @@ const playerRef = (playerr) => {
 export const Player = ({coord}) => {
     const [isPlaying, setPlaying] = usePlaying();
     const [playbackTime, setPlaybackTime] = usePlaybackTime();
-    // Default currentClip is the first clip on the coord.
-    const [currentClip = coord.clips[0], setCurrentClip] = useCurrentClip();
+    const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
 
     const [startTime, setStartTime] = React.useState(null);
 
