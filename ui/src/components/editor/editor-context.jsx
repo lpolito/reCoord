@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const EditorContext = React.createContext();
+const EditorContext = React.createContext();
 
 const calcTimelineInfo = ({clips}) => (
     clips.reduce((acc, clip) => {
@@ -90,7 +90,7 @@ const useCoordEditor = ({initialCoord}) => {
     };
 };
 
-export const EditorProvider = ({coord: initialCoord, children}) => {
+export const EditorProvider = ({coord: initialCoord, ...props}) => {
     const {coord, updateClip} = useCoordEditor({initialCoord});
 
     // useMemo around Provider context as good practice.
@@ -103,11 +103,11 @@ export const EditorProvider = ({coord: initialCoord, children}) => {
     ]);
 
     return (
-        <EditorContext.Provider value={context}>
-            {children}
-        </EditorContext.Provider>
+        <EditorContext.Provider value={context} {...props} />
     );
 };
+
+export const useEditorContext = () => React.useContext(EditorContext);
 
 EditorProvider.propTypes = {
     coord: PropTypes.shape({}).isRequired,

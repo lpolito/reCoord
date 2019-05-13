@@ -6,7 +6,7 @@ import {css} from '@emotion/core';
 import {grey} from '@material-ui/core/colors';
 import {ArrowLeft, ArrowRight} from '@material-ui/icons';
 
-import {EditorContext} from './editor-context';
+import {useEditorContext} from './editor-context';
 
 const Container = styled.div`
     display: flex;
@@ -34,10 +34,10 @@ const Right = styled(ArrowRight)`
 `;
 
 
-export const TimelineEditor = ({
+export const TimelineEditorControls = ({
     children, onChange,
 }) => {
-    const {coord, updateClip} = React.useContext(EditorContext);
+    const {coord, updateClip} = useEditorContext();
 
     const shiftClip = ({clip, dir, distance = 1}) => {
         if (!['left', 'right'].includes(dir)) return;
@@ -77,7 +77,7 @@ export const TimelineEditor = ({
     );
 };
 
-TimelineEditor.propTypes = {
+TimelineEditorControls.propTypes = {
     children: PropTypes.node.isRequired,
     onChange: PropTypes.func.isRequired,
 };

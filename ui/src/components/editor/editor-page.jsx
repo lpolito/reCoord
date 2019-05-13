@@ -2,7 +2,7 @@ import React from 'react';
 
 import {EditorProvider} from './editor-context';
 
-import {WrappedEditor} from './editor';
+import {Editor} from './editor';
 
 const COORD = {
     id: 1,
@@ -36,6 +36,6 @@ const COORD = {
 
 export const EditorPage = () => (
     <EditorProvider coord={COORD}>
-        <WrappedEditor />
+        <Editor />
     </EditorProvider>
 );

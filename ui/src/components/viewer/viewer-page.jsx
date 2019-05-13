@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {WrapperViewer} from './viewer';
+import {Viewer} from './viewer';
 
 
 const COORD = {
@@ -35,5 +35,5 @@ const COORD = {
 
 // Convert to handler.
 export const ViewerPage = () => (
-    <WrapperViewer coord={COORD} />
+    <Viewer coord={COORD} />
 );

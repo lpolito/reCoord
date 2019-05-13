@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import {Slider, Direction} from 'react-player-controls';
 
-import {usePlaybackTime} from '../timeline-context';
+import {usePlaybackTime} from './time-context';
 
 const ProgressBarContainer = styled.div`
     width: 100%;

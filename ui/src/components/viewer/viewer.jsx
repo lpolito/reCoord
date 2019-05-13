@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 
-import {Player} from '../player';
-import {usePlaybackTime, withTimelineContext} from '../timeline-context';
+import {Player} from '../shared/player';
 
-import {ProgressBar} from './progressbar';
-import {Timeline} from './timeline';
+import {PlayerProvider, useStartTime} from '../shared/player-context';
+import {TimeProvider, usePlaybackTime} from '../shared/time-context';
+
+import {ProgressBar} from '../shared/progressbar';
+import {Timeline} from '../shared/timeline';
 
 const ViewerContainer = styled.div`
     display: flex;
@@ -26,26 +28,22 @@ const playerRef = (playerr) => {
     player = playerr;
 };
 
-export const Viewer = ({coord}) => {
-    const [playbackTime, setPlaybackTime] = usePlaybackTime();
-    const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
 
-    const [startTime, setStartTime] = React.useState(null);
+const ViewerPlayer = ({currentClip}) => {
+    const [startTime] = useStartTime();
 
-    const onChangeClip = (clipId) => {
-        if (clipId === currentClip.id) return;
+    return (
+        <Player
+            playerRef={playerRef}
+            url={currentClip.url}
+            startTime={startTime}
+        />
+    );
+};
 
-        const newCurrentClip = coord.clips.find((clip) => clip.id === clipId);
 
-        setCurrentClip(newCurrentClip);
-
-        const nextStartTime = playbackTime - newCurrentClip.timePosition;
-        if (nextStartTime > 1) {
-            setStartTime(nextStartTime);
-        } else {
-            setStartTime(null);
-        }
-    };
+const ViewerProgress = ({coord, currentClip}) => {
+    const [, setPlaybackTime] = usePlaybackTime();
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
@@ -63,6 +61,34 @@ export const Viewer = ({coord}) => {
         }
     };
 
+    return (
+        <ProgressBar
+            length={coord.length}
+            onSeek={onSeek}
+        />
+    );
+};
+
+
+const ViewerTimeline = ({coord, currentClip, setCurrentClip}) => {
+    const [playbackTime] = usePlaybackTime();
+    const [, setStartTime] = useStartTime();
+
+    const onChangeClip = (clipId) => {
+        if (clipId === currentClip.id) return;
+
+        const newCurrentClip = coord.clips.find((clip) => clip.id === clipId);
+
+        setCurrentClip(newCurrentClip);
+
+        const nextStartTime = playbackTime - newCurrentClip.timePosition;
+        if (nextStartTime > 1) {
+            setStartTime(nextStartTime);
+        } else {
+            setStartTime(null);
+        }
+    };
+
     // Track playbackTime and update if clips need to be changed or the player needs to seek.
     React.useEffect(() => {
         const curClipRelTimePosition = (playbackTime - currentClip.timePosition);
@@ -77,25 +103,42 @@ export const Viewer = ({coord}) => {
 
     const playableClipIds = getPlayableClipIds(coord.clips, playbackTime);
 
-    const url = startTime ? `${currentClip.url}&t=${Math.floor(startTime)}` : currentClip.url;
+    return (
+        <Timeline
+            length={coord.length}
+            clips={coord.clips}
+            playableClipIds={playableClipIds}
+            currentClipId={currentClip.id}
+            onChangeClip={onChangeClip}
+        />
+    );
+};
+
+
+export const Viewer = ({coord}) => {
+    const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
 
     return (
         <ViewerContainer>
-            <Player
-                playerRef={playerRef}
-                url={url}
-            />
-            <ProgressBar
-                length={coord.length}
-                onSeek={onSeek}
-            />
-            <Timeline
-                length={coord.length}
-                clips={coord.clips}
-                playableClipIds={playableClipIds}
-                currentClipId={currentClip.id}
-                onChangeClip={onChangeClip}
-            />
+            <PlayerProvider>
+                <ViewerPlayer
+                    currentClip={currentClip}
+                />
+
+                <TimeProvider>
+                    <ViewerProgress
+                        coord={coord}
+                        currentClip={currentClip}
+                    />
+
+                    <ViewerTimeline
+                        coord={coord}
+                        currentClip={currentClip}
+                        setCurrentClip={setCurrentClip}
+                    />
+                </TimeProvider>
+
+            </PlayerProvider>
         </ViewerContainer>
     );
 };
@@ -103,5 +146,3 @@ export const Viewer = ({coord}) => {
 Viewer.propTypes = {
     coord: PropTypes.shape({}).isRequired,
 };
-
-export const WrapperViewer = withTimelineContext(Viewer);
