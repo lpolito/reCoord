@@ -9,7 +9,7 @@ import {usePlaying, usePlaybackTime, withTimelineContext} from '../timeline-cont
 import {ProgressBar} from './progressbar';
 import {Timeline} from './timeline';
 
-const PlayerContainer = styled.div`
+const ViewerContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -27,7 +27,7 @@ const playerRef = (playerr) => {
     player = playerr;
 };
 
-export const Player = ({coord}) => {
+export const Viewer = ({coord}) => {
     const [isPlaying, setPlaying] = usePlaying();
     const [playbackTime, setPlaybackTime] = usePlaybackTime();
     const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
@@ -82,7 +82,7 @@ export const Player = ({coord}) => {
     const url = startTime ? `${currentClip.url}&t=${Math.floor(startTime)}` : currentClip.url;
 
     return (
-        <PlayerContainer>
+        <ViewerContainer>
             <ReactPlayer
                 ref={playerRef}
                 url={url}
@@ -103,12 +103,12 @@ export const Player = ({coord}) => {
                 currentClipId={currentClip.id}
                 onChangeClip={onChangeClip}
             />
-        </PlayerContainer>
+        </ViewerContainer>
     );
 };
 
-Player.propTypes = {
+Viewer.propTypes = {
     coord: PropTypes.shape({}).isRequired,
 };
 
-export const WrapperPlayer = withTimelineContext(Player);
+export const WrapperViewer = withTimelineContext(Viewer);

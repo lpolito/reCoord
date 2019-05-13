@@ -7,13 +7,13 @@ import {
 } from 'react-router-dom';
 
 
-import {PlayerPage} from './components/player/player-page';
+import {ViewerPage} from './components/viewer/viewer-page';
 import {EditorPage} from './components/editor/editor-page';
 
 
 const routes = [
     {
-        component: PlayerPage,
+        component: ViewerPage,
         path: '/',
         exact: true,
     },
