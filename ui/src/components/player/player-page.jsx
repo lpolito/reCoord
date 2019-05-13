@@ -1,8 +1,6 @@
 import React from 'react';
 
-import {TimelineProvider} from '../timeline-context';
-
-import {Player} from './player';
+import {WrapperPlayer} from './player';
 
 
 const COORD = {
@@ -35,8 +33,7 @@ const COORD = {
     }],
 };
 
+// Convert to handler.
 export const PlayerPage = () => (
-    <TimelineProvider>
-        <Player coord={COORD} />
-    </TimelineProvider>
+    <WrapperPlayer coord={COORD} />
 );

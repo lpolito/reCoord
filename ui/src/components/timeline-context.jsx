@@ -38,3 +38,11 @@ export const usePlaybackTime = () => {
     const {playbackTime, setPlaybackTime} = React.useContext(TimelineContext);
     return [playbackTime, setPlaybackTime];
 };
+
+export const withTimelineContext = (Component) => (
+    (props) => (
+        <TimelineProvider>
+            <Component {...props} />
+        </TimelineProvider>
+    )
+);

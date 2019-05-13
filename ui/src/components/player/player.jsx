@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import ReactPlayer from 'react-player';
 
-import {usePlaying, usePlaybackTime} from '../timeline-context';
+import {usePlaying, usePlaybackTime, withTimelineContext} from '../timeline-context';
 
 import {ProgressBar} from './progressbar';
 import {Timeline} from './timeline';
@@ -110,3 +110,5 @@ export const Player = ({coord}) => {
 Player.propTypes = {
     coord: PropTypes.shape({}).isRequired,
 };
+
+export const WrapperPlayer = withTimelineContext(Player);

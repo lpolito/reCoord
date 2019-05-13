@@ -6,7 +6,7 @@ import ReactPlayer from 'react-player';
 import {red, green} from '@material-ui/core/colors';
 
 import {EditorContext} from './editor-context';
-import {usePlaying, usePlaybackTime} from '../timeline-context';
+import {usePlaying, usePlaybackTime, withTimelineContext} from '../timeline-context';
 import {ProgressBar} from '../player/progressbar';
 import {Timeline} from '../player/timeline';
 import {TimelineEditor} from './timeline-editor';
@@ -159,3 +159,5 @@ export const Editor = () => {
         </EditorContainer>
     );
 };
+
+export const WrappedEditor = withTimelineContext(Editor);
