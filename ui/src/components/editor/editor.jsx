@@ -2,13 +2,13 @@ import React from 'react';
 import styled from '@emotion/styled';
 import {css} from '@emotion/core';
 
-import ReactPlayer from 'react-player';
 import {red, green} from '@material-ui/core/colors';
 
 import {EditorContext} from './editor-context';
+import {Player} from '../player';
 import {usePlaying, usePlaybackTime, withTimelineContext} from '../timeline-context';
-import {ProgressBar} from '../player/progressbar';
-import {Timeline} from '../player/timeline';
+import {ProgressBar} from '../viewer/progressbar';
+import {Timeline} from '../viewer/timeline';
 import {TimelineEditor} from './timeline-editor';
 
 
@@ -28,11 +28,11 @@ const TimelineFixedWidth = styled.div`
     width: 640px;
 `;
 
-const PlayerA = styled(ReactPlayer)`
+const PlayerA = styled(Player)`
     border: 1px solid ${red[200]};
 `;
 
-const PlayerB = styled(ReactPlayer)`
+const PlayerB = styled(Player)`
     border: 1px solid ${green[200]};
 `;
 
@@ -66,7 +66,7 @@ const seekPlayers = ({playbackTime, clipA, clipB}) => {
 export const Editor = () => {
     const {coord} = React.useContext(EditorContext);
 
-    const [isPlaying, setPlaying] = usePlaying();
+    const [isPlaying] = usePlaying();
     const [playbackTime, setPlaybackTime] = usePlaybackTime();
     const [clipA] = React.useState(coord.clips[0]);
     const [clipB] = React.useState(coord.clips[1]);
@@ -120,24 +120,17 @@ export const Editor = () => {
         <EditorContainer>
             <PlayerSideBySide>
                 <PlayerA
-                    ref={playerRefA}
+                    playerRef={playerRefA}
                     url={urlA}
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    playing={isPlaying}
                 />
                 <PlayerB
-                    ref={playerRefB}
+                    playerRef={playerRefB}
                     url={urlB}
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    playing={isPlaying}
                 />
             </PlayerSideBySide>
             <TimelineFixedWidth>
                 <ProgressBar
                     length={coord.length}
-                    playbackTime={playbackTime}
                     onSeek={onSeek}
                 />
                 <TimelineEditor
@@ -146,7 +139,6 @@ export const Editor = () => {
                     <Timeline
                         length={coord.length}
                         clips={coord.clips}
-                        playbackTime={playbackTime}
                         clipStyle={({id}) => css`
                             background-color: ${id === clipA.id ? red[200] : undefined};
                             background-color: ${id === clipB.id ? green[200] : undefined};

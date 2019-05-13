@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 
-import ReactPlayer from 'react-player';
-
-import {usePlaying, usePlaybackTime, withTimelineContext} from '../timeline-context';
+import {Player} from '../player';
+import {usePlaybackTime, withTimelineContext} from '../timeline-context';
 
 import {ProgressBar} from './progressbar';
 import {Timeline} from './timeline';
@@ -28,7 +27,6 @@ const playerRef = (playerr) => {
 };
 
 export const Viewer = ({coord}) => {
-    const [isPlaying, setPlaying] = usePlaying();
     const [playbackTime, setPlaybackTime] = usePlaybackTime();
     const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
 
@@ -83,22 +81,17 @@ export const Viewer = ({coord}) => {
 
     return (
         <ViewerContainer>
-            <ReactPlayer
-                ref={playerRef}
+            <Player
+                playerRef={playerRef}
                 url={url}
-                onPlay={() => setPlaying(true)}
-                onPause={() => setPlaying(false)}
-                playing={isPlaying}
             />
             <ProgressBar
                 length={coord.length}
-                playbackTime={playbackTime}
                 onSeek={onSeek}
             />
             <Timeline
                 length={coord.length}
                 clips={coord.clips}
-                playbackTime={playbackTime}
                 playableClipIds={playableClipIds}
                 currentClipId={currentClip.id}
                 onChangeClip={onChangeClip}

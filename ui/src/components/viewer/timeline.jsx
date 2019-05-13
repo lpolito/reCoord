@@ -4,6 +4,8 @@ import styled from '@emotion/styled';
 
 import {grey} from '@material-ui/core/colors';
 
+import {usePlaybackTime} from '../timeline-context';
+
 
 // factor by which widths & positions of clips needs to be multiplied by to fit in timeline width
 // x = width of timeline / length of coord
@@ -45,45 +47,49 @@ const ClipIndicator = styled.div`
 `;
 
 export const Timeline = ({
-    length, clips, playbackTime, playableClipIds, currentClipId, onChangeClip, clipStyle,
-}) => (
-    <TimelineContainer>
-        {clips.map(({
-            id, duration, timePosition, title,
-        }) => {
-            const clipWidth = xFactor(length) * duration;
-            const clipXPos = xFactor(length) * timePosition;
+    length, clips, playableClipIds, currentClipId, onChangeClip, clipStyle,
+}) => {
+    const [playbackTime] = usePlaybackTime();
 
-            const isPlaying = currentClipId === id;
-            const isPlayable = playableClipIds.includes(id);
+    return (
+        <TimelineContainer>
+            {clips.map(({
+                id, duration, timePosition, title,
+            }) => {
+                const clipWidth = xFactor(length) * duration;
+                const clipXPos = xFactor(length) * timePosition;
 
-            const currentClipProgress = isPlaying
-                ? (playbackTime - timePosition) / duration
-                : 0;
+                const isPlaying = currentClipId === id;
+                const isPlayable = playableClipIds.includes(id);
 
-            return (
-                <Clip
-                    key={id}
-                    onClick={() => (isPlayable ? onChangeClip(id) : null)}
-                    isPlayable={isPlayable}
-                    style={{
-                        width: `${clipWidth}px`,
-                        transform: `translateX(${clipXPos}px)`,
-                    }}
-                    id={id}
-                    clipStyle={clipStyle}
-                >
-                    {title}
-                    {isPlaying && (
-                        <ClipIndicator
-                            style={{transform: `translateX(${clipWidth * currentClipProgress}px)`}}
-                        />
-                    )}
-                </Clip>
-            );
-        })}
-    </TimelineContainer>
-);
+                const currentClipProgress = isPlaying
+                    ? (playbackTime - timePosition) / duration
+                    : 0;
+
+                return (
+                    <Clip
+                        key={id}
+                        onClick={() => (isPlayable ? onChangeClip(id) : null)}
+                        isPlayable={isPlayable}
+                        style={{
+                            width: `${clipWidth}px`,
+                            transform: `translateX(${clipXPos}px)`,
+                        }}
+                        id={id}
+                        clipStyle={clipStyle}
+                    >
+                        {title}
+                        {isPlaying && (
+                            <ClipIndicator
+                                style={{transform: `translateX(${clipWidth * currentClipProgress}px)`}}
+                            />
+                        )}
+                    </Clip>
+                );
+            })}
+        </TimelineContainer>
+    );
+}
 
 Timeline.propTypes = {
     length: PropTypes.number.isRequired,
@@ -93,7 +99,6 @@ Timeline.propTypes = {
         timePosition: PropTypes.number,
         title: PropTypes.string,
     })).isRequired,
-    playbackTime: PropTypes.number.isRequired,
     playableClipIds: PropTypes.arrayOf(PropTypes.number),
     currentClipId: PropTypes.number,
     onChangeClip: PropTypes.func,
