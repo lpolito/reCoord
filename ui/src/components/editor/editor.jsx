@@ -1,14 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import {css} from '@emotion/core';
 
 import {red, green} from '@material-ui/core/colors';
 
 import {useEditorContext} from './editor-context';
-import {TimeProvider, usePlaybackTime} from '../shared/time-context';
-import {PlayerProvider, usePlaying, useStartTime} from '../shared/player-context';
+import {
+    PlayerProvider,
+    useIsPlaying,
+    usePlaybackTime,
+    useSetPlaybackTime,
+} from '../shared/player/player-context';
 
-import {Player} from '../shared/player';
+import {Player} from '../shared/player/player';
 import {ProgressBar} from '../shared/progressbar';
 import {Timeline} from '../shared/timeline';
 import {TimelineEditorControls} from './timeline-editor-controls';
@@ -75,32 +80,49 @@ const calculateStartTime = (newPlaybackTime, clipTimePosition) => {
 };
 
 
-const Players = ({clipA, clipB}) => {
-    const [startTimes] = useStartTime();
+const EditorPlayers = ({
+    clipA,
+    startTimeA,
+    clipB,
+    startTimeB,
+}) => (
+    <PlayerSideBySide>
+        <PlayerA
+            playerRef={playerRefA}
+            url={clipA.url}
+            startTime={startTimeA}
+        />
+        <PlayerB
+            playerRef={playerRefB}
+            url={clipB.url}
+            startTime={startTimeB}
+        />
+    </PlayerSideBySide>
+);
 
-    return (
-        <PlayerSideBySide>
-            <PlayerA
-                playerRef={playerRefA}
-                url={clipA.url}
-                startTime={startTimes[0]}
-            />
-            <PlayerB
-                playerRef={playerRefB}
-                url={clipB.url}
-                startTime={startTimes[1]}
-            />
-        </PlayerSideBySide>
-    );
+EditorPlayers.propTypes = {
+    clipA: PropTypes.shape({}).isRequired,
+    startTimeA: PropTypes.number,
+    clipB: PropTypes.shape({}).isRequired,
+    startTimeB: PropTypes.number,
+};
+
+EditorPlayers.defaultProps = {
+    startTimeA: null,
+    startTimeB: null,
 };
 
 
-const EditorProgress = ({clipA, clipB}) => {
+const EditorProgress = ({
+    clipA,
+    setStartTimeA,
+    clipB,
+    setStartTimeB,
+}) => {
     const {coord} = useEditorContext();
 
-    const [isPlaying] = usePlaying();
-    const [, setStartTimes] = useStartTime();
-    const [, setPlaybackTime] = usePlaybackTime();
+    const isPlaying = useIsPlaying();
+    const setPlaybackTime = useSetPlaybackTime();
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
@@ -113,10 +135,8 @@ const EditorProgress = ({clipA, clipB}) => {
         if (isPlaying) {
             seekPlayers({playbackTime: newPlaybackTime, clipA, clipB});
         } else {
-            setStartTimes([
-                calculateStartTime(newPlaybackTime, clipA.timePosition),
-                calculateStartTime(newPlaybackTime, clipB.timePosition),
-            ]);
+            setStartTimeA(calculateStartTime(newPlaybackTime, clipA.timePosition));
+            setStartTimeB(calculateStartTime(newPlaybackTime, clipB.timePosition));
         }
     };
 
@@ -128,10 +148,20 @@ const EditorProgress = ({clipA, clipB}) => {
     );
 };
 
+EditorProgress.propTypes = {
+    clipA: PropTypes.shape({}).isRequired,
+    setStartTimeA: PropTypes.func.isRequired,
+    clipB: PropTypes.shape({}).isRequired,
+    setStartTimeB: PropTypes.func.isRequired,
+};
 
-const EditorTimeline = ({clipA, clipB}) => {
+
+const EditorTimeline = ({
+    clipA,
+    clipB,
+}) => {
     const {coord} = useEditorContext();
-    const [playbackTime] = usePlaybackTime();
+    const playbackTime = usePlaybackTime();
 
     const clipIds = React.useMemo(() => coord.clips.map((clip) => clip.id), [coord.clips]);
 
@@ -153,47 +183,51 @@ const EditorTimeline = ({clipA, clipB}) => {
     );
 };
 
+EditorTimeline.propTypes = {
+    clipA: PropTypes.shape({}).isRequired,
+    clipB: PropTypes.shape({}).isRequired,
+};
+
 
 export const Editor = () => {
     const {coord} = useEditorContext();
 
-    const [clipA] = React.useState(coord.clips[0]);
-    const [clipB] = React.useState(coord.clips[1]);
+    const [initialClipA, initialClipB] = useLazyInit([coord.clips[0], coord.clips[1]]);
 
-    // Set initial playbackTime to the latest clip.
-    const initialPlaybackTime = useLazyInit(Math.max(clipA.timePosition, clipB.timePosition));
+    // Set initial playbackTime to the latest (in time) clip.
+    const initialPlaybackTime = useLazyInit(Math.max(initialClipA.timePosition, initialClipB.timePosition));
 
-    // Set initial playbackTime to the latest clip.
-    const initialStartTime = useLazyInit([
-        calculateStartTime(initialPlaybackTime, clipA.timePosition),
-        calculateStartTime(initialPlaybackTime, clipB.timePosition),
-    ]);
+    // TODO make this dependend on the actual selected clip.
+    const [startTimeA, setStartTimeA] = React.useState(
+        calculateStartTime(initialPlaybackTime, initialClipA.timePosition)
+    );
+    const [startTimeB, setStartTimeB] = React.useState(
+        calculateStartTime(initialPlaybackTime, initialClipB.timePosition)
+    );
+
+    // TODO make sure these selected clips are coming from editorContext.
+    const [clipA, clipB] = coord.clips;
 
     return (
         <EditorContainer>
-            <PlayerProvider
-                startTime={initialStartTime}
-            >
-                <Players
+            <PlayerProvider playbackTime={initialPlaybackTime}>
+                <EditorPlayers
                     clipA={clipA}
+                    startTimeA={startTimeA}
                     clipB={clipB}
+                    startTimeB={startTimeB}
                 />
 
-                <TimeProvider
-                    playbackTime={initialPlaybackTime}
-                >
-                    <TimelineFixedWidth>
-                        <EditorProgress
-                            clipA={clipA}
-                            clipB={clipB}
-                        />
+                <TimelineFixedWidth>
+                    <EditorProgress
+                        clipA={clipA}
+                        setStartTimeA={setStartTimeA}
+                        clipB={clipB}
+                        setStartTimeB={setStartTimeB}
+                    />
 
-                        <EditorTimeline
-                            clipA={clipA}
-                            clipB={clipB}
-                        />
-                    </TimelineFixedWidth>
-                </TimeProvider>
+                    <EditorTimeline clipA={clipA} clipB={clipB} />
+                </TimelineFixedWidth>
 
             </PlayerProvider>
         </EditorContainer>
