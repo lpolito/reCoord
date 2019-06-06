@@ -2,10 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 
-import {Player} from '../shared/player';
+import {Player} from '../shared/player/player';
 
-import {PlayerProvider, useStartTime} from '../shared/player-context';
-import {TimeProvider, usePlaybackTime} from '../shared/time-context';
+import {
+    PlayerProvider,
+    usePlaybackTime,
+    useSetPlaybackTime,
+} from '../shared/player/player-context';
 
 import {ProgressBar} from '../shared/progressbar';
 import {Timeline} from '../shared/timeline';
@@ -29,21 +32,8 @@ const playerRef = (playerr) => {
 };
 
 
-const ViewerPlayer = ({currentClip}) => {
-    const [startTime] = useStartTime();
-
-    return (
-        <Player
-            playerRef={playerRef}
-            url={currentClip.url}
-            startTime={startTime}
-        />
-    );
-};
-
-
 const ViewerProgress = ({coord, currentClip}) => {
-    const [, setPlaybackTime] = usePlaybackTime();
+    const setPlaybackTime = useSetPlaybackTime();
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
@@ -69,10 +59,19 @@ const ViewerProgress = ({coord, currentClip}) => {
     );
 };
 
+ViewerProgress.propTypes = {
+    coord: PropTypes.shape({}).isRequired,
+    currentClip: PropTypes.shape({}).isRequired,
+};
 
-const ViewerTimeline = ({coord, currentClip, setCurrentClip}) => {
-    const [playbackTime] = usePlaybackTime();
-    const [, setStartTime] = useStartTime();
+
+const ViewerTimeline = ({
+    coord,
+    setStartTime,
+    currentClip,
+    setCurrentClip,
+}) => {
+    const playbackTime = usePlaybackTime();
 
     const onChangeClip = (clipId) => {
         if (clipId === currentClip.id) return;
@@ -114,29 +113,38 @@ const ViewerTimeline = ({coord, currentClip, setCurrentClip}) => {
     );
 };
 
+ViewerTimeline.propTypes = {
+    coord: PropTypes.shape({}).isRequired,
+    setStartTime: PropTypes.func.isRequired,
+    currentClip: PropTypes.shape({}).isRequired,
+    setCurrentClip: PropTypes.func.isRequired,
+};
+
 
 export const Viewer = ({coord}) => {
     const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
+    const [startTime, setStartTime] = React.useState(0);
 
     return (
         <ViewerContainer>
             <PlayerProvider>
-                <ViewerPlayer
+                <Player
+                    playerRef={playerRef}
+                    url={currentClip.url}
+                    startTime={startTime}
+                />
+
+                <ViewerProgress
+                    coord={coord}
                     currentClip={currentClip}
                 />
 
-                <TimeProvider>
-                    <ViewerProgress
-                        coord={coord}
-                        currentClip={currentClip}
-                    />
-
-                    <ViewerTimeline
-                        coord={coord}
-                        currentClip={currentClip}
-                        setCurrentClip={setCurrentClip}
-                    />
-                </TimeProvider>
+                <ViewerTimeline
+                    coord={coord}
+                    setStartTime={setStartTime}
+                    currentClip={currentClip}
+                    setCurrentClip={setCurrentClip}
+                />
 
             </PlayerProvider>
         </ViewerContainer>

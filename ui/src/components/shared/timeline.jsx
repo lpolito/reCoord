@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import {grey} from '@material-ui/core/colors';
 
-import {usePlaybackTime} from './time-context';
+import {usePlaybackTime} from './player/player-context';
 
 
 // factor by which widths & positions of clips needs to be multiplied by to fit in timeline width
@@ -49,7 +49,7 @@ const ClipIndicator = styled.div`
 export const Timeline = ({
     length, clips, playableClipIds, currentClipId, onChangeClip, clipStyle,
 }) => {
-    const [playbackTime] = usePlaybackTime();
+    const playbackTime = usePlaybackTime();
 
     return (
         <TimelineContainer>
@@ -89,7 +89,7 @@ export const Timeline = ({
             })}
         </TimelineContainer>
     );
-}
+};
 
 Timeline.propTypes = {
     length: PropTypes.number.isRequired,

@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 
-import {usePlaying} from './player-context';
+import {useIsPlaying, useSetIsPlaying} from './player-context';
 
 export const Player = ({
     playerRef, url, startTime, ...props
 }) => {
-    const [isPlaying, setPlaying] = usePlaying();
+    const isPlaying = useIsPlaying();
+    const setPlaying = useSetIsPlaying();
 
     const urlWithStart = React.useMemo(() => (
         startTime ? `${url}&t=${startTime}` : url

@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 import {Slider, Direction} from 'react-player-controls';
 
-import {usePlaybackTime} from './time-context';
+import {usePlaybackTime} from './player/player-context';
 
 const ProgressBarContainer = styled.div`
     width: 100%;
@@ -44,7 +44,7 @@ const IntentIndicator = styled.div`
 `;
 
 export const ProgressBar = ({length, onSeek}) => {
-    const [playbackTime] = usePlaybackTime();
+    const playbackTime = usePlaybackTime();
 
     const [active, setActive] = React.useState(false);
     // intent is decimal of current progress bar's length
