@@ -16,7 +16,14 @@
         "jsx-quotes":["error", "prefer-single"],
         "arrow-parens":["error", "always"],
         "prefer-destructuring": 0,
-        "max-len": ["error", { "code": 120}]
+        "max-len": ["error", { "code": 120}],
+        "comma-dangle": ["error", {
+            "arrays": "always-multiline",
+            "objects": "always-multiline",
+            "imports": "always-multiline",
+            "exports": "always-multiline",
+            "functions": "never"
+        }]
     },
     "globals": {
         "window": false,
