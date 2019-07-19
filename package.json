@@ -1,4 +1,4 @@
 {
     "private": true,
-    "workspaces": ["ui", "server"]
+    "workspaces": ["ui", "ui2", "server"]
 }
