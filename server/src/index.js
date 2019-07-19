@@ -5,7 +5,7 @@
 import debugLib from 'debug';
 import http from 'http';
 
-import app from './app.js';
+import app from './app';
 
 const debug = debugLib('server:server');
 

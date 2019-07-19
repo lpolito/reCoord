@@ -1,19 +1,8 @@
-{
-    "extends": "airbnb",
-    "plugins": ["emotion", "jest", "react-hooks"],
-    "env": {
-        "jest/globals": true
-    },
+module.exports = {
     "rules": {
-        "jsx-a11y/click-events-have-key-events": 0,
         "indent": ["error", 4],
-        "react-hooks/rules-of-hooks": ["error"],
-        "react/jsx-indent": ["error", 4],
-        "react/jsx-indent-props": ["error", 4],
-        "react/jsx-one-expression-per-line": 0,
         "import/prefer-default-export": 0,
         "object-curly-spacing": [2, "never"],
-        "jsx-quotes":["error", "prefer-single"],
         "arrow-parens":["error", "always"],
         "prefer-destructuring": 0,
         "max-len": ["error", { "code": 120}],
@@ -25,8 +14,4 @@
             "functions": "never"
         }]
     },
-    "globals": {
-        "window": false,
-        "document": false
-    }
-}
+};

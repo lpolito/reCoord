@@ -1,8 +1,0 @@
-{
-    "extends": "airbnb-base",
-    "rules": {
-        "jsx-a11y/click-events-have-key-events": 0,
-        "indent": ["error", 4],
-        "import/extensions": ["error", "always", {"ignorePackages": true}]
-    }
-}
