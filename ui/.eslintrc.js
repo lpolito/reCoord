@@ -2,13 +2,14 @@ const parentConfig = require('../eslint-rules');
 
 module.exports = {
     "extends": "airbnb",
-    "plugins": ["emotion", "react-hooks"],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint", "emotion", "react-hooks"],
     "rules": {
         ...parentConfig.rules,
         "jsx-a11y/click-events-have-key-events": 0,
         "react-hooks/rules-of-hooks": ["error"],
-        "react/jsx-indent": ["error", 4],
-        "react/jsx-indent-props": ["error", 4],
+        "react/jsx-indent": parentConfig.rules.indent,
+        "react/jsx-indent-props": parentConfig.rules.indent,
         "react/jsx-one-expression-per-line": 0,
         "jsx-quotes":["error", "prefer-single"],
     },
@@ -16,4 +17,15 @@ module.exports = {
         "window": true,
         "document": true,
     },
+    settings: {
+        'import/extensions': [".js",".jsx",".ts",".tsx"],
+        'import/parsers': {
+          '@typescript-eslint/parser': [".ts",".tsx"]
+         },
+         'import/resolver': {
+             'node': {
+                 'extensions': [".js",".jsx",".ts",".tsx"]
+             }
+         }
+    }
 };

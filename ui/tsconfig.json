@@ -5,6 +5,5 @@
     "strict": true,
     "esModuleInterop": true,
     "jsx": "react",
-    "noImplicitAny": false
   }
 }
