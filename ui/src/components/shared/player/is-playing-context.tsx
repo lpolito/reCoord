@@ -1,11 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+const StateContext = React.createContext(false);
+const SetContext = React.createContext<(isPlaying: boolean) => void>((() => {}));
 
-const StateContext = React.createContext();
-const SetContext = React.createContext();
-
-export const IsPlayingProvider = ({children}) => {
+export const IsPlayingProvider = ({children}: {children: React.ReactNode}) => {
     const [isPlaying, setPlaying] = React.useState(false);
 
     return (
@@ -15,10 +13,6 @@ export const IsPlayingProvider = ({children}) => {
             </SetContext.Provider>
         </StateContext.Provider>
     );
-};
-
-IsPlayingProvider.propTypes = {
-    children: PropTypes.node.isRequired,
 };
 
 export const useIsPlaying = () => React.useContext(StateContext);

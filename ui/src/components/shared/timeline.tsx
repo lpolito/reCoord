@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 
 import {grey} from '@material-ui/core/colors';
@@ -10,7 +9,7 @@ import {usePlaybackTime} from './player/player-context';
 // factor by which widths & positions of clips needs to be multiplied by to fit in timeline width
 // x = width of timeline / length of coord
 // pixels over time
-const xFactor = (coordLength) => 640 / coordLength;
+const xFactor = (coordLength: number) => 640 / coordLength;
 
 // width = width of player
 const TimelineContainer = styled.div`
@@ -23,7 +22,13 @@ const TimelineContainer = styled.div`
     padding: 8px 0;
 `;
 
-const Clip = styled.div`
+interface ClipProps {
+    clipId?: number;
+    isPlayable?: boolean;
+    clipStyle?: any;
+}
+
+const Clip = styled.div<ClipProps>`
     height: 15px;
     margin: 2px 0;
 
@@ -46,9 +51,23 @@ const ClipIndicator = styled.div`
     background-color: red;
 `;
 
+interface TimelineProps {
+    length: number;
+    clips: Clip[];
+    playableClipIds: number[];
+    currentClipId?: number;
+    onChangeClip: (id: number) => void;
+    clipStyle?: any;
+}
+
 export const Timeline = ({
-    length, clips, playableClipIds, currentClipId, onChangeClip, clipStyle,
-}) => {
+    length,
+    clips,
+    playableClipIds = [],
+    currentClipId = undefined,
+    onChangeClip = () => {},
+    clipStyle = {},
+}: TimelineProps) => {
     const playbackTime = usePlaybackTime();
 
     return (
@@ -75,7 +94,7 @@ export const Timeline = ({
                             width: `${clipWidth}px`,
                             transform: `translateX(${clipXPos}px)`,
                         }}
-                        id={id}
+                        clipId={id}
                         clipStyle={clipStyle}
                     >
                         {title}
@@ -89,25 +108,4 @@ export const Timeline = ({
             })}
         </TimelineContainer>
     );
-};
-
-Timeline.propTypes = {
-    length: PropTypes.number.isRequired,
-    clips: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number,
-        duration: PropTypes.number,
-        timePosition: PropTypes.number,
-        title: PropTypes.string,
-    })).isRequired,
-    playableClipIds: PropTypes.arrayOf(PropTypes.number),
-    currentClipId: PropTypes.number,
-    onChangeClip: PropTypes.func,
-    clipStyle: PropTypes.instanceOf(Object),
-};
-
-Timeline.defaultProps = {
-    playableClipIds: [],
-    currentClipId: undefined,
-    onChangeClip: () => {},
-    clipStyle: {},
 };

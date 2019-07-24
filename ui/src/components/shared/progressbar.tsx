@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 
 import {Slider, Direction} from 'react-player-controls';
@@ -43,12 +42,21 @@ const IntentIndicator = styled.div`
     opacity: 0.6;
 `;
 
-export const ProgressBar = ({length, onSeek}) => {
+interface ProgressBarProps {
+    length: number;
+    onSeek: (intent: number) => void;
+}
+
+export const ProgressBar = ({
+    length,
+    onSeek,
+}: ProgressBarProps) => {
     const playbackTime = usePlaybackTime();
 
     const [active, setActive] = React.useState(false);
     // intent is decimal of current progress bar's length
-    const [intent, setIntent] = React.useState(null);
+    // TODO make sure initial intent of 0 works after refactor
+    const [intent, setIntent] = React.useState(0);
     const [dragging, setDragging] = React.useState(false);
 
     const changeTimePosition = () => {
@@ -61,10 +69,10 @@ export const ProgressBar = ({length, onSeek}) => {
             <PB
                 direction={Direction.HORIZONTAL}
                 isEnabled
-                onIntent={(pos) => setIntent(pos)}
+                onIntent={(pos: number) => setIntent(pos)}
                 onIntentStart={() => setActive(true)}
                 onIntentEnd={() => setActive(false)}
-                onChange={(pos) => (dragging ? setIntent(pos) : null)}
+                onChange={(pos: number) => (dragging ? setIntent(pos) : null)}
                 onChangeStart={() => setDragging(true)}
                 onChangeEnd={changeTimePosition}
                 active={active}
@@ -74,9 +82,4 @@ export const ProgressBar = ({length, onSeek}) => {
             </PB>
         </ProgressBarContainer>
     );
-};
-
-ProgressBar.propTypes = {
-    length: PropTypes.number.isRequired,
-    onSeek: PropTypes.func.isRequired,
 };

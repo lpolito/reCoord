@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 
 import {Player} from '../shared/player/player';
@@ -20,25 +19,32 @@ const ViewerContainer = styled.div`
     justify-content: center;
 `;
 
-const getPlayableClipIds = (clips, givenTime) => clips.filter((clip) => (
+const getPlayableClipIds = (clips: Clip[], givenTime: number) => clips.filter((clip) => (
     // playbackTime falls within the bounds of a clip.
     clip.timePosition <= givenTime && (clip.timePosition + clip.duration) > givenTime
 )).map((clip) => clip.id);
 
 // Reference for controlling react-player.
-let player;
-const playerRef = (playerr) => {
+let player: any;
+const playerRef = (playerr: any) => {
     player = playerr;
 };
 
+interface ViewerProgressProps {
+    coord: Coord;
+    currentClip: Clip;
+}
 
-const ViewerProgress = ({coord, currentClip}) => {
+const ViewerProgress = ({
+    coord,
+    currentClip,
+}: ViewerProgressProps) => {
     const setPlaybackTime = useSetPlaybackTime();
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
      */
-    const onSeek = (intent) => {
+    const onSeek = (intent: number) => {
         // Convert intent to playbackTime.
         const newPlaybackTime = intent * coord.length;
         setPlaybackTime(newPlaybackTime);
@@ -59,28 +65,29 @@ const ViewerProgress = ({coord, currentClip}) => {
     );
 };
 
-ViewerProgress.propTypes = {
-    coord: PropTypes.shape({}).isRequired,
-    currentClip: PropTypes.shape({}).isRequired,
-};
-
+interface ViewerTimelineProps {
+    coord: Coord;
+    setStartTime: (startTime: number | null) => void;
+    currentClip: Clip;
+    setCurrentClip: (currentClip: Clip) => void;
+}
 
 const ViewerTimeline = ({
     coord,
     setStartTime,
     currentClip,
     setCurrentClip,
-}) => {
+}: ViewerTimelineProps) => {
     const playbackTime = usePlaybackTime();
 
-    const onChangeClip = (clipId) => {
+    const onChangeClip = (clipId: number) => {
         if (clipId === currentClip.id) return;
 
         const newCurrentClip = coord.clips.find((clip) => clip.id === clipId);
 
-        setCurrentClip(newCurrentClip);
+        setCurrentClip(newCurrentClip!);
 
-        const nextStartTime = playbackTime - newCurrentClip.timePosition;
+        const nextStartTime = playbackTime - newCurrentClip!.timePosition;
         if (nextStartTime > 1) {
             setStartTime(nextStartTime);
         } else {
@@ -113,17 +120,15 @@ const ViewerTimeline = ({
     );
 };
 
-ViewerTimeline.propTypes = {
-    coord: PropTypes.shape({}).isRequired,
-    setStartTime: PropTypes.func.isRequired,
-    currentClip: PropTypes.shape({}).isRequired,
-    setCurrentClip: PropTypes.func.isRequired,
-};
+interface ViewerProps {
+    coord: Coord;
+}
 
-
-export const Viewer = ({coord}) => {
+export const Viewer = ({
+    coord,
+}: ViewerProps) => {
     const [currentClip, setCurrentClip] = React.useState(coord.clips[0]);
-    const [startTime, setStartTime] = React.useState(0);
+    const [startTime, setStartTime] = React.useState<number | null>(0);
 
     return (
         <ViewerContainer>
@@ -149,8 +154,4 @@ export const Viewer = ({coord}) => {
             </PlayerProvider>
         </ViewerContainer>
     );
-};
-
-Viewer.propTypes = {
-    coord: PropTypes.shape({}).isRequired,
 };

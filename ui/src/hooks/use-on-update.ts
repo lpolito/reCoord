@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const useOnUpdateEffect = (callback, dependencies) => {
+export const useOnUpdateEffect = (callback: Function, dependencies: any[]) => {
     const isInitRef = React.useRef(false);
 
     React.useEffect(() => {

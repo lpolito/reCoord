@@ -1,23 +1,40 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const EditorContext = React.createContext();
+interface EditorContextValue {
+    coord: Coord;
+    updateCoord: (coord: Coord) => void;
+    updateClip: (clip: Clip) => void;
+}
 
-const calcTimelineInfo = ({clips}) => (
-    clips.reduce((acc, clip) => {
+const EditorContext = React.createContext<EditorContextValue>({
+    coord: {} as Coord,
+    updateCoord: () => {},
+    updateClip: () => {},
+});
+
+interface TimelineInfo {
+    start?: number;
+    end?: number;
+    length: number;
+}
+
+const calcTimelineInfo = (clips: Clip[]) => (
+    clips.reduce((acc: TimelineInfo, clip: Clip): TimelineInfo => {
         const coordEnd = clip.timePosition + clip.duration;
         // Earliest starting point of coord.
         const end = (acc.end === undefined || coordEnd > acc.end)
-            ? coordEnd : acc.end;
+            ? coordEnd
+            : acc.end;
 
         // Latest ending point of coord.
         const start = (acc.start === undefined || clip.timePosition < acc.start)
-            ? clip.timePosition : acc.start;
+            ? clip.timePosition
+            : acc.start;
 
         return {
             start,
             end,
-            length: end - start,
+            length: end! - start!,
         };
     }, {
         start: undefined,
@@ -26,7 +43,17 @@ const calcTimelineInfo = ({clips}) => (
     })
 );
 
-const coordReducer = (prevCoord, {type, payload}) => {
+interface CoordReducerDispatchArgs {
+    type: 'updateCoord' | 'updateClip';
+    payload: {
+        id: number;
+    };
+}
+
+const coordReducer = (
+    prevCoord: Coord,
+    {type, payload}: CoordReducerDispatchArgs
+): Coord => {
     switch (type) {
     case 'updateCoord':
         return {
@@ -34,7 +61,7 @@ const coordReducer = (prevCoord, {type, payload}) => {
             ...payload,
         };
     case 'updateClip': {
-        const clips = prevCoord.clips.map((clip) => {
+        const clips = prevCoord.clips.map((clip): Clip => {
             const {id, ...rest} = payload;
 
             if (clip.id !== id) {
@@ -47,10 +74,10 @@ const coordReducer = (prevCoord, {type, payload}) => {
             };
         });
 
-        const {start, length} = calcTimelineInfo({clips});
+        const {start = 0, length} = calcTimelineInfo(clips);
 
         // Shift clips so the earliest clip is always at timePosition: 0.
-        const shiftedClips = clips.map((clip) => ({
+        const shiftedClips = clips.map((clip): Clip => ({
             ...clip,
             timePosition: clip.timePosition - start,
         }));
@@ -66,17 +93,18 @@ const coordReducer = (prevCoord, {type, payload}) => {
     }
 };
 
-const useCoordEditor = ({initialCoord}) => {
+
+const useCoordEditor = (initialCoord: Coord) => {
     const [coord, dispatch] = React.useReducer(coordReducer, initialCoord);
 
-    const updateCoord = (newCoord) => {
+    const updateCoord = (newCoord: Coord) => {
         dispatch({
             type: 'updateCoord',
             payload: newCoord,
         });
     };
 
-    const updateClip = (clip) => {
+    const updateClip = (clip: Clip) => {
         dispatch({
             type: 'updateClip',
             payload: clip,
@@ -90,26 +118,38 @@ const useCoordEditor = ({initialCoord}) => {
     };
 };
 
-export const EditorProvider = ({coord: initialCoord, ...props}) => {
-    const {coord, updateClip} = useCoordEditor({initialCoord});
+
+interface EditorProviderProps {
+    coord: Coord;
+    children: React.ReactNode;
+}
+
+export const EditorProvider = ({
+    coord: initialCoord,
+    children,
+}: EditorProviderProps) => {
+    const {
+        coord,
+        updateCoord,
+        updateClip,
+    } = useCoordEditor(initialCoord);
 
     // useMemo around Provider context as good practice.
     const context = React.useMemo(() => ({
         coord,
+        updateCoord,
         updateClip,
     }), [
         coord,
+        updateCoord,
         updateClip,
     ]);
 
     return (
-        <EditorContext.Provider value={context} {...props} />
+        <EditorContext.Provider value={context}>
+            {children}
+        </EditorContext.Provider>
     );
 };
 
 export const useEditorContext = () => React.useContext(EditorContext);
-
-EditorProvider.propTypes = {
-    coord: PropTypes.shape({}).isRequired,
-    children: PropTypes.node.isRequired,
-};

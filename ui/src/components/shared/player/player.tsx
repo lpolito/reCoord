@@ -1,12 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 
 import {useIsPlaying, useSetIsPlaying} from './player-context';
 
+interface PlayerProps {
+    playerRef: any;
+    url: string;
+    startTime: number | null;
+}
+
 export const Player = ({
-    playerRef, url, startTime, ...props
-}) => {
+    playerRef,
+    url,
+    startTime = null,
+    ...props
+}: PlayerProps) => {
     const isPlaying = useIsPlaying();
     const setPlaying = useSetIsPlaying();
 
@@ -24,14 +32,4 @@ export const Player = ({
             {...props}
         />
     );
-};
-
-Player.propTypes = {
-    playerRef: PropTypes.func.isRequired,
-    url: PropTypes.string.isRequired,
-    startTime: PropTypes.number,
-};
-
-Player.defaultProps = {
-    startTime: null,
 };

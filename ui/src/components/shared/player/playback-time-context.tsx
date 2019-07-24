@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {useIsPlaying} from './is-playing-context';
 import {useInterval} from '../../../hooks/use-interval';
@@ -7,13 +6,18 @@ import {useInterval} from '../../../hooks/use-interval';
 
 const TIME_REFRESH_SECONDS = 1;
 
-const StateContext = React.createContext();
-const SetContext = React.createContext();
+const StateContext = React.createContext(0);
+const SetContext = React.createContext<(playbackTime: number) => void>(() => {});
+
+interface PlaybackTimeProviderProps {
+    playbackTime: number;
+    children: React.ReactNode;
+}
 
 export const PlaybackTimeProvider = ({
-    playbackTime: initialPlaybackTime,
+    playbackTime: initialPlaybackTime = 0,
     children,
-}) => {
+}: PlaybackTimeProviderProps) => {
     const [playbackTime, setPlaybackTime] = React.useState(initialPlaybackTime);
     const isPlaying = useIsPlaying();
 
@@ -28,15 +32,6 @@ export const PlaybackTimeProvider = ({
             </SetContext.Provider>
         </StateContext.Provider>
     );
-};
-
-PlaybackTimeProvider.propTypes = {
-    playbackTime: PropTypes.number,
-    children: PropTypes.node.isRequired,
-};
-
-PlaybackTimeProvider.defaultProps = {
-    playbackTime: 0,
 };
 
 export const usePlaybackTime = () => React.useContext(StateContext);

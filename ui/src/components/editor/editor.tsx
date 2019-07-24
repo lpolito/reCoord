@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import {css} from '@emotion/core';
 
@@ -46,18 +45,24 @@ const PlayerB = styled(Player)`
 `;
 
 // Reference for controlling react-player.
-let playerA;
-const playerRefA = (playerrA) => {
+let playerA: any;
+const playerRefA = (playerrA: any) => {
     playerA = playerrA;
 };
 
-let playerB;
-const playerRefB = (playerrB) => {
+let playerB: any;
+const playerRefB = (playerrB: any) => {
     playerB = playerrB;
 };
 
 
-const seekPlayers = ({playbackTime, clipA, clipB}) => {
+interface SeekPlayersArgs {
+    playbackTime: number;
+    clipA: Clip;
+    clipB: Clip;
+}
+
+const seekPlayers = ({playbackTime, clipA, clipB}: SeekPlayersArgs) => {
     // playerA
     const curClipRelTimePositionA = (playbackTime - clipA.timePosition);
     // Seek player if curClipRelTimePosition falls within the current clip.
@@ -73,19 +78,26 @@ const seekPlayers = ({playbackTime, clipA, clipB}) => {
     }
 };
 
-const calculateStartTime = (newPlaybackTime, clipTimePosition) => {
+const calculateStartTime = (newPlaybackTime: number, clipTimePosition: number) => {
     const nextStartTime = newPlaybackTime - clipTimePosition;
 
     return nextStartTime > 1 ? Math.floor(nextStartTime) : null;
 };
 
 
+interface EditorPlayersProps {
+    clipA: Clip;
+    startTimeA: number | null;
+    clipB: Clip;
+    startTimeB: number | null;
+}
+
 const EditorPlayers = ({
     clipA,
-    startTimeA,
+    startTimeA = null,
     clipB,
-    startTimeB,
-}) => (
+    startTimeB = null,
+}: EditorPlayersProps) => (
     <PlayerSideBySide>
         <PlayerA
             playerRef={playerRefA}
@@ -100,25 +112,19 @@ const EditorPlayers = ({
     </PlayerSideBySide>
 );
 
-EditorPlayers.propTypes = {
-    clipA: PropTypes.shape({}).isRequired,
-    startTimeA: PropTypes.number,
-    clipB: PropTypes.shape({}).isRequired,
-    startTimeB: PropTypes.number,
-};
-
-EditorPlayers.defaultProps = {
-    startTimeA: null,
-    startTimeB: null,
-};
-
+interface EditorProgressProps {
+    clipA: Clip;
+    setStartTimeA: (startTime: number | null) => void;
+    clipB: Clip;
+    setStartTimeB: (startTime: number | null) => void;
+}
 
 const EditorProgress = ({
     clipA,
     setStartTimeA,
     clipB,
     setStartTimeB,
-}) => {
+}: EditorProgressProps) => {
     const {coord} = useEditorContext();
 
     const isPlaying = useIsPlaying();
@@ -127,7 +133,7 @@ const EditorProgress = ({
     /**
      * @param {number} intent Decimal of current progress bar's length.
      */
-    const onSeek = (intent) => {
+    const onSeek = (intent: number) => {
         // Convert intent to playbackTime.
         const newPlaybackTime = intent * coord.length;
         setPlaybackTime(newPlaybackTime);
@@ -148,18 +154,15 @@ const EditorProgress = ({
     );
 };
 
-EditorProgress.propTypes = {
-    clipA: PropTypes.shape({}).isRequired,
-    setStartTimeA: PropTypes.func.isRequired,
-    clipB: PropTypes.shape({}).isRequired,
-    setStartTimeB: PropTypes.func.isRequired,
-};
-
+interface EditorTimelineProps {
+    clipA: Clip;
+    clipB: Clip;
+}
 
 const EditorTimeline = ({
     clipA,
     clipB,
-}) => {
+}: EditorTimelineProps) => {
     const {coord} = useEditorContext();
     const playbackTime = usePlaybackTime();
 
@@ -167,25 +170,22 @@ const EditorTimeline = ({
 
     return (
         <TimelineEditorControls
-            onChange={() => seekPlayers({playbackTime, clipA, clipB})}
+            onChange={() => {
+                seekPlayers({playbackTime, clipA, clipB});
+            }}
         >
             <Timeline
                 length={coord.length}
                 clips={coord.clips}
-                clipStyle={({id}) => css`
-                    background-color: ${id === clipA.id ? red[200] : undefined};
-                    background-color: ${id === clipB.id ? green[200] : undefined};
+                clipStyle={({clipId}: {clipId: number}) => css`
+                    background-color: ${clipId === clipA.id ? red[200] : undefined};
+                    background-color: ${clipId === clipB.id ? green[200] : undefined};
                 `}
                 playableClipIds={clipIds}
-                onChangeClip={(id) => console.log({id})}
+                onChangeClip={(id: number) => console.log({id})}
             />
         </TimelineEditorControls>
     );
-};
-
-EditorTimeline.propTypes = {
-    clipA: PropTypes.shape({}).isRequired,
-    clipB: PropTypes.shape({}).isRequired,
 };
 
 

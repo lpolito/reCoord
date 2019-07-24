@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import {css} from '@emotion/core';
 
@@ -33,13 +32,24 @@ const Right = styled(ArrowRight)`
     ${ControlBase}
 `;
 
+interface TimelineEditorControlsProps {
+    onChange: () => void;
+    children: React.ReactNode;
+}
+
+interface ShiftClipArgs {
+    clip: Clip;
+    dir: 'left' | 'right';
+    distance?: number;
+}
 
 export const TimelineEditorControls = ({
-    children, onChange,
-}) => {
+    children,
+    onChange,
+}: TimelineEditorControlsProps) => {
     const {coord, updateClip} = useEditorContext();
 
-    const shiftClip = ({clip, dir, distance = 1}) => {
+    const shiftClip = ({clip, dir, distance = 1}: ShiftClipArgs) => {
         if (!['left', 'right'].includes(dir)) return;
 
         updateClip({
@@ -75,9 +85,4 @@ export const TimelineEditorControls = ({
             </ControlContainer>
         </Container>
     );
-};
-
-TimelineEditorControls.propTypes = {
-    children: PropTypes.node.isRequired,
-    onChange: PropTypes.func.isRequired,
 };
