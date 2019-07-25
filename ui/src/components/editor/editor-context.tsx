@@ -34,7 +34,7 @@ const calcTimelineInfo = (clips: Clip[]) => (
         return {
             start,
             end,
-            length: end! - start!,
+            length: end - start,
         };
     }, {
         start: undefined,

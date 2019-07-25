@@ -3,7 +3,13 @@ import React from 'react';
 const StateContext = React.createContext(false);
 const SetContext = React.createContext<(isPlaying: boolean) => void>((() => {}));
 
-export const IsPlayingProvider = ({children}: {children: React.ReactNode}) => {
+interface IsPlayingProviderProps {
+    children: React.ReactNode;
+}
+
+export const IsPlayingProvider = ({
+    children,
+}: IsPlayingProviderProps) => {
     const [isPlaying, setPlaying] = React.useState(false);
 
     return (

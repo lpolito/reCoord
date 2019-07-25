@@ -55,7 +55,6 @@ export const ProgressBar = ({
 
     const [active, setActive] = React.useState(false);
     // intent is decimal of current progress bar's length
-    // TODO make sure initial intent of 0 works after refactor
     const [intent, setIntent] = React.useState(0);
     const [dragging, setDragging] = React.useState(false);
 
@@ -63,6 +62,8 @@ export const ProgressBar = ({
         setDragging(false);
         onSeek(intent);
     };
+
+    const progressScale = playbackTime / length;
 
     return (
         <ProgressBarContainer>
@@ -77,7 +78,7 @@ export const ProgressBar = ({
                 onChangeEnd={changeTimePosition}
                 active={active}
             >
-                <Progress style={{transform: `scaleX(${playbackTime / length})`}} />
+                <Progress style={{transform: `scaleX(${progressScale >= 1 ? 1 : progressScale})`}} />
                 {active && <IntentIndicator style={{transform: `scaleX(${intent})`}} />}
             </PB>
         </ProgressBarContainer>

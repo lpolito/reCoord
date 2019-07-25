@@ -7,6 +7,7 @@ import {
     PlayerProvider,
     usePlaybackTime,
     useSetPlaybackTime,
+    useSetIsPlaying,
 } from '../shared/player/player-context';
 
 import {ProgressBar} from '../shared/progressbar';
@@ -19,10 +20,13 @@ const ViewerContainer = styled.div`
     justify-content: center;
 `;
 
-const getPlayableClipIds = (clips: Clip[], givenTime: number) => clips.filter((clip) => (
-    // playbackTime falls within the bounds of a clip.
-    clip.timePosition <= givenTime && (clip.timePosition + clip.duration) > givenTime
-)).map((clip) => clip.id);
+const getPlayableClipIds = (clips: Clip[], givenTime: number) => (
+    clips.filter((clip) => (
+        // playbackTime falls within the bounds of a clip.
+        clip.timePosition <= givenTime && (clip.timePosition + clip.duration) > givenTime
+    ))
+        .map((clip) => clip.id)
+);
 
 // Reference for controlling react-player.
 let player: any;
@@ -79,6 +83,7 @@ const ViewerTimeline = ({
     setCurrentClip,
 }: ViewerTimelineProps) => {
     const playbackTime = usePlaybackTime();
+    const setIsPlaying = useSetIsPlaying();
 
     const onChangeClip = (clipId: number) => {
         if (clipId === currentClip.id) return;
@@ -102,7 +107,13 @@ const ViewerTimeline = ({
         if (curClipRelTimePosition > currentClip.duration || curClipRelTimePosition < 0) {
             // playbackTime is outside of bounds of current clip, change clips.
             // Just grab and use first playable clip for now.
-            const nextClipId = getPlayableClipIds(coord.clips, playbackTime)[0];
+            const nextClipId: number | undefined = getPlayableClipIds(coord.clips, playbackTime)[0];
+
+            if (nextClipId === undefined) {
+                setIsPlaying(false);
+                return;
+            }
+
             onChangeClip(nextClipId);
         }
     }, [playbackTime, currentClip]);
