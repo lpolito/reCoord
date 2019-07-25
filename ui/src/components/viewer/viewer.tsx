@@ -8,7 +8,7 @@ import {
     usePlaybackTime,
     useSetPlaybackTime,
     useSetIsPlaying,
-} from '../shared/player/player-context';
+} from '../shared/player/player-provider';
 
 import {ProgressBar} from '../shared/progressbar';
 import {Timeline} from '../shared/timeline';

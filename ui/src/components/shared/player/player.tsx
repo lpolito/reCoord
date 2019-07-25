@@ -2,7 +2,7 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 
 import {usePrevious} from '../../../hooks/use-previous';
-import {useIsPlaying, useSetIsPlaying} from './player-context';
+import {useIsPlaying, useSetIsPlaying} from './player-provider';
 
 
 interface PlayerProps {

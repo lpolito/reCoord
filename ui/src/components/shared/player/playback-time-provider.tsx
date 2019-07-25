@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useIsPlaying} from './is-playing-context';
+import {useIsPlaying} from './is-playing-provider';
 import {useInterval} from '../../../hooks/use-interval';
 
 

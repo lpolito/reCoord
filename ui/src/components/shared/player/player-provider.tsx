@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {IsPlayingProvider, useIsPlaying, useSetIsPlaying} from './is-playing-context';
-import {PlaybackTimeProvider, usePlaybackTime, useSetPlaybackTime} from './playback-time-context';
+import {IsPlayingProvider, useIsPlaying, useSetIsPlaying} from './is-playing-provider';
+import {PlaybackTimeProvider, usePlaybackTime, useSetPlaybackTime} from './playback-time-provider';
 
 interface PlayerProviderProps {
     playbackTime?: number;

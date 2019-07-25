@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {EditorProvider} from './editor-context';
+import {EditorProvider} from './editor-provider';
 
 import {Editor} from './editor';
 

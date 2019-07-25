@@ -5,7 +5,7 @@ import {css} from '@emotion/core';
 import {grey} from '@material-ui/core/colors';
 import {ArrowLeft, ArrowRight} from '@material-ui/icons';
 
-import {useEditorContext} from './editor-context';
+import {useEditorContext} from './editor-provider';
 
 const Container = styled.div`
     display: flex;

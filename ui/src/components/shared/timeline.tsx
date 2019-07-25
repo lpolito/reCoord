@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import {grey} from '@material-ui/core/colors';
 
-import {usePlaybackTime} from './player/player-context';
+import {usePlaybackTime} from './player/player-provider';
 
 
 // factor by which widths & positions of clips needs to be multiplied by to fit in timeline width

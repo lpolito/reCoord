@@ -4,13 +4,13 @@ import {css} from '@emotion/core';
 
 import {red, green} from '@material-ui/core/colors';
 
-import {useEditorContext} from './editor-context';
+import {useEditorContext} from './editor-provider';
 import {
     PlayerProvider,
     useIsPlaying,
     usePlaybackTime,
     useSetPlaybackTime,
-} from '../shared/player/player-context';
+} from '../shared/player/player-provider';
 
 import {Player} from '../shared/player/player';
 import {ProgressBar} from '../shared/progressbar';
