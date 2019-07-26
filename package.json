@@ -2,7 +2,6 @@
     "private": true,
     "workspaces": [
         "ui",
-        "ui2",
         "server"
     ],
     "devDependencies": {

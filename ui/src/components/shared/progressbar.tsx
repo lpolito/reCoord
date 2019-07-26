@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import {Slider, Direction} from 'react-player-controls';
 
-import {usePlaybackTime} from './player/player-provider';
+import {usePlaybackTime, usePlayerActions} from './player/player-provider';
 
 const ProgressBarContainer = styled.div`
     width: 100%;
@@ -44,13 +44,12 @@ const IntentIndicator = styled.div`
 
 interface ProgressBarProps {
     length: number;
-    onSeek: (intent: number) => void;
 }
 
 export const ProgressBar = ({
     length,
-    onSeek,
 }: ProgressBarProps) => {
+    const {onSeekHandle} = usePlayerActions();
     const playbackTime = usePlaybackTime();
 
     const [active, setActive] = React.useState(false);
@@ -60,7 +59,7 @@ export const ProgressBar = ({
 
     const changeTimePosition = () => {
         setDragging(false);
-        onSeek(intent);
+        onSeekHandle(intent);
     };
 
     const progressScale = playbackTime / length;
