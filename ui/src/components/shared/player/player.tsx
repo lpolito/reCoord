@@ -3,10 +3,9 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 import {uniqueId} from 'lodash';
 
-import {usePrevious} from '../../../hooks/use-previous';
 import {
     useIsPlaying,
-    usePlayerActions,
+    usePlayerSetters,
 } from './player-provider';
 import {useOnUpdateEffect} from '../../../hooks/use-on-update';
 
@@ -21,14 +20,15 @@ export const Player = ({
     startTime = null,
     ...props
 }: PlayerProps) => {
-    const isPlaying = useIsPlaying();
+    const isTimeProgressing = useIsPlaying();
     const {
         addPlayer,
-        setPlaying,
-    } = usePlayerActions();
+        setPlaying: setTimeProgressing,
+    } = usePlayerSetters();
 
     // The player playing is independent from isPlaying, which is the actual progression of time.
-    const [playerPlaying, setPlayerPlaying] = React.useState(isPlaying);
+    const [playerPlaying, setPlayerPlaying] = React.useState(isTimeProgressing);
+    const [isBuffering, setBuffering] = React.useState(false);
     const [playerId] = React.useState(uniqueId('player-id-'));
     const playerRef = React.useRef<ReactPlayer | null>();
 
@@ -41,16 +41,13 @@ export const Player = ({
         });
     }, []);
 
-    // TODO why is this necessary when it wasn't before?
-    useOnUpdateEffect(() => {
-        setPlayerPlaying(isPlaying);
-    }, [isPlaying]);
-
     const urlWithStart = React.useMemo(() => (
         startTime ? `${clip.url}&t=${startTime}` : clip.url
     ), [startTime, clip.url]);
 
-    const wasPlaying = usePrevious(isPlaying);
+    useOnUpdateEffect(() => {
+        setTimeProgressing(!isBuffering && playerPlaying);
+    }, [isBuffering, playerPlaying]);
 
     return (
         <ReactPlayer
@@ -61,20 +58,17 @@ export const Player = ({
             playing={playerPlaying}
 
             onPlay={() => {
-                setPlaying(true);
                 setPlayerPlaying(true);
             }}
             onPause={() => {
-                setPlaying(false);
                 setPlayerPlaying(false);
             }}
 
-            // Stop progression of time when player buffers.
-            onBuffer={() => setPlaying(false)}
+            onBuffer={() => {
+                setBuffering(true);
+            }}
             onBufferEnd={() => {
-                // If player was playing before buffer, make sure it keeps playing.
-                if (!wasPlaying) return;
-                setPlaying(true);
+                setBuffering(false);
             }}
 
             {...props}

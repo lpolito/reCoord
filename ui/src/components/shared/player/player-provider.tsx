@@ -19,13 +19,17 @@ interface Player {
     startTime: number | null;
 }
 
-interface PlayerActionsContext {
+interface PlayerSettersContext {
     setPlaying: (isPlaying: boolean) => void;
     setPlaybackTime: (playbackTime: number) => void;
     addPlayer: (player: Player) => void;
+}
+
+interface PlayerActionsContext {
     seekPlayers: (playbackTime: number) => void;
     onSeekHandle: (intent: number) => void;
 }
+
 
 // isPlaying
 const IsPlayingContext = React.createContext(false);
@@ -39,11 +43,16 @@ export const usePlaybackTime = () => React.useContext(PlaybackTimeContext);
 const PlayersContext = React.createContext<Player[]>([]);
 export const usePlayers = () => React.useContext(PlayersContext);
 
-// actions
-const PlayerActionsContext = React.createContext<PlayerActionsContext>({
+// setters
+const PlayerSettersContext = React.createContext<PlayerSettersContext>({
     setPlaying: () => {},
     setPlaybackTime: () => {},
     addPlayer: () => {},
+});
+export const usePlayerSetters = () => React.useContext(PlayerSettersContext);
+
+// actions
+const PlayerActionsContext = React.createContext<PlayerActionsContext>({
     seekPlayers: () => {},
     onSeekHandle: () => {},
 });
@@ -113,27 +122,32 @@ export const PlayerProvider = ({
                 });
             });
         }
-    }, [coord.length, players]);
+    }, [coord.length, isPlaying, players]);
 
     useInterval(() => {
         setPlaybackTime((prevTime) => prevTime + TIME_REFRESH_SECONDS);
     }, isPlaying ? TIME_REFRESH_SECONDS * 1000 : null);
 
-    const actionsContext: PlayerActionsContext = React.useMemo(() => ({
+    const settersContext: PlayerSettersContext = React.useMemo(() => ({
         setPlaying,
         setPlaybackTime,
         addPlayer,
+    }), []);
+
+    const actionsContext: PlayerActionsContext = React.useMemo(() => ({
         seekPlayers,
         onSeekHandle,
-    }), []);
+    }), [seekPlayers, onSeekHandle]);
 
     return (
         <IsPlayingContext.Provider value={isPlaying}>
             <PlaybackTimeContext.Provider value={playbackTime}>
                 <PlayersContext.Provider value={players}>
-                    <PlayerActionsContext.Provider value={actionsContext}>
-                        {children}
-                    </PlayerActionsContext.Provider>
+                    <PlayerSettersContext.Provider value={settersContext}>
+                        <PlayerActionsContext.Provider value={actionsContext}>
+                            {children}
+                        </PlayerActionsContext.Provider>
+                    </PlayerSettersContext.Provider>
                 </PlayersContext.Provider>
             </PlaybackTimeContext.Provider>
         </IsPlayingContext.Provider>

@@ -6,8 +6,7 @@ import {Player} from '../shared/player/player';
 import {
     PlayerProvider,
     usePlaybackTime,
-    useSetPlaybackTime,
-    useSetIsPlaying,
+    usePlayerSetters,
 } from '../shared/player/player-provider';
 
 import {ProgressBar} from '../shared/progressbar';
@@ -43,7 +42,7 @@ const ViewerProgress = ({
     coord,
     currentClip,
 }: ViewerProgressProps) => {
-    const setPlaybackTime = useSetPlaybackTime();
+    const {setPlaybackTime} = usePlayerSetters();
 
     /**
      * @param {number} intent Decimal of current progress bar's length.
@@ -64,7 +63,6 @@ const ViewerProgress = ({
     return (
         <ProgressBar
             length={coord.length}
-            onSeek={onSeek}
         />
     );
 };
@@ -83,7 +81,7 @@ const ViewerTimeline = ({
     setCurrentClip,
 }: ViewerTimelineProps) => {
     const playbackTime = usePlaybackTime();
-    const setIsPlaying = useSetIsPlaying();
+    const {setPlaying} = usePlayerSetters();
 
     const onChangeClip = (clipId: number) => {
         if (clipId === currentClip.id) return;
@@ -110,7 +108,7 @@ const ViewerTimeline = ({
             const nextClipId: number | undefined = getPlayableClipIds(coord.clips, playbackTime)[0];
 
             if (nextClipId === undefined) {
-                setIsPlaying(false);
+                setPlaying(false);
                 return;
             }
 
@@ -143,10 +141,9 @@ export const Viewer = ({
 
     return (
         <ViewerContainer>
-            <PlayerProvider>
+            <PlayerProvider coord={coord}>
                 <Player
-                    playerRef={playerRef}
-                    url={currentClip.url}
+                    clip={currentClip}
                     startTime={startTime}
                 />
 
