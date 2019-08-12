@@ -9,7 +9,8 @@
     "serve": "node build/",
     "watch-node": "nodemon build/",
     "watch-ts": "yarn clean && tsc -w",
-    "watch": "yarn clean && tsc-watch --onSuccess \"yarn serve\""
+    "watch": "yarn clean && tsc-watch --onSuccess \"yarn serve\"",
+    "lint": "../node_modules/.bin/eslint src/*.*"
   },
   "dependencies": {
     "cookie-parser": "~1.4.3",
