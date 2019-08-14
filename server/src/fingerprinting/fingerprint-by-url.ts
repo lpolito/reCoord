@@ -19,8 +19,6 @@ export const getYoutubeFingerprint = (url: string) => (
         const bucketer = new FingerprintBucketer();
 
         ffmpeg(videoStream)
-            // Ignore video output.
-            .withNoVideo()
             .format('mp3')
             .on('error', (err) => {
                 console.error(err);
