@@ -2,11 +2,12 @@ import ytdl from 'ytdl-core';
 import ffmpeg from 'fluent-ffmpeg';
 import Codegen from 'stream-audio-fingerprint';
 
-import {FingerprintBucketer} from './fingerprint-bucketer';
+import {FingerprintBuckets} from './types';
+import FingerprintBucketer from './FingerprintBucketer';
 
 
 export const getYoutubeFingerprint = (url: string) => (
-    new Promise((resolve, reject) => {
+    new Promise<FingerprintBuckets>((resolve, reject) => {
         console.log(`Start: ${url}`);
 
         const videoStream = ytdl(url, {

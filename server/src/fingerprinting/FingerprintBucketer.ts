@@ -1,17 +1,11 @@
 import {Writable, WritableOptions} from 'stream';
 
+import {
+    FingerprintBuckets,
+    FingerprintBuffer,
+} from './types';
 
-interface FingerprintBuffer {
-    tcodes: number[];
-    hcodes: number[];
-}
-
-interface FingerprintBuckets {
-    [tcodes: string]: number[];
-}
-
-
-export class FingerprintBucketer extends Writable {
+export default class FingerprintBucketer extends Writable {
     public fingerBuckets: FingerprintBuckets = {};
 
     public constructor(options?: WritableOptions) {

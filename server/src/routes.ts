@@ -1,6 +1,6 @@
 import express from 'express';
 
-import {getYoutubeFingerprint} from './services/fingerprint-by-url';
+import {getYoutubeFingerprint} from './fingerprinting/fingerprint-by-url';
 
 const router = express.Router();
 
