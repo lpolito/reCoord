@@ -2,12 +2,12 @@ import ytdl from 'ytdl-core';
 import ffmpeg from 'fluent-ffmpeg';
 import Codegen from 'stream-audio-fingerprint';
 
-import {FingerprintBuckets} from './types';
+import {FingerprintBuffer} from './types';
 import FingerprintBucketer from './FingerprintBucketer';
 
 
 export const getYoutubeFingerprint = (url: string) => (
-    new Promise<FingerprintBuckets>((resolve, reject) => {
+    new Promise<FingerprintBuffer>((resolve, reject) => {
         console.log(`Start: ${url}`);
 
         const videoStream = ytdl(url, {
@@ -19,7 +19,10 @@ export const getYoutubeFingerprint = (url: string) => (
         const bucketer = new FingerprintBucketer();
 
         ffmpeg(videoStream)
-            .format('mp3')
+            // Format to what fingerprinter expects.
+            .format('wav')
+            .withAudioChannels(1)
+            .withAudioFrequency(22050)
             .on('error', (err) => {
                 console.error(err);
 
@@ -28,7 +31,7 @@ export const getYoutubeFingerprint = (url: string) => (
             .on('end', () => {
                 console.log(`End: ${url}`);
 
-                resolve(bucketer.fingerBuckets);
+                resolve(bucketer.buffer);
             })
             .pipe(fingerprinter)
             .pipe(bucketer);
