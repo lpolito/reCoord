@@ -21,8 +21,10 @@ export const getYoutubeFingerprint = (url: string) => (
         ffmpeg(videoStream)
             // Format to what fingerprinter expects.
             .format('wav')
+            .withAudioCodec('pcm_s16le')
             .withAudioChannels(1)
             .withAudioFrequency(22050)
+            .on('codecData', (data) => console.log({data}))
             .on('error', (err) => {
                 console.error(err);
 

@@ -2,9 +2,9 @@
 
 import {FingerprintBuffer} from '../fingerprinting/types';
 
-import buffer1 from '../examples/1-buffer.json';
-import buffer2 from '../examples/2-buffer.json';
-import buffer3 from '../examples/3-buffer.json';
+import buffer1 from '../examples/1-wav-buffer.json';
+import buffer2 from '../examples/2-wav-buffer.json';
+import buffer3 from '../examples/3-wav-buffer.json';
 
 
 // TEMP
@@ -19,6 +19,7 @@ const DT = 1 / (SAMPLING_RATE / STEP);
 interface FingerprintData {
     id: number;
     buffer: FingerprintBuffer;
+    duration: number;
 }
 
 const toFixed = (num: number, digits: number) => (
@@ -27,7 +28,7 @@ const toFixed = (num: number, digits: number) => (
 );
 
 
-export const syncByBuckets = () => (
+export const syncByBucketsOrig = () => (
     new Promise(async (resolve, reject) => {
         // const fpDatas: FingerprintData[] = await Promise.all([
         //     readJson('../src/examples/1-buffer.json'),
@@ -237,5 +238,89 @@ export const syncByBuckets = () => (
 
 
         resolve(output);
+    })
+);
+
+export const syncByBuckets = () => (
+    new Promise(async (resolve, reject) => {
+        const fpDatas: FingerprintData[] = [
+            {
+                id: 1,
+                buffer: buffer1,
+                duration: 194,
+            },
+            {
+                id: 2,
+                buffer: buffer2,
+                duration: 159,
+            },
+            {
+                id: 3,
+                buffer: buffer3,
+                duration: 22,
+            },
+        ];
+
+        fpDatas.forEach((curFpData) => {
+            const {
+                id: curId,
+                buffer: {
+                    tcodes: curTCodes,
+                    hcodes: curHCodes,
+                },
+            } = curFpData;
+
+            fpDatas.forEach((fpDataToCheck) => {
+                // Skip over the current fingerprint data.
+                if (curId === fpDataToCheck.id) return;
+
+                const {
+                    id: idToCheck,
+                    buffer: {
+                        tcodes: tcodesToCheck,
+                        hcodes: hcodesToCheck,
+                    },
+                } = fpDataToCheck;
+
+                const matchingTCodes: number[] = [];
+                const matchingHCodes: number[] = [];
+
+                tcodesToCheck.forEach((t, i) => {
+                    const hcodeToCheck = hcodesToCheck[i];
+
+                    // Get all matching indices of hcodes.
+                    // The chance of there being more than one matching hcode is slim, but we have to check.
+                    const matchIndices: number[] = [];
+                    let x = curHCodes.indexOf(hcodeToCheck);
+                    while (x !== -1) {
+                        matchIndices.push(x);
+                        x = curHCodes.indexOf(hcodeToCheck, x + 1);
+                    }
+
+                    // const matchIndices = Object.entries(curHCodes)
+                    //     .filter(([index, value]) => (value === hcodeToCheck))
+                    //     .map(([index]) => index);
+
+                    // No matches.
+                    if (matchIndices.length === 0) return;
+
+                    // const matchingTCodes: number[] = [];
+                    matchIndices.forEach((index) => {
+                        matchingTCodes.push(curTCodes[index]);
+                        matchingHCodes.push(curHCodes[index]);
+                    });
+                });
+
+                console.log({
+                    curId,
+                    idToCheck,
+                    matchingTCodes,
+                    matchingHCodes,
+                });
+            });
+        });
+
+
+        resolve({});
     })
 );
