@@ -19,7 +19,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^8.1.0",
     "morgan": "~1.9.0",
-    "stream-audio-fingerprint": "https://github.com/lpolito/stream-audio-fingerprint",
+    "stream-audio-fingerprint": "file:/Users/lucaspolito/dev/stream-audio-fingerprint",
     "ytdl-core": "^0.29.5"
   },
   "devDependencies": {

@@ -2333,10 +2333,6 @@ dotenv@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-5.0.1.tgz#a5317459bd3d79ab88cff6e44057a6a3fbb1fcef"
 
-"dsp.js@git+https://git@github.com/corbanbrook/dsp.js.git":
-  version "1.0.0"
-  resolved "git+https://git@github.com/corbanbrook/dsp.js.git#051f341d8e1d05515efecb1851bbc862decf02bc"
-
 duplexer2@~0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer2/-/duplexer2-0.1.4.tgz#8b12dab878c0d69e3e7891051662a32fc6bddcc1"
@@ -4679,6 +4675,10 @@ pn@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
 
+pngjs@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-3.4.0.tgz#99ca7d725965fb655814eaf65f38f12bbdbf555f"
+
 popper.js@^1.14.1:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
@@ -5816,11 +5816,10 @@ stealthy-require@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
 
-"stream-audio-fingerprint@https://github.com/lpolito/stream-audio-fingerprint":
+"stream-audio-fingerprint@file:/Users/lucaspolito/dev/stream-audio-fingerprint":
   version "1.0.4"
-  resolved "https://github.com/lpolito/stream-audio-fingerprint#2eb3a84fe4ce79d8c0525d304af4852bfdae248d"
   dependencies:
-    dsp.js "git+https://git@github.com/corbanbrook/dsp.js.git"
+    pngjs "^3.4.0"
 
 stream-browserify@^2.0.1:
   version "2.0.2"

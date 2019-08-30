@@ -5,6 +5,8 @@ import Codegen from 'stream-audio-fingerprint';
 import {FingerprintBuffer} from './types';
 import FingerprintBucketer from './FingerprintBucketer';
 
+const FREQUENCY = 22050;
+
 
 export const getYoutubeFingerprint = (url: string) => (
     new Promise<FingerprintBuffer>((resolve, reject) => {
@@ -15,7 +17,9 @@ export const getYoutubeFingerprint = (url: string) => (
             quality: 'lowestvideo',
         });
 
-        const fingerprinter = new Codegen();
+        const fingerprinter = new Codegen(undefined, {
+            samplingRate: FREQUENCY,
+        });
         const bucketer = new FingerprintBucketer();
 
         ffmpeg(videoStream)
