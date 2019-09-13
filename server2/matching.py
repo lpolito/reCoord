@@ -1,36 +1,79 @@
 # Inspired / copied from https://github.com/worldveil/dejavu
 from itertools import zip_longest
 
+import fingerprint
 
-def grouper(iterable, n, fillvalue=None):
-    args = [iter(iterable)] * n
-    return (filter(None, values) for values in zip_longest(fillvalue=fillvalue, *args))
+
+def return_matches(hashes, id_comparing, hashes_to_check):
+    hash_map = {}
+    for hash, offset in hashes:
+        hash_map[hash.upper()] = offset
+
+    for hash, offset in hashes_to_check:
+        hash_up = hash.upper()
+        if hash_up in hash_map:
+            yield (id_comparing, offset - hash_map[hash_up])
 
 
 def find_matches(fingerprints_by_id):
+    matches_by_id = {}
+
     for id in fingerprints_by_id:
+        print(id)
         hashes = fingerprints_by_id[id]
+        matches = []
 
-        """
-        Return the (song_id, offset_diff) tuples associated with
-        a list of (sha1, sample_offset) values.
-        """
-        # Create a dictionary of hash => offset pairs for later lookups
-        mapper = {}
-        for hash, offset in hashes:
-            mapper[hash.upper()] = offset
+        # Avoid comparing video to itself.
+        for id_comparing in filter(lambda x: x != id, fingerprints_by_id):
+            hashes_to_check = fingerprints_by_id[id_comparing]
 
-        # Get an iteratable of all the hashes we need
-        values = mapper.keys()
+            matches.extend(return_matches(hashes, id_comparing, hashes_to_check))
 
-        for split_values in grouper(values, 1000):
-            # Match hashes and return the hash + offset
+        # Remove duplicates.
+        matches_by_id[id] = matches
 
-            for hash, sid, offset in cur:
-                # (sid, db_offset - song_sampled_offset)
-                yield (sid, offset - mapper[hash])
+    return matches_by_id
 
 
-def align_matches():
+def align_matches(matches):
+    """
+        Finds hash matches that align in time with other matches and finds
+        consensus about which hashes are "true" signal from the audio.
+        Returns a dictionary with match information.
+    """
+    # align by diffs
+    diff_counter = {}
+    largest = 0
+    largest_count = 0
+    song_id = -1
 
-    return
+    for tup in matches:
+        sid, diff = tup
+        diff = int(diff)
+
+        if diff not in diff_counter:
+            diff_counter[diff] = {}
+        if sid not in diff_counter[diff]:
+            diff_counter[diff][sid] = 0
+        diff_counter[diff][sid] += 1
+
+        if diff_counter[diff][sid] > largest_count:
+            largest = diff
+            largest_count = diff_counter[diff][sid]
+            song_id = sid
+
+    nseconds = round(
+        float(largest)
+        / fingerprint.DEFAULT_FS
+        * fingerprint.DEFAULT_WINDOW_SIZE
+        * fingerprint.DEFAULT_OVERLAP_RATIO,
+        5,
+    )
+
+    return {
+        "diff_counter": diff_counter,
+        "confidence": largest_count,
+        "offset": int(largest),
+        "offset_seconds": nseconds,
+        "match_id": song_id,
+    }
