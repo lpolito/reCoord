@@ -30,6 +30,14 @@ const COORD = {
         title: 'Gorillaz - Superfast Jellfish live in Detroit',
         thumbnails: {},
         timePosition: 24,
+    },
+    {
+        id: 4,
+        url: 'https://www.youtube.com/watch?v=U17_4K9ucB8',
+        duration: 22,
+        title: 'Gorillaz - part of Superfast Jellyfish - Live at the Fox Theater in Detroit, MI on 9-18-17',
+        thumbnails: {},
+        timePosition: 32,
     }],
 };
 
