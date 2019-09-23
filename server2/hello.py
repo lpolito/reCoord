@@ -44,7 +44,7 @@ def download_videos(yt_vids):
     return output_dir
 
 
-def convert_videos_to_wav(download_location):
+def convert_directory_to_wav(download_location):
     # Convert all output files to wav files.
     out_path = path.join(download_location, OUT_DIR)
 
@@ -100,16 +100,16 @@ def fingerprint_directory(wav_location):
 
 
 @app.route("/", methods=["POST"])
-def hello_world():
+def align_youtube_videos():
     req_data = request.get_json()
     yt_vids = req_data["ytVids"]
 
-    log.info("Videos to  to fingerprint: " + str(yt_vids))
+    log.info("Videos to fingerprint: " + str(yt_vids))
 
     download_location = download_videos(yt_vids)
-    wav_location = convert_videos_to_wav(download_location)
-    fingerprints_by_id = fingerprint_directory(wav_location)
+    wav_location = convert_directory_to_wav(download_location)
 
+    fingerprints_by_id = fingerprint_directory(wav_location)
     matches_by_id = find_matches(fingerprints_by_id)
 
     align_by_id = {}

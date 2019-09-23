@@ -18,7 +18,6 @@ def find_matches(fingerprints_by_id):
     matches_by_id = {}
 
     for id in fingerprints_by_id:
-        print(id)
         hashes = fingerprints_by_id[id]
         matches = []
 
