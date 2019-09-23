@@ -11,9 +11,7 @@ from matching import align_matches, find_matches
 from utils import get_dir_contents
 
 app = Flask(__name__)
-
-TEMP_DIR = "temp"
-OUT_DIR = "out"
+app.config.from_object("default_config")
 
 
 def fingerprint_directory(wav_location):
