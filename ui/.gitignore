@@ -1,3 +1,6 @@
 node_modules
 dist
 .cache
+
+yarn-debug.log*
+yarn-error.log*
