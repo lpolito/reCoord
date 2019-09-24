@@ -1,5 +1,4 @@
 # Inspired / copied from https://github.com/worldveil/dejavu
-from itertools import zip_longest
 import fingerprint
 
 
