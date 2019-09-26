@@ -3,9 +3,9 @@ from os import path
 from uuid import uuid4
 
 import youtube_dl
-from flask import current_app
+from flask import current_app as app
 
-LOG = logging.getLogger("reCoord.download")
+LOG = logging.getLogger("recoord.download")
 
 
 def download_by_ytids(yt_vids):
@@ -16,7 +16,7 @@ def download_by_ytids(yt_vids):
     request_id = uuid4()
     request_id = str(request_id)
 
-    output_dir = path.join(current_app.config["TEMP_DIR"], request_id)
+    output_dir = path.join(app.config["TEMP_DIR"], request_id)
     outtmpl = output_dir + "/%(id)s.%(ext)s"
 
     ydl_opts = {

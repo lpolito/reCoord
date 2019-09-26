@@ -2,16 +2,16 @@ import logging
 from os import makedirs, path
 
 import ffmpeg
-from flask import current_app
+from flask import current_app as APP
 
 from utils import get_dir_contents
 
-LOG = logging.getLogger("reCoord.convert")
+LOG = logging.getLogger("recoord.convert")
 
 
 def convert_directory_to_wav(download_location):
     # Convert all output files to wav files.
-    out_path = path.join(download_location, current_app.config["OUT_DIR"])
+    out_path = path.join(download_location, APP.config["OUT_DIR"])
 
     # Make output folder if it doesn't exist.
     if not path.exists(out_path):

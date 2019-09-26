@@ -1,5 +1,5 @@
 # Inspired / copied from https://github.com/worldveil/dejavu
-import fingerprint
+from align.fingerprint import DEFAULT_FS, DEFAULT_OVERLAP_RATIO, DEFAULT_WINDOW_SIZE
 
 
 def compare_hashes(hashes, hashes_id, hashes_to_check):
@@ -59,11 +59,7 @@ def align_matches(matches):
             match_id = sid
 
     nseconds = round(
-        float(largest)
-        / fingerprint.DEFAULT_FS
-        * fingerprint.DEFAULT_WINDOW_SIZE
-        * fingerprint.DEFAULT_OVERLAP_RATIO,
-        5,
+        float(largest) / DEFAULT_FS * DEFAULT_WINDOW_SIZE * DEFAULT_OVERLAP_RATIO, 5
     )
 
     return {
