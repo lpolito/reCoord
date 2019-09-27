@@ -1,7 +1,9 @@
 import logging
 from os import path
 
-from flask import Blueprint, Flask, jsonify, render_template, request
+from flask import Blueprint, Flask
+from flask import current_app as APP
+from flask import jsonify, render_template, request
 from scipy.io import wavfile
 
 from align.convert import convert_directory_to_wav
@@ -9,8 +11,6 @@ from align.download import download_by_ytids
 from align.fingerprint import fingerprint
 from align.matching import align_matches, find_matches
 from utils import get_dir_contents
-
-LOG = logging.getLogger("recoord.align_routes")
 
 
 # Blueprint for route
@@ -27,7 +27,7 @@ def fingerprint_directory(wav_location):
 
         wav_file_path = path.join(wav_location, wav_file)
 
-        LOG.info("Wav to fingerprint: " + wav_file_path)
+        APP.logger.info("Wav to fingerprint: " + wav_file_path)
         _, buffer = wavfile.read(wav_file_path)
 
         # Generate fingerprint (convert generator to complete list of hashes).
@@ -43,7 +43,7 @@ def align_youtube_videos():
     req_data = request.get_json()
     yt_vids = req_data["ytVids"]
 
-    LOG.info("Videos to fingerprint: " + str(yt_vids))
+    APP.logger.info("Videos to fingerprint: " + str(yt_vids))
 
     download_location = download_by_ytids(yt_vids)
     wav_location = convert_directory_to_wav(download_location)

@@ -1,22 +1,19 @@
-import logging
 from os import path
 from uuid import uuid4
 
 import youtube_dl
-from flask import current_app as app
-
-LOG = logging.getLogger("recoord.download")
+from flask import current_app as APP
 
 
 def download_by_ytids(yt_vids):
     def progress(status):
         if status["status"] == "finished":
-            LOG.info(status)
+            APP.logger.info(status)
 
     request_id = uuid4()
     request_id = str(request_id)
 
-    output_dir = path.join(app.config["TEMP_DIR"], request_id)
+    output_dir = path.join(APP.config["TEMP_DIR"], request_id)
     outtmpl = output_dir + "/%(id)s.%(ext)s"
 
     ydl_opts = {

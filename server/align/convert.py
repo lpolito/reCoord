@@ -1,12 +1,9 @@
-import logging
 from os import makedirs, path
 
 import ffmpeg
 from flask import current_app as APP
 
 from utils import get_dir_contents
-
-LOG = logging.getLogger("recoord.convert")
 
 
 def convert_directory_to_wav(download_location):
@@ -20,7 +17,7 @@ def convert_directory_to_wav(download_location):
     downloaded_videos = get_dir_contents(download_location)
 
     for video_file in downloaded_videos:
-        LOG.info("Video file to convert: " + video_file)
+        APP.logger.info("Video file to convert: " + video_file)
 
         # Get file name without extension and append .wav
         wav_output_name = path.splitext(video_file)[0] + ".wav"
