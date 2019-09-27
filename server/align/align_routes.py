@@ -8,7 +8,7 @@ from scipy.io import wavfile
 
 from align.convert import convert_directory_to_wav
 from align.download import download_by_ytids
-from align.fingerprint import fingerprint
+from align.lib.fingerprint import fingerprint
 from align.matching import align_matches, find_matches
 from utils import get_dir_contents
 

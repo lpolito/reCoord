@@ -1,5 +1,5 @@
 # Inspired / copied from https://github.com/worldveil/dejavu
-from align.fingerprint import DEFAULT_FS, DEFAULT_OVERLAP_RATIO, DEFAULT_WINDOW_SIZE
+from align.lib.fingerprint import DEFAULT_FS, DEFAULT_OVERLAP_RATIO, DEFAULT_WINDOW_SIZE
 
 
 def compare_hashes(hashes, hashes_id, hashes_to_check):
