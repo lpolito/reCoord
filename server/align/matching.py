@@ -1,5 +1,12 @@
 # Inspired / copied from https://github.com/worldveil/dejavu
+from typing import TypedDict
 from align.lib.fingerprint import DEFAULT_FS, DEFAULT_OVERLAP_RATIO, DEFAULT_WINDOW_SIZE
+
+
+class Align(TypedDict):
+    confidence: int
+    offset_seconds: int
+    match_id: int
 
 
 def compare_hashes(hashes, hashes_id, hashes_to_check):
@@ -31,7 +38,7 @@ def find_matches(fingerprints_by_id):
     return matches_by_id
 
 
-def align_matches(matches):
+def align_matches(matches) -> Align:
     """
     Finds hash matches that align in time with other matches and finds
     consensus about which hashes are "true" signal from the audio.
