@@ -3,7 +3,7 @@ from os import makedirs, path
 import ffmpeg
 from flask import current_app as APP
 
-from utils import get_dir_contents
+from utils.utils import get_dir_contents
 
 
 def convert_directory_to_wav(download_location):

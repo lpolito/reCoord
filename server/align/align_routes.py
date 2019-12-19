@@ -8,12 +8,14 @@ from flask import current_app as APP
 from flask import jsonify, request
 from scipy.io import wavfile
 
-from align.types import FingerprintsByFileId, Fingerprint, Align, FileId
-from align.convert import convert_directory_to_wav
-from align.download import download_by_ytids
-from align.lib.fingerprint import fingerprint
-from align.matching import align_matches, find_matches
-from utils import get_dir_contents, Timer
+from utils.Timer import Timer
+from utils.utils import get_dir_contents
+
+from .convert import convert_directory_to_wav
+from .download import download_by_ytids
+from .lib.fingerprint import fingerprint
+from .matching import align_matches, find_matches
+from .types import Align, FileId, Fingerprint, FingerprintsByFileId
 
 # Blueprint for route
 align_bp = Blueprint("align_bp", __name__)
