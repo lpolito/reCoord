@@ -1,12 +1,11 @@
-import logging
 import operator
 from collections import Counter
 from os import path
 from typing import Dict, List
 
-from flask import Blueprint, Flask
+from flask import Blueprint
 from flask import current_app as APP
-from flask import jsonify, render_template, request
+from flask import jsonify, request
 from scipy.io import wavfile
 
 from align.types import FingerprintsByFileId, Fingerprint, Align, FileId
@@ -14,7 +13,7 @@ from align.convert import convert_directory_to_wav
 from align.download import download_by_ytids
 from align.lib.fingerprint import fingerprint
 from align.matching import align_matches, find_matches
-from utils import get_dir_contents
+from utils import get_dir_contents, Timer
 
 # Blueprint for route
 align_bp = Blueprint("align_bp", __name__)
@@ -69,12 +68,19 @@ def align_youtube_videos():
     APP.logger.info("Videos to fingerprint: " + str(yt_vids))
 
     # Download videos.
+    download_timer = Timer().start()
     download_location = download_by_ytids(yt_vids)
+    download_timer.end()
+
     # Convert all videos to same wav format.
+    wav_conversion_timer = Timer().start()
     wav_location = convert_directory_to_wav(download_location)
+    wav_conversion_timer.end()
 
     # Fingerprint wav files.
+    fingerprint_timer = Timer().start()
     fingerprints_by_id = fingerprint_directory(wav_location)
+    fingerprint_timer.end()
 
     # Compare generated fingerprints and produce offset data.
     matches_by_id = find_matches(fingerprints_by_id)
@@ -85,6 +91,13 @@ def align_youtube_videos():
         aligns_by_id[matches_id] = align_matches(matches_by_id[matches_id])
 
     # Coerce match metadata into clips.
-    response = calculate_clips(aligns_by_id)
+    clips = calculate_clips(aligns_by_id)
+
+    response = {
+        "clips": clips,
+        "download_time_total": download_timer.get_diff_seconds(),
+        "wav_conversion_time_total": wav_conversion_timer.get_diff_seconds(),
+        "fingerprint_time_total": fingerprint_timer.get_diff_seconds(),
+    }
 
     return jsonify(response)
