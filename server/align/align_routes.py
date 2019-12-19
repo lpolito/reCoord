@@ -68,6 +68,7 @@ def align_youtube_videos():
     yt_vids = req_data["ytVids"]
 
     APP.logger.info("Videos to fingerprint: " + str(yt_vids))
+    request_timer = Timer().start()
 
     # Download videos.
     download_timer = Timer().start()
@@ -97,9 +98,12 @@ def align_youtube_videos():
 
     response = {
         "clips": clips,
-        "download_time_total": download_timer.get_diff_seconds(),
-        "wav_conversion_time_total": wav_conversion_timer.get_diff_seconds(),
-        "fingerprint_time_total": fingerprint_timer.get_diff_seconds(),
+        "time_stats": {
+            "download_total": download_timer.get_diff_seconds(),
+            "wav_conversion_total": wav_conversion_timer.get_diff_seconds(),
+            "fingerprint_total": fingerprint_timer.get_diff_seconds(),
+            "request_total": request_timer.end().get_diff_seconds(),
+        },
     }
 
     return jsonify(response)
