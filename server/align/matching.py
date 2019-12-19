@@ -1,44 +1,47 @@
 # Inspired / copied from https://github.com/worldveil/dejavu
-from typing import TypedDict
+from typing import Generator, Dict, List
+from align.types import Match, MatchesByFileId, Align
+
 from align.lib.fingerprint import DEFAULT_FS, DEFAULT_OVERLAP_RATIO, DEFAULT_WINDOW_SIZE
 
 
-class Align(TypedDict):
-    confidence: int
-    offset_seconds: int
-    match_id: int
-
-
-def compare_hashes(hashes, hashes_id, hashes_to_check):
+def prepare_hash_map(hashes) -> Dict[str, int]:
+    # Convert FingerPrintsByFileId to {value: uppercase hash, key: offset} dict
     hash_map = {}
     for hash, offset in hashes:
         hash_map[hash.upper()] = offset
 
+    return hash_map
+
+
+def hash_matches(hash_map, hashes_id, hashes_to_check) -> Generator[Match, None, None]:
     for hash, offset in hashes_to_check:
         hash_up = hash.upper()
         if hash_up in hash_map:
             yield (hashes_id, offset - hash_map[hash_up])
 
 
-def find_matches(fingerprints_by_id):
-    matches_by_id = {}
+def find_matches(fingerprints_by_id) -> MatchesByFileId:
+    matches_by_id: MatchesByFileId = {}
 
     for id in fingerprints_by_id:
         hashes = fingerprints_by_id[id]
-        matches = []
+        hash_map = prepare_hash_map(hashes)
+
+        matches: List[Match] = []
 
         # Avoid comparing video to itself.
         for id_comparing in filter(lambda x: x != id, fingerprints_by_id):
             hashes_to_check = fingerprints_by_id[id_comparing]
 
-            matches.extend(compare_hashes(hashes, id_comparing, hashes_to_check))
+            matches.extend(hash_matches(hash_map, id_comparing, hashes_to_check))
 
         matches_by_id[id] = matches
 
     return matches_by_id
 
 
-def align_matches(matches) -> Align:
+def align_matches(matches: List[Match]) -> Align:
     """
     Finds hash matches that align in time with other matches and finds
     consensus about which hashes are "true" signal from the audio.
@@ -50,8 +53,8 @@ def align_matches(matches) -> Align:
     largest_count = 0
     match_id = -1
 
-    for tup in matches:
-        sid, diff = tup
+    for match in matches:
+        sid, diff = match
         diff = int(diff)
 
         if diff not in diff_counter:

@@ -10,7 +10,7 @@ def download_by_ytids(yt_vids):
         if status["status"] == "finished":
             APP.logger.info(status)
 
-    request_id = uuid4()
+    request_id = 1  # uuid4()
     request_id = str(request_id)
 
     output_dir = path.join(APP.config["TEMP_DIR"], request_id)

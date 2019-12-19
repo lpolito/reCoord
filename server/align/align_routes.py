@@ -2,12 +2,14 @@ import logging
 import operator
 from collections import Counter
 from os import path
+from typing import Dict, List
 
 from flask import Blueprint, Flask
 from flask import current_app as APP
 from flask import jsonify, render_template, request
 from scipy.io import wavfile
 
+from align.types import FingerprintsByFileId, Fingerprint, Align, FileId
 from align.convert import convert_directory_to_wav
 from align.download import download_by_ytids
 from align.lib.fingerprint import fingerprint
@@ -18,21 +20,22 @@ from utils import get_dir_contents
 align_bp = Blueprint("align_bp", __name__)
 
 
-def fingerprint_directory(wav_location):
-    fingerprints_by_id = {}
+def fingerprint_directory(wav_location) -> FingerprintsByFileId:
+    fingerprints_by_id: FingerprintsByFileId = {}
 
     output_wavs = get_dir_contents(wav_location)
 
     for wav_file in output_wavs:
-        file_id = path.splitext(wav_file)[0]
+        file_id: FileId = path.splitext(wav_file)[0]
 
         wav_file_path = path.join(wav_location, wav_file)
 
         APP.logger.info("Wav to fingerprint: " + wav_file_path)
+        buffer: List[int]
         _, buffer = wavfile.read(wav_file_path)
 
         # Generate fingerprint (convert generator to complete list of hashes).
-        hashes = list(fingerprint(buffer))
+        hashes: List[Fingerprint] = list(fingerprint(buffer))
 
         fingerprints_by_id[file_id] = hashes
 
@@ -77,7 +80,7 @@ def align_youtube_videos():
     matches_by_id = find_matches(fingerprints_by_id)
 
     # Given offset data, find where fingerprints are the same across videos and provide match metadata.
-    aligns_by_id = {}
+    aligns_by_id: Dict[FileId, Align] = {}
     for matches_id in matches_by_id:
         aligns_by_id[matches_id] = align_matches(matches_by_id[matches_id])
 
@@ -85,4 +88,3 @@ def align_youtube_videos():
     response = calculate_clips(aligns_by_id)
 
     return jsonify(response)
-
