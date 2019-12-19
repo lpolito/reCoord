@@ -14,11 +14,14 @@ def prepare_hash_map(hashes) -> Dict[str, int]:
     return hash_map
 
 
-def hash_matches(hash_map, hashes_id, hashes_to_check) -> Generator[Match, None, None]:
+def get_hash_matches(hash_map, hashes_id, hashes_to_check) -> List[Match]:
+    hash_matches: List[Match] = []
     for hash, offset in hashes_to_check:
         hash_up = hash.upper()
         if hash_up in hash_map:
-            yield (hashes_id, offset - hash_map[hash_up])
+            hash_matches.append((hashes_id, offset - hash_map[hash_up]))
+
+    return hash_matches
 
 
 def find_matches(fingerprints_by_id) -> MatchesByFileId:
@@ -34,7 +37,7 @@ def find_matches(fingerprints_by_id) -> MatchesByFileId:
         for id_comparing in filter(lambda x: x != id, fingerprints_by_id):
             hashes_to_check = fingerprints_by_id[id_comparing]
 
-            matches.extend(hash_matches(hash_map, id_comparing, hashes_to_check))
+            matches.extend(get_hash_matches(hash_map, id_comparing, hashes_to_check))
 
         matches_by_id[id] = matches
 
