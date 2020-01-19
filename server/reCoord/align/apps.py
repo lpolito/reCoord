@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class AlignConfig(AppConfig):
-    name = 'align'
+    name = "reCoord.align"
