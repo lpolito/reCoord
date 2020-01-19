@@ -12,14 +12,14 @@ Run it
 ```console
 source venv/bin/activate
 
-export FLASK_APP=recoord
-export FLASK_ENV=development
-
 pip install -e .
 manage.py runserver
 ```
 
 old run command
 ```console
+export FLASK_APP=recoord
+export FLASK_ENV=development
+
 flask run
 ```
