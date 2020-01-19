@@ -6,6 +6,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "django",
+        "djangorestframework",
         "psycopg2",
         "flask",
         "appdirs==1.4.3",
