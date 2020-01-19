@@ -97,6 +97,7 @@ def align_youtube_videos():
     clips = calculate_clips(aligns_by_id)
 
     response = {
+        "aligns_by_id": aligns_by_id,
         "clips": clips,
         "time_stats": {
             "download_total": download_timer.get_diff_seconds(),
