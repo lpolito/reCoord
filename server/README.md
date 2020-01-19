@@ -3,6 +3,10 @@ Create virtual env
 virtualenv venv --python=python3.8
 ```
 
+Start DB
+```console
+pg_ctl -D /usr/local/var/postgres start
+```
 
 Run it
 ```console
@@ -12,5 +16,10 @@ export FLASK_APP=recoord
 export FLASK_ENV=development
 
 pip install -e .
+manage.py runserver
+```
+
+old run command
+```console
 flask run
 ```
