@@ -4,6 +4,9 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r"coords", views.CoordsViewSet)
+router.register(r"clips", views.ClipsViewSet)
+router.register(r"videos", views.VideosViewSet)
+router.register(r"fingerprints", views.FingerprintsViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
