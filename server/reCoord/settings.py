@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "graphene_django",
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,6 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ]
 }
+
+GRAPHENE = {"SCHEMA": "reCoord.schema.schema"}
+

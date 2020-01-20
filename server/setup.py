@@ -8,6 +8,7 @@ setup(
         "django",
         "djangorestframework",
         "psycopg2",
+        "graphene-django",
         "flask",
         "appdirs==1.4.3",
         "astroid==2.3.0",
