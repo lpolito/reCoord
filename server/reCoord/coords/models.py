@@ -43,11 +43,19 @@ class Video(BaseModel):
 
 class Fingerprint(models.Model):
     # Length of hash must match FINGERPRINT_REDUCTION in fingerprint utility.
-    hash = models.CharField(max_length=20, editable=False, db_index=True)
+    hash = models.CharField(max_length=20, db_index=True)
     # In seconds, number up to 99999.99
-    time_offset = models.DecimalField(max_digits=7, decimal_places=2, editable=False)
+    time_offset = models.DecimalField(max_digits=7, decimal_places=2)
 
     video = models.ForeignKey("Video", on_delete=models.CASCADE)
 
     def __str__(self):
         return "[" + self.hash + "," + self.time_offset + "] in " + self.video
+
+    # Make Fingerprint essentially read-only after creation.
+    def get_readonly_fields(self, request, obj=None):
+        # obj is None during the object creation
+        if obj:
+            return ["hash", "time_offset", "video_id"]
+        else:
+            return []
