@@ -7,13 +7,11 @@
     "lint": "tslint -p ."
   },
   "devDependencies": {
-    "@types/jest": "^24.9.0",
     "@types/node": "^13.1.8",
     "husky": "^4.0.10",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
     "ts-node-dev": "^1.0.0-pre.44",
-    "tslib": "^1.10.0",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.7.5"
