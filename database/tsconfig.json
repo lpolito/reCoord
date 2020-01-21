@@ -2,8 +2,8 @@
   "include": ["src", "types", "test"],
   "compilerOptions": {
     "target": "es5",
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
+    "module": "commonjs",
+    "lib": ["es5", "es6"],
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
@@ -24,8 +24,9 @@
     "paths": {
       "*": ["src/*", "node_modules/*"]
     },
-    "jsx": "react",
+    "outDir": "./build",
     "esModuleInterop": true,
-    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   }
 }
