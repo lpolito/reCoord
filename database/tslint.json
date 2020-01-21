@@ -6,5 +6,8 @@
     "no-console": [true, "warning"],
     "member-access": false
   },
+  "linterOptions": {
+    "exclude": ["src/migration/*.ts"]
+  },
   "rulesDirectory": []
 }

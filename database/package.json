@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "scripts": {
     "start": "tsnd --respawn src/index.ts",
-    "lint": "tslint -p ."
+    "lint": "tslint -p .",
+    "typeorm": "tsnd ./node_modules/typeorm/cli.js"
   },
   "devDependencies": {
     "@types/node": "^13.1.8",
