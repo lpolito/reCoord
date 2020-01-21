@@ -27,7 +27,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  
   "module": "dist/database.esm.js",
   "devDependencies": {
     "@types/jest": "^24.9.0",
