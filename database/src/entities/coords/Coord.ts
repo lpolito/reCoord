@@ -1,9 +1,10 @@
 import { Length } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseAbstract } from '../BaseAbstract';
+import { COORDS } from '../db-schemas';
 import { Clip } from './Clip';
 
-@Entity()
+@Entity({ schema: COORDS })
 export class Coord extends BaseAbstract {
   @Column('varchar')
   @Length(0, 100)

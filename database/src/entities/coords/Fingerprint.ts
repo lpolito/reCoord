@@ -6,13 +6,14 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { COORDS } from '../db-schemas';
 import { Video } from './Video';
 
 export enum VideoOrigin {
   YOUTUBE = 'youtube',
 }
 
-@Entity()
+@Entity({ schema: COORDS })
 export class Fingerprint {
   @PrimaryGeneratedColumn()
   id: number;

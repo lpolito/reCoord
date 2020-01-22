@@ -1,10 +1,11 @@
 import { Max, Min } from 'class-validator';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseAbstract } from '../BaseAbstract';
+import { COORDS } from '../db-schemas';
 import { Coord } from './Coord';
 import { Video } from './Video';
 
-@Entity()
+@Entity({ schema: COORDS })
 export class Clip extends BaseAbstract {
   // In seconds, number between -99999.99 and 99999.99
   @Column('decimal', {

@@ -1,6 +1,7 @@
 import { Length, Max, Min } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseAbstract } from '../BaseAbstract';
+import { COORDS } from '../db-schemas';
 import { Clip } from './Clip';
 import { Fingerprint } from './Fingerprint';
 
@@ -8,7 +9,7 @@ export enum VideoOrigin {
   YOUTUBE = 'youtube',
 }
 
-@Entity()
+@Entity({ schema: COORDS })
 export class Video extends BaseAbstract {
   @Column('enum', {
     enum: VideoOrigin,
