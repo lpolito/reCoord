@@ -4,7 +4,8 @@
   "jsRules": {},
   "rules": {
     "no-console": [true, "warning"],
-    "member-access": false
+    "member-access": false,
+    "object-literal-sort-keys": false
   },
   "linterOptions": {
     "exclude": ["src/migration/*.ts"]
