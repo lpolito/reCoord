@@ -13,11 +13,7 @@ Run it
 source venv/bin/activate
 
 pip install -e .
-manage.py runserver
-```
 
-old run command
-```console
 export FLASK_APP=recoord
 export FLASK_ENV=development
 

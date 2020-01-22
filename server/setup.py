@@ -5,10 +5,6 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "django",
-        "djangorestframework",
-        "psycopg2",
-        "graphene-django",
         "flask",
         "appdirs==1.4.3",
         "astroid==2.3.0",
@@ -39,5 +35,4 @@ setup(
         "wrapt==1.11.2",
         "youtube-dl==2019.11.28",
     ],
-    scripts=["manage.py"],
 )
