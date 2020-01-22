@@ -1,5 +1,5 @@
 import { Max, Min } from 'class-validator';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseAbstract } from '../BaseAbstract';
 import { Coord } from './Coord';
 import { Video } from './Video';
@@ -20,11 +20,13 @@ export class Clip extends BaseAbstract {
     () => Coord,
     coord => coord.clips
   )
+  @JoinColumn({ name: 'coord_id' })
   coord: Coord;
 
   @ManyToOne(
     () => Video,
     video => video.clips
   )
+  @JoinColumn({ name: 'video_id' })
   video: Video;
 }

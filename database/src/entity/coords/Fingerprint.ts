@@ -1,5 +1,11 @@
 import { Max, Min } from 'class-validator';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Video } from './Video';
 
 export enum VideoOrigin {
@@ -28,5 +34,6 @@ export class Fingerprint {
     () => Video,
     video => video.fingerprints
   )
+  @JoinColumn({ name: 'video_id' })
   video: Video;
 }
