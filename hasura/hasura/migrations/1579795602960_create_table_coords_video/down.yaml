@@ -1,0 +1,3 @@
+- args:
+    sql: DROP TABLE "coords"."video"
+  type: run_sql

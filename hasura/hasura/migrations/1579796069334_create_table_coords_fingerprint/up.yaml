@@ -1,0 +1,10 @@
+- args:
+    sql: CREATE TABLE "coords"."fingerprint"("id" serial NOT NULL, "hash" text NOT
+      NULL, "time_offset" numeric NOT NULL, "video_id" integer NOT NULL, PRIMARY KEY
+      ("id") , FOREIGN KEY ("video_id") REFERENCES "coords"."video"("id") ON UPDATE
+      restrict ON DELETE cascade);
+  type: run_sql
+- args:
+    name: fingerprint
+    schema: coords
+  type: add_existing_table_or_view

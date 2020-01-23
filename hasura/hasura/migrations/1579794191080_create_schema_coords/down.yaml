@@ -1,0 +1,3 @@
+- args:
+    sql: drop schema "coords" cascade;
+  type: run_sql

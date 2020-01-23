@@ -1,0 +1,80 @@
+- args:
+    name: coord
+    table:
+      name: clip
+      schema: coords
+    using:
+      foreign_key_constraint_on: coord_id
+  type: create_object_relationship
+- args:
+    name: video
+    table:
+      name: clip
+      schema: coords
+    using:
+      foreign_key_constraint_on: video_id
+  type: create_object_relationship
+- args:
+    name: clips
+    table:
+      name: coord
+      schema: coords
+    using:
+      foreign_key_constraint_on:
+        column: coord_id
+        table:
+          name: clip
+          schema: coords
+  type: create_array_relationship
+- args:
+    name: video
+    table:
+      name: fingerprint
+      schema: coords
+    using:
+      foreign_key_constraint_on: video_id
+  type: create_object_relationship
+- args:
+    name: video_origin
+    table:
+      name: video
+      schema: coords
+    using:
+      foreign_key_constraint_on: origin
+  type: create_object_relationship
+- args:
+    name: clips
+    table:
+      name: video
+      schema: coords
+    using:
+      foreign_key_constraint_on:
+        column: video_id
+        table:
+          name: clip
+          schema: coords
+  type: create_array_relationship
+- args:
+    name: fingerprints
+    table:
+      name: video
+      schema: coords
+    using:
+      foreign_key_constraint_on:
+        column: video_id
+        table:
+          name: fingerprint
+          schema: coords
+  type: create_array_relationship
+- args:
+    name: videos
+    table:
+      name: video_origin
+      schema: coords
+    using:
+      foreign_key_constraint_on:
+        column: origin
+        table:
+          name: video
+          schema: coords
+  type: create_array_relationship

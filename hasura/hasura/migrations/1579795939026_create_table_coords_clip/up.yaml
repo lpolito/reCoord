@@ -1,0 +1,18 @@
+- args:
+    sql: "CREATE TABLE \"coords\".\"clip\"(\"id\" serial NOT NULL, \"created_at\"
+      timestamptz NOT NULL DEFAULT now(), \"modified_at\" timestamptz NOT NULL DEFAULT
+      now(), \"time_position\" numeric NOT NULL, \"coord_id\" integer NOT NULL, \"video_id\"
+      integer NOT NULL, PRIMARY KEY (\"id\") , FOREIGN KEY (\"coord_id\") REFERENCES
+      \"coords\".\"coord\"(\"id\") ON UPDATE restrict ON DELETE restrict, FOREIGN
+      KEY (\"video_id\") REFERENCES \"coords\".\"video\"(\"id\") ON UPDATE restrict
+      ON DELETE restrict);\nCREATE OR REPLACE FUNCTION \"coords\".\"set_current_timestamp_modified_at\"()\nRETURNS
+      TRIGGER AS $$\nDECLARE\n  _new record;\nBEGIN\n  _new := NEW;\n  _new.\"modified_at\"
+      = NOW();\n  RETURN _new;\nEND;\n$$ LANGUAGE plpgsql;\nCREATE TRIGGER \"set_coords_clip_modified_at\"\nBEFORE
+      UPDATE ON \"coords\".\"clip\"\nFOR EACH ROW\nEXECUTE PROCEDURE \"coords\".\"set_current_timestamp_modified_at\"();\nCOMMENT
+      ON TRIGGER \"set_coords_clip_modified_at\" ON \"coords\".\"clip\" \nIS 'trigger
+      to set value of column \"modified_at\" to current timestamp on row update';\n"
+  type: run_sql
+- args:
+    name: clip
+    schema: coords
+  type: add_existing_table_or_view

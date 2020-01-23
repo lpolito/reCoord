@@ -1,0 +1,9 @@
+- args:
+    sql: CREATE TABLE "coords"."video_origin"("origin" text NOT NULL, "description"
+      text NOT NULL, PRIMARY KEY ("origin") ); COMMENT ON TABLE "coords"."video_origin"
+      IS E'Enum table for video_origin';
+  type: run_sql
+- args:
+    name: video_origin
+    schema: coords
+  type: add_existing_table_or_view

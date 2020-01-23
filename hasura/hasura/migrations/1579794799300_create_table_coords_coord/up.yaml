@@ -1,0 +1,16 @@
+- args:
+    sql: "CREATE TABLE \"coords\".\"coord\"(\"id\" serial NOT NULL, \"created_at\"
+      timestamptz NOT NULL DEFAULT now(), \"modified_at\" timestamptz NOT NULL DEFAULT
+      now(), \"deleted\" boolean NOT NULL DEFAULT false, \"deleted_at\" timestamptz,
+      \"title\" text NOT NULL, \"description\" text NOT NULL, PRIMARY KEY (\"id\")
+      );\nCREATE OR REPLACE FUNCTION \"coords\".\"set_current_timestamp_modified_at\"()\nRETURNS
+      TRIGGER AS $$\nDECLARE\n  _new record;\nBEGIN\n  _new := NEW;\n  _new.\"modified_at\"
+      = NOW();\n  RETURN _new;\nEND;\n$$ LANGUAGE plpgsql;\nCREATE TRIGGER \"set_coords_coord_modified_at\"\nBEFORE
+      UPDATE ON \"coords\".\"coord\"\nFOR EACH ROW\nEXECUTE PROCEDURE \"coords\".\"set_current_timestamp_modified_at\"();\nCOMMENT
+      ON TRIGGER \"set_coords_coord_modified_at\" ON \"coords\".\"coord\" \nIS 'trigger
+      to set value of column \"modified_at\" to current timestamp on row update';\n"
+  type: run_sql
+- args:
+    name: coord
+    schema: coords
+  type: add_existing_table_or_view

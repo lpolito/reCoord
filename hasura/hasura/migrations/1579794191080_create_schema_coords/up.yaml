@@ -1,0 +1,3 @@
+- args:
+    sql: create schema "coords";
+  type: run_sql

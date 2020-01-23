@@ -1,0 +1,48 @@
+- args:
+    relationship: coord
+    table:
+      name: clip
+      schema: coords
+  type: drop_relationship
+- args:
+    relationship: video
+    table:
+      name: clip
+      schema: coords
+  type: drop_relationship
+- args:
+    relationship: clips
+    table:
+      name: coord
+      schema: coords
+  type: drop_relationship
+- args:
+    relationship: video
+    table:
+      name: fingerprint
+      schema: coords
+  type: drop_relationship
+- args:
+    relationship: video_origin
+    table:
+      name: video
+      schema: coords
+  type: drop_relationship
+- args:
+    relationship: clips
+    table:
+      name: video
+      schema: coords
+  type: drop_relationship
+- args:
+    relationship: fingerprints
+    table:
+      name: video
+      schema: coords
+  type: drop_relationship
+- args:
+    relationship: videos
+    table:
+      name: video_origin
+      schema: coords
+  type: drop_relationship
