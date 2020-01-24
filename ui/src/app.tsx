@@ -3,9 +3,12 @@ import styled from '@emotion/styled';
 import { Global } from '@emotion/core';
 import { create } from 'jss';
 import { StylesProvider, jssPreset } from '@material-ui/styles';
+import { ApolloProvider } from '@apollo/react-hooks';
 
 import { globalStyles } from './global-styles';
 import { RoutedContent } from './router';
+
+import { apolloClient } from './apollo-client';
 
 const jss = create({
   ...jssPreset(),
@@ -30,7 +33,9 @@ export const App = () => (
     <AppBody>
       <Global styles={globalStyles} />
       <AppContent>
-        <RoutedContent />
+        <ApolloProvider client={apolloClient}>
+          <RoutedContent />
+        </ApolloProvider>
       </AppContent>
     </AppBody>
   </StylesProvider>
