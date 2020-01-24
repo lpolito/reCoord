@@ -6,7 +6,7 @@
     "start": "parcel index.html",
     "build": "parcel build index.html"
   },
-  "license": "MIT",
+  "license": "UNLICENSED",
   "dependencies": {
     "@babel/core": "^7.0.0-0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
