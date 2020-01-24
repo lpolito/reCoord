@@ -1,0 +1,23 @@
+- args:
+    sql: ALTER TABLE "coords"."video" ALTER COLUMN "created_at" TYPE timestamp with
+      time zone;
+  type: run_sql
+- args:
+    custom_column_names:
+      modified_at: modifiedAt
+      origin_id: originId
+    custom_root_fields:
+      delete: null
+      insert: null
+      select: null
+      select_aggregate: null
+      select_by_pk: null
+      update: null
+    table:
+      name: video
+      schema: coords
+  type: set_table_custom_fields
+  version: 2
+- args:
+    sql: COMMENT ON COLUMN "coords"."video"."created_at" IS E'null'
+  type: run_sql

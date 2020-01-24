@@ -1,0 +1,22 @@
+- args:
+    sql: ALTER TABLE "coords"."coord" ALTER COLUMN "modified_at" TYPE timestamptz;
+  type: run_sql
+- args:
+    custom_column_names:
+      deleted_at: deletedAt
+      modified_at: modifiedAt
+    custom_root_fields:
+      delete: null
+      insert: null
+      select: null
+      select_aggregate: null
+      select_by_pk: null
+      update: null
+    table:
+      name: coord
+      schema: coords
+  type: set_table_custom_fields
+  version: 2
+- args:
+    sql: COMMENT ON COLUMN "coords"."coord"."modified_at" IS E''
+  type: run_sql

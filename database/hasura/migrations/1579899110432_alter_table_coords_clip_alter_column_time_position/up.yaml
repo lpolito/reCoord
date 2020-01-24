@@ -1,0 +1,20 @@
+- args:
+    custom_column_names:
+      coord_id: coordId
+      time_position: timePosition
+      video_id: videoId
+    custom_root_fields:
+      delete: null
+      insert: null
+      select: null
+      select_aggregate: null
+      select_by_pk: null
+      update: null
+    table:
+      name: clip
+      schema: coords
+  type: set_table_custom_fields
+  version: 2
+- args:
+    sql: COMMENT ON COLUMN "coords"."clip"."time_position" IS E''
+  type: run_sql

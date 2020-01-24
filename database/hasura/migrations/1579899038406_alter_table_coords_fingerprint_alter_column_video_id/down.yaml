@@ -1,0 +1,20 @@
+- args:
+    sql: ALTER TABLE "coords"."fingerprint" ALTER COLUMN "video_id" TYPE integer;
+  type: run_sql
+- args:
+    custom_column_names: {}
+    custom_root_fields:
+      delete: null
+      insert: null
+      select: null
+      select_aggregate: null
+      select_by_pk: null
+      update: null
+    table:
+      name: fingerprint
+      schema: coords
+  type: set_table_custom_fields
+  version: 2
+- args:
+    sql: COMMENT ON COLUMN "coords"."fingerprint"."video_id" IS E'null'
+  type: run_sql

@@ -1,0 +1,19 @@
+- args:
+    custom_column_names:
+      time_offset: timeOffset
+      video_id: videoId
+    custom_root_fields:
+      delete: null
+      insert: null
+      select: null
+      select_aggregate: null
+      select_by_pk: null
+      update: null
+    table:
+      name: fingerprint
+      schema: coords
+  type: set_table_custom_fields
+  version: 2
+- args:
+    sql: COMMENT ON COLUMN "coords"."fingerprint"."time_offset" IS E''
+  type: run_sql
