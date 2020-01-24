@@ -24,7 +24,7 @@ parcel index.html -p 3000
 You can use CSS files with simple ES2015 `import` statements in your Javascript:
 
 ```js
-import "./index.css";
+import './index.css';
 ```
 
 ## Babel transforms
