@@ -1,0 +1,6 @@
+- args:
+    sql: "\n           alter table \"coords\".\"fingerprint\"\n           add constraint
+      \"fingerprint_version_fkey\"\n           foreign key (\"version\")\n           references
+      \"coords\".\"fingerprint_version\"\n           (\"version\") on update restrict
+      on delete restrict;\n      "
+  type: run_sql

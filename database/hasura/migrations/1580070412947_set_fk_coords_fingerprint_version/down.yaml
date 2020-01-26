@@ -1,0 +1,4 @@
+- args:
+    sql: "\n          alter table \"coords\".\"fingerprint\" drop constraint \"fingerprint_version_fkey\"\n
+      \     "
+  type: run_sql

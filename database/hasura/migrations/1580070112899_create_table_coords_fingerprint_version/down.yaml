@@ -1,0 +1,3 @@
+- args:
+    sql: DROP TABLE "coords"."fingerprint_version"
+  type: run_sql

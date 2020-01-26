@@ -1,0 +1,8 @@
+- args:
+    sql: CREATE TABLE "coords"."fingerprint_version"("version" integer NOT NULL, "description"
+      text NOT NULL, PRIMARY KEY ("version") , UNIQUE ("version"));
+  type: run_sql
+- args:
+    name: fingerprint_version
+    schema: coords
+  type: add_existing_table_or_view

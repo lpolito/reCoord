@@ -1,0 +1,6 @@
+- args:
+    sql: ALTER TABLE "coords"."fingerprint" ALTER COLUMN "version" SET DEFAULT 'v0'::text;
+  type: run_sql
+- args:
+    sql: COMMENT ON COLUMN "coords"."fingerprint"."version" IS E'null'
+  type: run_sql
