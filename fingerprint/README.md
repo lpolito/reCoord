@@ -3,11 +3,6 @@ Create virtual env
 virtualenv venv --python=python3.8
 ```
 
-Start DB
-```console
-pg_ctl -D /usr/local/var/postgres start
-```
-
 Run it
 ```console
 source venv/bin/activate
