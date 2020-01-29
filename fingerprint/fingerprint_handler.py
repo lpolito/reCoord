@@ -9,17 +9,17 @@ from lib.fingerprint import fingerprint
 from scipy.io import wavfile
 from utils.Timer import Timer
 
-# from types import Fingerprint
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def fingerprint_file(wav_file_path):
+    logger.info("Wav to fingerprint: " + wav_file_path)
+
     buffer: List[int]
     _, buffer = wavfile.read(wav_file_path)
 
-    logger.info("Wav to fingerprint: " + wav_file_path)
     # Generate fingerprint (convert generator to complete list of hashes).
     fingerprints = list(fingerprint(buffer))
 
@@ -27,12 +27,10 @@ def fingerprint_file(wav_file_path):
 
 
 def fingerprint_by_url(event, context):
-    video_url: str = event.body.url
+    video_url: str = event["body"]["url"]
+    logger.info("## Video to fingerprint:" + video_url)
 
     request_timer = Timer().start()
-
-    logger.info("## Video to fingerprint:")
-    logger.info(video_url)
 
     # Changing working directory to /tmp for storage.
     os.chdir("/tmp")
@@ -56,16 +54,18 @@ def fingerprint_by_url(event, context):
 
     # Return generated fingerprints.
 
-    body = {
-        "fingerprints": fingerprints,
-        "time_stats": {
-            "download_total": download_timer.get_diff_seconds(),
-            "wav_conversion_total": wav_conversion_timer.get_diff_seconds(),
-            "fingerprint_total": fingerprint_timer.get_diff_seconds(),
-            "request_total": request_timer.end().get_diff_seconds(),
-        },
+    time_stats = {
+        "download_total": download_timer.get_diff_seconds(),
+        "wav_conversion_total": wav_conversion_timer.get_diff_seconds(),
+        "fingerprint_total": fingerprint_timer.get_diff_seconds(),
+        "request_total": request_timer.end().get_diff_seconds(),
     }
 
-    response = {"statusCode": 200, "body": json.dumps(body)}
+    response = {
+        "statusCode": 200,
+        "body": json.dumps({"fingerprints": fingerprints, "time_stats": time_stats}),
+    }
+
+    logger.info(time_stats)
 
     return response

@@ -167,4 +167,4 @@ def generate_hashes(peaks, fan_value=DEFAULT_FAN_VALUE):
                             "utf-8"
                         )
                     )
-                    yield (h.hexdigest()[0:FINGERPRINT_REDUCTION], t1)
+                    yield (h.hexdigest()[0:FINGERPRINT_REDUCTION], int(t1))
