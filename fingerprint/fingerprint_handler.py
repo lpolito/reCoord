@@ -27,7 +27,9 @@ def fingerprint_file(wav_file_path):
 
 
 def fingerprint_by_url(event, context):
-    video_url: str = event["body"]["url"]
+    body = json.loads(event["body"])
+    video_url: str = body.get("url")
+
     logger.info("## Video to fingerprint:" + video_url)
 
     request_timer = Timer().start()
