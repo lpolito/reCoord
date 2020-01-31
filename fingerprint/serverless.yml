@@ -50,19 +50,16 @@ provider:
 
 # you can add packaging information here
 package:
-#  include:
-#    - include-me.py
-#    - include-me-dir/**
+ include:
+  - handler.py
+  - utils/**
+  - lib/**
+  - fingerprint/**
+  #  - include-me.py
+  #  - include-me-dir/**
  exclude:
-  - venv/**
-  - node_modules/**
-  - .gitignore
-  - package-lock.json
-  - package.json
-  - README.md
+  - "**"
   - __pycache__
-  #  - exclude-me.py
-  #  - exclude-me-dir/**
 
 functions:
   fingerprint:
