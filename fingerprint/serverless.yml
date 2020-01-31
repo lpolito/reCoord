@@ -130,6 +130,7 @@ plugins:
   - serverless-python-requirements
 custom:
   pythonRequirements:
+    invalidateCaches: true
     useStaticCache: false
     dockerizePip: non-linux
     slim: true
