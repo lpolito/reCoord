@@ -3,12 +3,13 @@ import logging
 import os
 from typing import List
 
-from convert import convert_video_to_wav
-from download import download_by_url
-from lib.fingerprint import fingerprint
 from scipy.io import wavfile
+
+from lib.fingerprint import fingerprint
 from utils.Timer import Timer
 
+from .convert import convert_video_to_wav
+from .download import download_by_url
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -26,10 +27,7 @@ def fingerprint_file(wav_file_path):
     return fingerprints
 
 
-def fingerprint_by_url(event, context):
-    body = json.loads(event["body"])
-    video_url: str = body.get("url")
-
+def by_url(video_url):
     logger.info("## Video to fingerprint:" + video_url)
 
     request_timer = Timer().start()

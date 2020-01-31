@@ -11,7 +11,7 @@ from scipy.ndimage.morphology import (
 )
 
 # Use a slimmed down version of matplotlib.mlab
-import lib.matplotlib.mlab as mlab
+from .matplotlib import mlab
 
 IDX_FREQ_I = 0
 IDX_TIME_J = 1
