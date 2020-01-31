@@ -2,8 +2,6 @@
 import hashlib
 from operator import itemgetter
 
-import matplotlib.mlab as mlab
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy.ndimage.filters import maximum_filter
 from scipy.ndimage.morphology import (
@@ -11,6 +9,9 @@ from scipy.ndimage.morphology import (
     generate_binary_structure,
     iterate_structure,
 )
+
+# Use a slimmed down version of matplotlib.mlab
+import lib.matplotlib.mlab as mlab
 
 IDX_FREQ_I = 0
 IDX_TIME_J = 1
@@ -93,13 +94,13 @@ def fingerprint(
     arr2D[arr2D == -np.inf] = 0  # replace infs with zeros
 
     # find local maxima
-    local_maxima = get_2D_peaks(arr2D, plot=False, amp_min=amp_min)
+    local_maxima = get_2D_peaks(arr2D, amp_min=amp_min)
 
     # return hashes
     return generate_hashes(local_maxima, fan_value=fan_value)
 
 
-def get_2D_peaks(arr2D, plot=False, amp_min=DEFAULT_AMP_MIN):
+def get_2D_peaks(arr2D, amp_min=DEFAULT_AMP_MIN):
     # http://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.morphology.iterate_structure.html#scipy.ndimage.morphology.iterate_structure
     struct = generate_binary_structure(2, 1)
     neighborhood = iterate_structure(struct, PEAK_NEIGHBORHOOD_SIZE)
@@ -126,17 +127,6 @@ def get_2D_peaks(arr2D, plot=False, amp_min=DEFAULT_AMP_MIN):
     # get indices for frequency and time
     frequency_idx = [x[1] for x in peaks_filtered]
     time_idx = [x[0] for x in peaks_filtered]
-
-    if plot:
-        # scatter of the peaks
-        _, ax = plt.subplots()
-        ax.imshow(arr2D)
-        ax.scatter(time_idx, frequency_idx)
-        ax.set_xlabel("Time")
-        ax.set_ylabel("Frequency")
-        ax.set_title("Spectrogram")
-        plt.gca().invert_yaxis()
-        plt.show()
 
     return zip(frequency_idx, time_idx)
 
