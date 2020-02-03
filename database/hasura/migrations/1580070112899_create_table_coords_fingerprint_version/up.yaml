@@ -1,7 +1,7 @@
 - args:
     sql: CREATE TABLE "coords"."fingerprint_version"("version" text NOT NULL DEFAULT
       '0', "description" text NOT NULL DEFAULT 'not versioned', PRIMARY KEY ("version")
-      , UNIQUE ("version"));
+      , UNIQUE ("version")); INSERT INTO "coords"."fingerprint_version" (version, description) VALUES ('v0', 'initial');
   type: run_sql
 - args:
     name: fingerprint_version
