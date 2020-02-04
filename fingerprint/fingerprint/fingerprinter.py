@@ -52,6 +52,7 @@ def by_url(video_url):
     fingerprint_timer.end()
 
     # Save video info and fingerprints to database.
+    save_timer = Timer().start()
     save(
         fingerprints=fingerprints,
         fingerprint_version="v0",
@@ -60,11 +61,13 @@ def by_url(video_url):
         title=video_url,
         duration=0,
     )
+    save_timer.end()
 
     time_stats = {
         "download_total": download_timer.get_diff_seconds(),
         "wav_conversion_total": wav_conversion_timer.get_diff_seconds(),
         "fingerprint_total": fingerprint_timer.get_diff_seconds(),
+        "save_total": save_timer.get_diff_seconds(),
         "request_total": request_timer.end().get_diff_seconds(),
     }
 
