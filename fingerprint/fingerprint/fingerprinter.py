@@ -10,6 +10,7 @@ from utils.Timer import Timer
 
 from .convert import convert_video_to_wav
 from .download import download_by_url
+from .store import save
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -51,8 +52,14 @@ def by_url(video_url):
     fingerprint_timer.end()
 
     # Save video info and fingerprints to database.
-
-    # Return generated fingerprints.
+    save(
+        fingerprints=fingerprints,
+        fingerprint_version="v0",
+        origin="youtube",
+        origin_id="notreal",
+        title=video_url,
+        duration=0,
+    )
 
     time_stats = {
         "download_total": download_timer.get_diff_seconds(),
