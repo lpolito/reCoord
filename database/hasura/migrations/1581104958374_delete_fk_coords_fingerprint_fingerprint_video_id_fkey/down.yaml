@@ -1,0 +1,4 @@
+- args:
+    sql: alter table "coords"."fingerprint" add foreign key ("video_id") references
+      "coords"."video"("id") on update restrict on delete cascade;
+  type: run_sql

@@ -1,0 +1,6 @@
+- args:
+    relationship: video
+    table:
+      name: fingerprint
+      schema: coords
+  type: drop_relationship

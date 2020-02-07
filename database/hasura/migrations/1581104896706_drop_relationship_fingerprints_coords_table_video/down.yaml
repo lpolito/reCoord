@@ -1,0 +1,12 @@
+- args:
+    name: fingerprints
+    table:
+      name: video
+      schema: coords
+    using:
+      foreign_key_constraint_on:
+        column: video_id
+        table:
+          name: fingerprint
+          schema: coords
+  type: create_array_relationship

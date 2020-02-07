@@ -1,0 +1,4 @@
+- args:
+    sql: ALTER TABLE "coords"."video" ADD COLUMN "fingerprints" jsonb NULL DEFAULT
+      jsonb_build_array();
+  type: run_sql

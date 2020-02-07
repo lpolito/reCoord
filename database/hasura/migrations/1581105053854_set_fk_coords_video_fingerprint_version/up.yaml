@@ -1,0 +1,6 @@
+- args:
+    sql: "\n           alter table \"coords\".\"video\"\n           add constraint
+      \"video_fingerprint_version_fkey\"\n           foreign key (\"fingerprint_version\")\n
+      \          references \"coords\".\"fingerprint_version\"\n           (\"version\")
+      on update restrict on delete restrict;\n      "
+  type: run_sql

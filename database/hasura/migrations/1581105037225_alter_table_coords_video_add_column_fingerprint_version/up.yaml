@@ -1,0 +1,4 @@
+- args:
+    sql: ALTER TABLE "coords"."video" ADD COLUMN "fingerprint_version" text NOT NULL
+      DEFAULT 'v0';
+  type: run_sql
