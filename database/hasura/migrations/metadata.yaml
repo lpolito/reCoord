@@ -6,7 +6,12 @@ tables:
 - array_relationships: []
   computed_fields: []
   configuration:
-    custom_column_names: {}
+    custom_column_names:
+      coord_id: coordId
+      created_at: createdAt
+      modified_at: modifiedAt
+      time_position: timePosition
+      video_id: videoId
     custom_root_fields:
       delete: null
       insert: null
@@ -43,7 +48,10 @@ tables:
           schema: coords
   computed_fields: []
   configuration:
-    custom_column_names: {}
+    custom_column_names:
+      created_at: createdAt
+      deleted_at: deletedAt
+      modified_at: modifiedAt
     custom_root_fields:
       delete: null
       insert: null
@@ -75,15 +83,11 @@ tables:
   delete_permissions: []
   event_triggers: []
   insert_permissions: []
-  is_enum: false
-  object_relationships:
-  - comment: null
-    name: video
-    using:
-      foreign_key_constraint_on: video_id
+  is_enum: true
+  object_relationships: []
   select_permissions: []
   table:
-    name: fingerprint
+    name: fingerprint_version
     schema: coords
   update_permissions: []
 - array_relationships:
@@ -95,17 +99,12 @@ tables:
         table:
           name: clip
           schema: coords
-  - comment: null
-    name: fingerprints
-    using:
-      foreign_key_constraint_on:
-        column: video_id
-        table:
-          name: fingerprint
-          schema: coords
   computed_fields: []
   configuration:
-    custom_column_names: {}
+    custom_column_names:
+      created_at: createdAt
+      modified_at: modifiedAt
+      origin_id: originId
     custom_root_fields:
       delete: null
       insert: null
