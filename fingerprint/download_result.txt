@@ -1,0 +1,117 @@
+{
+   'id':'U17_4K9ucB8',
+   'uploader':'Uncle Sam - Alive in Detroit',
+   'uploader_id':'UCqP8yfmFAd3yBaD0_Y7jiqA',
+   'uploader_url':'http://www.youtube.com/channel/UCqP8yfmFAd3yBaD0_Y7jiqA',
+   'channel_id':'UCqP8yfmFAd3yBaD0_Y7jiqA',
+   'channel_url':'http://www.youtube.com/channel/UCqP8yfmFAd3yBaD0_Y7jiqA',
+   'upload_date':'20170919',
+   'license':None,
+   'creator':None,
+   'title':'Gorillaz - part of Superfast Jellyfish - Live at the Fox Theater in Detroit, MI on 9-18-17',
+   'alt_title':None,
+   'thumbnail':'https://i.ytimg.com/vi/U17_4K9ucB8/maxresdefault.jpg',
+   'description':'Gorillaz - snippet of Superfast Jellyfish with De La Soul - Live at the Fox Theater in Detroit, MI on 9-18-17',
+   'categories':[
+      'People & Blogs'
+   
+],
+   'tags':[ ],
+   'subtitles':{ },
+   'automatic_captions':{ },
+   'duration':41,
+   'age_limit':0,
+   'annotations':None,
+   'chapters':None,
+   'webpage_url':'https://www.youtube.com/watch?v=U17_4K9ucB8',
+   'view_count':340,
+   'like_count':None,
+   'dislike_count':None,
+   'average_rating':4.7777777,
+   'formats':[ ],
+   'is_live':None,
+   'start_time':None,
+   'end_time':None,
+   'series':None,
+   'season_number':None,
+   'episode_number':None,
+   'track':None,
+   'artist':None,
+   'album':None,
+   'release_date':None,
+   'release_year':None,
+   'extractor':'youtube',
+   'webpage_url_basename':'watch',
+   'extractor_key':'Youtube',
+   'playlist':None,
+   'playlist_index':None,
+   'thumbnails':[
+      {
+         'url':'https://i.ytimg.com/vi/U17_4K9ucB8/maxresdefault.jpg',
+         'id':'0'
+      
+}
+   
+],
+   'display_id':'U17_4K9ucB8',
+   'requested_subtitles':None,
+   'ext':'webm',
+   'format_note':'DASH audio',
+   'acodec':'opus',
+   'abr':160,
+   'format_id':'251',
+   'manifest_url':'https://manifest.googlevideo.com/api/manifest/dash/expire/1581220974/ei/DjA_XoXgINzZigT9h7WgCw/ip/64.199.237.185/id/535effe0af6e701f/source/youtube/requiressl/yes/playback_host/r3---sn-fpoqnugx5h-jaxe.googlevideo.com/mm/31%2C29/mn/sn-fpoqnugx5h-jaxe%2Csn-vgqsrn7d/ms/au%2Crdu/mv/m/mvi/2/pcm2cms/yes/pl/23/hfr/all/as/fmp4_audio_clear%2Cwebm_audio_clear%2Cwebm2_audio_clear%2Cfmp4_sd_hd_clear%2Cwebm2_sd_hd_clear/initcwndbps/878750/vprv/1/mt/1581199290/fvip/6/keepalive/yes/fexp/23842630/itag/0/sparams/expire%2Cei%2Cip%2Cid%2Csource%2Crequiressl%2Chfr%2Cas%2Cvprv%2Citag/sig/ALgxI2wwRgIhAORKbkxLnx_cb2zICry4xHz0b40ca3OhlMgiNRb__6HVAiEAxxZsWT_XcxWugMujiwd763KTz-FkYiImbrA1kTZJdfc%3D/lsparams/playback_host%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpcm2cms%2Cpl%2Cinitcwndbps/lsig/AHylml4wRQIgIGNQMQGhlvHJ9mTK5Cag9J0C0LAIsqwbNtUTAo1TxBMCIQDnBC2l9004V95dkkLEd7Ugw9vU_d4Bk-fbRT-zhL9HVQ%3D%3D',
+   'width':None,
+   'height':None,
+   'tbr':136.693,
+   'asr':48000,
+   'fps':None,
+   'language':None,
+   'filesize':None,
+   'container':'webm_dash',
+   'vcodec':'none',
+   'url':'https://manifest.googlevideo.com/api/manifest/dash/expire/1581220974/ei/DjA_XoXgINzZigT9h7WgCw/ip/64.199.237.185/id/535effe0af6e701f/source/youtube/requiressl/yes/playback_host/r3---sn-fpoqnugx5h-jaxe.googlevideo.com/mm/31%2C29/mn/sn-fpoqnugx5h-jaxe%2Csn-vgqsrn7d/ms/au%2Crdu/mv/m/mvi/2/pcm2cms/yes/pl/23/hfr/all/as/fmp4_audio_clear%2Cwebm_audio_clear%2Cwebm2_audio_clear%2Cfmp4_sd_hd_clear%2Cwebm2_sd_hd_clear/initcwndbps/878750/vprv/1/mt/1581199290/fvip/6/keepalive/yes/fexp/23842630/itag/0/sparams/expire%2Cei%2Cip%2Cid%2Csource%2Crequiressl%2Chfr%2Cas%2Cvprv%2Citag/sig/ALgxI2wwRgIhAORKbkxLnx_cb2zICry4xHz0b40ca3OhlMgiNRb__6HVAiEAxxZsWT_XcxWugMujiwd763KTz-FkYiImbrA1kTZJdfc%3D/lsparams/playback_host%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpcm2cms%2Cpl%2Cinitcwndbps/lsig/AHylml4wRQIgIGNQMQGhlvHJ9mTK5Cag9J0C0LAIsqwbNtUTAo1TxBMCIQDnBC2l9004V95dkkLEd7Ugw9vU_d4Bk-fbRT-zhL9HVQ%3D%3D',
+   'fragment_base_url':'https://r3---sn-fpoqnugx5h-jaxe.googlevideo.com/videoplayback/expire/1581220974/ei/DjA_XoXgINzZigT9h7WgCw/ip/64.199.237.185/id/535effe0af6e701f/itag/251/source/youtube/requiressl/yes/mm/31,29/mn/sn-fpoqnugx5h-jaxe,sn-vgqsrn7d/ms/au,rdu/mv/m/mvi/2/pcm2cms/yes/pl/23/initcwndbps/878750/vprv/1/ratebypass/yes/mime/audio%2Fwebm/otfp/1/gir/yes/clen/639958/lmt/1564150214281464/dur/40.601/mt/1581199290/fvip/6/keepalive/yes/fexp/23842630/disable_polymer/true/sparams/expire,ei,ip,id,itag,source,requiressl,vprv,ratebypass,mime,otfp,gir,clen,lmt,dur/sig/ALgxI2wwRgIhAJwGILQRD6qCka2PDzDfs-Oesn15xFN3C7zkQhJhsuGiAiEAzw4JuIqw-H2Uj7y55mou8MrrIiVtJwAmad4j-THFVYY%3D/lsparams/mm,mn,ms,mv,mvi,pcm2cms,pl,initcwndbps/lsig/AHylml4wRgIhAKZPdj-zTUFhp-vOblXxLF4WUDZ6bOz2e8evWamdmlRIAiEAyzmytSVzCPUdnu-EGkd4R7LIcerL7grw7x124s3sG-Y%3D/',
+   'fragments':[
+      {
+         'path':'range/0-258'
+      
+},
+      {
+         'path':'range/342-156965',
+         'duration':10.001
+      
+},
+      {
+         'path':'range/156966-314030',
+         'duration':10.0
+      
+},
+      {
+         'path':'range/314031-471174',
+         'duration':10.0
+      
+},
+      {
+         'path':'range/471175-629705',
+         'duration':10.0
+      
+},
+      {
+         'path':'range/629706-639957',
+         'duration':0.6
+      
+}
+   
+],
+   'protocol':'http_dash_segments',
+   'format':'251 - audio only (DASH audio)',
+   'http_headers':{
+      'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3717.2 Safari/537.36',
+      'Accept-Charset':'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
+      'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Encoding':'gzip, deflate',
+      'Accept-Language':'en-us,en;q=0.5'
+   
+}
+}

@@ -24,4 +24,15 @@ def download_by_url(url: str) -> None:
     }
 
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+        # Don't use default YoutubeDL download function so we can get metadata.
+        try:
+            # It also downloads the videos
+            return ydl.extract_info(
+                url,
+                force_generic_extractor=ydl.params.get(
+                    "force_generic_extractor", False
+                ),
+            )
+        except Exception as e:
+            logger.error(e)
+            raise
