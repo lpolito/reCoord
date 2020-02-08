@@ -76,6 +76,7 @@ def by_url(video_url):
         "body": json.dumps({"fingerprints": fingerprints, "time_stats": time_stats}),
     }
 
+    logger.info("## Request completed")
     logger.info(time_stats)
 
     return response

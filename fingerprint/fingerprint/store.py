@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 
 from gql import Client, gql
 from gql.transport.requests import RequestsHTTPTransport
@@ -7,16 +8,17 @@ from gql.transport.requests import RequestsHTTPTransport
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+GRAPHQL_ENDPOINT = os.environ["GRAPHQL_ENDPOINT"]
 
-http_transport = RequestsHTTPTransport(
-    "youshouldputgraphqlserverhttpaddresshere", use_json=True
-)
+
+http_transport = RequestsHTTPTransport(GRAPHQL_ENDPOINT, use_json=True)
 
 client = Client(transport=http_transport)
 
 
 def save(fingerprints, **kwargs):
     logger.info("## Saving video and fingerprints to database")
+    logger.info("Database url: " + GRAPHQL_ENDPOINT)
 
     # Convert array of tuples to array of arrays json string.
     fingerprints_json = json.dumps(fingerprints)
