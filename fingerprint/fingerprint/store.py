@@ -1,3 +1,4 @@
+import json
 import logging
 
 from gql import Client, gql
@@ -14,23 +15,13 @@ http_transport = RequestsHTTPTransport(
 client = Client(transport=http_transport)
 
 
-def get_fingerprints_gql(fingerprint_version, fingerprints, **_):
-    result = ""
-    for fingerprint, time_offset in fingerprints:
-        result += '{{ hash: "{hash}", timeOffset: {time_offset}, version: {version} }},'.format(
-            version=fingerprint_version, hash=fingerprint, time_offset=time_offset
-        )
-
-    return result
-
-
-def save(**kwargs):
+def save(fingerprints, **kwargs):
     logger.info("## Saving video and fingerprints to database")
 
-    fingerprints = get_fingerprints_gql(**kwargs)
+    # Convert array of tuples to array of arrays json string.
+    fingerprints_json = json.dumps(fingerprints)
 
-    format_args = {**kwargs, "fingerprints": fingerprints}
-    print(format_args)
+    format_args = {**kwargs, "fingerprints": fingerprints_json}
     query = gql(
         """mutation {{
           insert_coords_video(
@@ -38,10 +29,9 @@ def save(**kwargs):
               origin: {origin},
               originId: "{origin_id}",
               title: "{title}",
-              duration: {duration}
-              fingerprints: {{
-                data: [{fingerprints}]
-              }}
+              duration: {duration},
+              fingerprints: {fingerprints},
+              fingerprint_version: {fingerprint_version}
             }}
           ) {{
             returning {{
@@ -61,14 +51,3 @@ def save(**kwargs):
     logger.info(response)
 
     return response
-
-
-# save(
-#     fingerprints=[["test", 5]],
-#     fingerprint_version="v0",
-#     origin="youtube",
-#     origin_id="",
-#     title="",
-#     duration=0,
-# )
-
