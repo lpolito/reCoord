@@ -17,7 +17,6 @@ client = Client(transport=http_transport)
 
 
 def save(fingerprints, **kwargs):
-    logger.info("## Saving video and fingerprints to database")
     logger.info("Database url: " + GRAPHQL_ENDPOINT)
 
     # Convert array of tuples to array of arrays json string.
@@ -50,6 +49,8 @@ def save(fingerprints, **kwargs):
     )
 
     response = client.execute(query)
+
+    logger.info("Database response:")
     logger.info(response)
 
     return response

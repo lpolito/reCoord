@@ -2,11 +2,13 @@ import json
 import logging
 import os
 from typing import List
+from uuid import uuid4
 
 from scipy.io import wavfile
 
 from lib.fingerprint import fingerprint
 from utils.Timer import Timer
+from utils.utils import delete_directory
 
 from .convert import convert_video_to_wav
 from .download import download_by_url
@@ -16,9 +18,10 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def fingerprint_file(wav_file_path):
-    logger.info("Wav to fingerprint: " + wav_file_path)
+TEMP_DIR = "/tmp"
 
+
+def fingerprint_file(wav_file_path):
     buffer: List[int]
     _, buffer = wavfile.read(wav_file_path)
 
@@ -28,30 +31,49 @@ def fingerprint_file(wav_file_path):
     return fingerprints
 
 
-def by_url(video_url):
-    logger.info("## Video to fingerprint:" + video_url)
+def by_url(video_url: str):
+    logger.info("## Fingerprint by URL started: " + video_url)
 
     request_timer = Timer().start()
 
-    # Changing working directory to /tmp for storage.
-    os.chdir("/tmp")
+    # Create a temp working directory to clean up in-case of resused lambdas.
+    output_dir = os.path.join(TEMP_DIR, str(uuid4()))
+    os.makedirs(output_dir)
+    os.chdir(output_dir)
 
-    # TODO Create a temp directory to clean up in-case of resused lambdas.
+    logger.info("## Temp directory: " + output_dir)
 
     # Download video.
     download_timer = Timer().start()
-    video_info = download_by_url(video_url)
+    download_meta = download_by_url(video_url)
     download_timer.end()
+
+    video_info = {
+        "url": video_url,
+        "origin_id": download_meta.get("id"),
+        "title": download_meta.get("title"),
+        "duration": download_meta.get("duration"),
+    }
+
+    logger.info("## Converting to WAV started.")
 
     # Convert downloaded videos to wav format.
     wav_conversion_timer = Timer().start()
     wav_location = convert_video_to_wav()
     wav_conversion_timer.end()
 
+    logger.info("## Converting to WAV complete.")
+
+    logger.info("## Wav to fingerprint started: " + wav_location)
+
     # Fingerprint wav file.
     fingerprint_timer = Timer().start()
     fingerprints = fingerprint_file(wav_location)
     fingerprint_timer.end()
+
+    logger.info("## Fingerprint completed.")
+
+    logger.info("## Saving video started.")
 
     # Save video info and fingerprints to database.
     save_timer = Timer().start()
@@ -59,11 +81,11 @@ def by_url(video_url):
         fingerprints=fingerprints,
         fingerprint_version="v0",
         origin="youtube",
-        origin_id=video_info.get("id"),
-        title=video_info.get("title"),
-        duration=video_info.get("duration"),
+        **video_info,
     )
     save_timer.end()
+
+    logger.info("## Saving video completed.")
 
     time_stats = {
         "download_total": download_timer.get_diff_seconds(),
@@ -75,10 +97,14 @@ def by_url(video_url):
 
     response = {
         "statusCode": 200,
-        "body": json.dumps({"fingerprints": fingerprints, "time_stats": time_stats}),
+        "body": json.dumps({"video_info": video_info, "time_stats": time_stats}),
     }
 
-    logger.info("## Request completed")
+    logger.info("## Fingerprint by URL complete. Cleaning up directory: " + output_dir)
     logger.info(time_stats)
+
+    # Delete working directory.
+    os.chdir(TEMP_DIR)
+    delete_directory(output_dir)
 
     return response

@@ -22,12 +22,12 @@ def convert_video_to_wav() -> str:
         os.makedirs(out_path)
 
     if len(downloaded_videos) > 1:
-        logger.info("More than one downloaded video, exit")
+        logger.error("## ERROR - More than one downloaded video, exit.")
         raise SystemExit(0)
 
     video_file = downloaded_videos[0]
 
-    logger.info("Video file to convert: " + video_file)
+    logger.info("## Video file to convert: " + video_file)
 
     # Get file name without extension and append .wav
     wav_output_name = os.path.splitext(video_file)[0] + ".wav"

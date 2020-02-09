@@ -9,6 +9,7 @@ logger.setLevel(logging.INFO)
 def download_by_url(url: str):
     def progress(status):
         if status["status"] == "finished":
+            logger.info("## Download finished")
             logger.info(status)
 
     ydl_opts = {
