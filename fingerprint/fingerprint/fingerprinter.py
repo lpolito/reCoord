@@ -36,9 +36,11 @@ def by_url(video_url):
     # Changing working directory to /tmp for storage.
     os.chdir("/tmp")
 
+    # TODO Create a temp directory to clean up in-case of resused lambdas.
+
     # Download video.
     download_timer = Timer().start()
-    download_by_url(video_url)
+    video_info = download_by_url(video_url)
     download_timer.end()
 
     # Convert downloaded videos to wav format.
@@ -57,9 +59,9 @@ def by_url(video_url):
         fingerprints=fingerprints,
         fingerprint_version="v0",
         origin="youtube",
-        origin_id="notreal",
-        title=video_url,
-        duration=0,
+        origin_id=video_info.get("id"),
+        title=video_info.get("title"),
+        duration=video_info.get("duration"),
     )
     save_timer.end()
 
