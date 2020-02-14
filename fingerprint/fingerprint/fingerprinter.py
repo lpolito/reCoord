@@ -10,9 +10,10 @@ from lib.fingerprint import fingerprint
 from utils.Timer import Timer
 from utils.utils import delete_directory
 
+from .parse_url import check_youtube
 from .convert import convert_video_to_wav
 from .download import download_by_url
-from .store import save
+from .store import check_origin_by_id, save
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -35,6 +36,26 @@ def by_url(video_url: str):
     logger.info("## Fingerprint by URL started: " + video_url)
 
     request_timer = Timer().start()
+
+    logger.info("## Checking if already fingerprinted in database.")
+
+    url_info = check_youtube(video_url)
+    if not url_info:
+        # The provided URL isn't supported.
+        logger.info("## URL is not supported. Complete request.")
+        return {
+            "statusCode": 400,
+            "body": "Unsupported URL",
+        }
+
+    check_result = check_origin_by_id(**url_info)
+    if check_result.get("coords_video"):
+        # The provided video has been fingerprinted already.
+        logger.info("## URL already fingerprinted. Complete request.")
+        return {
+            "statusCode": 200,
+            "body": "URL already fingerprinted",
+        }
 
     # Create a temp working directory to clean up in-case of resused lambdas.
     output_dir = os.path.join(TEMP_DIR, str(uuid4()))

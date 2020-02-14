@@ -54,3 +54,27 @@ def save(fingerprints, **kwargs):
     logger.info(response)
 
     return response
+
+
+def check_origin_by_id(**kwargs):
+    logger.info("Database url: " + GRAPHQL_ENDPOINT)
+
+    query = gql(
+        """query {{
+          coords_video(where: {{
+            originId: {{_eq: "{origin_id}"}},
+            origin: {{_eq: {origin}}}
+          }}) {{
+            id
+          }}
+        }}""".format(
+            **kwargs
+        )
+    )
+
+    response = client.execute(query)
+
+    logger.info("Database response:")
+    logger.info(response)
+
+    return response
