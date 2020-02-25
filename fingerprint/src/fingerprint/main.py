@@ -10,10 +10,10 @@ from lib.fingerprint import fingerprint
 from utils.Timer import Timer
 from utils.utils import delete_directory
 
-from .parse_url import check_youtube
-from .convert import convert_video_to_wav
-from .download import download_by_url
-from .store import check_origin_by_id, save
+from parse_url import check_youtube
+from convert import convert_video_to_wav
+from download import download_by_url
+from store import check_origin_by_id, save
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

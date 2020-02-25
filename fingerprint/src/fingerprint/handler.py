@@ -1,6 +1,6 @@
 import json
 
-from fingerprint.fingerprinter import by_url
+from main import by_url
 
 
 def fingerprint_handler(event, context):

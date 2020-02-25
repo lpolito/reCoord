@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: fingerprint
+service: recoordBackend
 # app and org for use with dashboard.serverless.com
 app: recoord
 org: lpolito
@@ -22,6 +22,7 @@ org: lpolito
 
 provider:
   name: aws
+  # runtime which individual functions will probably override
   runtime: python3.8
   # service wide environment variables
   environment:
@@ -53,19 +54,12 @@ provider:
 
 # you can add packaging information here
 package:
- include:
-  - handler.py
-  - utils/**
-  - lib/**
-  - fingerprint/**
-  #  - include-me.py
-  #  - include-me-dir/**
- exclude:
-  - "**"
-  - __pycache__
+ individually: true
 
 functions:
   fingerprint:
+    runtime: python3.8
+    module: src/fingerprint
     handler: handler.fingerprint_handler
     timeout: 60
     events:
@@ -74,6 +68,12 @@ functions:
           method: post
     layers:
       - arn:aws:lambda:us-east-1:965185891634:layer:ffmpeg:1
+    package:
+      include:
+        - src/fingerprint/**
+      exclude:
+        - "**"
+        - __pycache__
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
