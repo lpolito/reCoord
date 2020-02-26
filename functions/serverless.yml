@@ -42,6 +42,10 @@ functions:
     handler: src/align/dist/index.align_handler
     timeout: 60
     memorySize: 1024
+    environment:
+      # GRAPHQL_ENDPOINT: ${opt:graphqlEndpoint}
+      FINGERPRINT_TOPIC_ARN:
+        Ref: SNSTopicFingerprint
     events:
       - http:
           path: /align
