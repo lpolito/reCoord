@@ -1,7 +1,6 @@
-service: recoordBackend
-# app and org for use with dashboard.serverless.com
 app: recoord
 org: lpolito
+service: recoordBackend
 
 provider:
   name: aws
@@ -40,7 +39,7 @@ functions:
 
   align:
     runtime: nodejs12.x
-    handler: src/align/handler.align_handler
+    handler: src/align/dist/index.align_handler
     timeout: 60
     memorySize: 1024
     events:
@@ -49,7 +48,7 @@ functions:
           method: post
     package:
       include:
-        - src/align/**
+        - src/align/dist/**
       exclude:
         - "**"
 
