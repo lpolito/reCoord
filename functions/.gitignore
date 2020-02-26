@@ -19,3 +19,4 @@ __pycache__
 
 # Serverless directories
 .serverless
+serverless_sdk/
