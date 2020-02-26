@@ -17,13 +17,18 @@ package:
 functions:
   fingerprint:
     runtime: python3.8
+    # module needed for python runtime to resolve dependencies
     module: src/fingerprint
     handler: handler.fingerprint_handler
     timeout: 60
+    memorySize: 1024
     events:
       - http:
           path: /fingerprint
           method: post
+      - sns:
+          topicName: fingerprint
+          displayName: Video fingerprinter pipeline
     layers:
       - arn:aws:lambda:us-east-1:965185891634:layer:ffmpeg:1
     package:
@@ -33,12 +38,27 @@ functions:
         - "**"
         - __pycache__
 
+  align:
+    runtime: nodejs12.x
+    handler: src/align/handler.align_handler
+    timeout: 60
+    memorySize: 1024
+    events:
+      - http:
+          path: /align
+          method: post
+    package:
+      include:
+        - src/align/**
+      exclude:
+        - "**"
+
 plugins:
   - serverless-python-requirements
 custom:
   pythonRequirements:
-    invalidateCaches: true
-    useStaticCache: false
+    #invalidateCaches: true
+    #useStaticCache: false
     dockerizePip: non-linux
     slim: true
     slimPatterns:
