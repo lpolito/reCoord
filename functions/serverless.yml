@@ -17,7 +17,7 @@ functions:
   fingerprint:
     runtime: python3.8
     # module needed for python runtime to resolve dependencies
-    module: src/fingerprint
+    module: fingerprint
     handler: handler.fingerprint_handler
     timeout: 60
     memorySize: 1024
@@ -32,14 +32,14 @@ functions:
       - arn:aws:lambda:us-east-1:965185891634:layer:ffmpeg:1
     package:
       include:
-        - src/fingerprint/**
+        - fingerprint/**
       exclude:
         - "**"
         - __pycache__
 
   align:
     runtime: nodejs12.x
-    handler: src/align/dist/index.align_handler
+    handler: align/dist/index.align_handler
     timeout: 60
     memorySize: 1024
     environment:
@@ -52,7 +52,7 @@ functions:
           method: post
     package:
       include:
-        - src/align/dist/**
+        - align/dist/**
       exclude:
         - "**"
 
