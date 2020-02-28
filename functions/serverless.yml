@@ -7,8 +7,8 @@ provider:
   # runtime which individual functions will override
   runtime: python3.8
   # service wide environment variables
-  environment:
-    GRAPHQL_ENDPOINT: ${opt:graphqlEndpoint}
+  # environment:
+    # GRAPHQL_ENDPOINT: ${opt:graphqlEndpoint}
 
 package:
   individually: true
@@ -21,6 +21,8 @@ functions:
     handler: handler.fingerprint_handler
     timeout: 60
     memorySize: 1024
+    environment:
+      DB_URI: ${opt:dbUri}
     events:
       - http:
           path: /fingerprint
@@ -43,7 +45,7 @@ functions:
     timeout: 60
     memorySize: 1024
     environment:
-      # GRAPHQL_ENDPOINT: ${opt:graphqlEndpoint}
+      GRAPHQL_ENDPOINT: ${opt:graphqlEndpoint}
       FINGERPRINT_TOPIC_ARN:
         Ref: SNSTopicFingerprint
     events:

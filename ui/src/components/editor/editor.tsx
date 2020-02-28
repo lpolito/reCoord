@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactComponentElement, Component } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
 
@@ -38,7 +38,7 @@ interface EditorTimelineProps {
   editingClips: Clip[];
 }
 
-const EditorTimeline = ({ editingClips }: EditorTimelineProps) => {
+const EditorTimeline = ({ editingClips }: EditorTimelineProps): React.ReactNode => {
   const { coord } = useEditorContext();
   const playbackTime = usePlaybackTime();
   const { seekPlayers } = usePlayerActions();
@@ -49,7 +49,7 @@ const EditorTimeline = ({ editingClips }: EditorTimelineProps) => {
 
   return (
     <TimelineEditorControls
-      onChange={() => {
+      onChange={(): void => {
         seekPlayers(playbackTime);
       }}
     >
@@ -61,13 +61,13 @@ const EditorTimeline = ({ editingClips }: EditorTimelineProps) => {
         //     background-color: ${clipId === clipB.id ? green[200] : undefined};
         // `}
         playableClipIds={clipIds}
-        onChangeClip={(id: number) => console.log({ id })}
+        onChangeClip={(id: number): void => console.log({ id })}
       />
     </TimelineEditorControls>
   );
 };
 
-export const Editor = () => {
+export const Editor = (): React.ReactNode => {
   const { coord } = useEditorContext();
 
   const [initialClipA, initialClipB] = useLazyInit([
