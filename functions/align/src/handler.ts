@@ -1,16 +1,30 @@
-export const align_handler = async (event: any) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'TS Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+import { gql } from 'apollo-boost';
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+import apolloClient from './apollo';
+
+const VIDEOS = gql`
+  {
+    coords_video {
+      id
+      title
+    }
+  }
+`;
+
+export const align_handler = async (event: any) => {
+  const result = await apolloClient
+    .query({
+      query: VIDEOS,
+    })
+    .then(result => {
+      console.log(result);
+      console.log(JSON.stringify(event));
+
+      return {
+        statusCode: 200,
+        body: 'fine',
+      };
+    });
+
+    return result;
 };
