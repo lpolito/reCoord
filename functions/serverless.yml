@@ -45,6 +45,7 @@ functions:
     timeout: 60
     memorySize: 1024
     environment:
+      NODE_ENV: 'production'
       GRAPHQL_ENDPOINT: ${opt:graphqlEndpoint}
       FINGERPRINT_TOPIC_ARN:
         Ref: SNSTopicFingerprint
@@ -54,7 +55,8 @@ functions:
           method: post
     package:
       include:
-        - align/dist/**
+        - align/dist/index.js
+        - align/dist/align.cjs.production.min.js
       exclude:
         - "**"
 
