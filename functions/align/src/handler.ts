@@ -3,12 +3,21 @@ import { gql } from 'apollo-boost';
 import apolloClient from './apollo';
 import { parseUrls, ParsedUrl, UNKNOWN } from 'parse-urls';
 
-const VIDEOS = gql`
-  query($originId: String!, $origin: String!) {
-    coords_video(
-      where: { originId: { _eq: $originId }, origin: { _eq: $origin } }
-    ) {
+const VIDEOS = (urls: BundledUrls) => gql`
+  query {
+    coords_video(where: {_or: [
+      ${Object.entries(urls)
+        .map(
+          ([origin, originIds]) => `
+          {
+            origin: { _eq: ${origin} },
+            originId: { _in: ${JSON.stringify(originIds)} },
+          }`
+        )
+        .join(',')}
+    ]}) {
       id
+      originId
     }
   }
 `;
@@ -32,13 +41,8 @@ const bundleUrlsByOrigin = (parsedUrls: ParsedUrl[]): BundledUrls =>
   }, {} as BundledUrls);
 
 const checkExistingVideos = async (urls: BundledUrls) => {
-  // TODO make query smart enough to bundle origins with the corresponding urls
   const result = await apolloClient.query({
-    query: VIDEOS,
-    variables: {
-      originId: '',
-      origin: '',
-    },
+    query: VIDEOS(urls),
   });
 
   return result;
@@ -46,6 +50,7 @@ const checkExistingVideos = async (urls: BundledUrls) => {
 
 export const align_handler = async (event: any) => {
   const body = JSON.parse(event.body);
+  // const { body } = event;
   const { urls } = body;
 
   if (!urls || !Array.isArray(urls) || urls.length === 0) {
@@ -60,10 +65,10 @@ export const align_handler = async (event: any) => {
 
   const { [UNKNOWN]: unknownUrls, ...validUrls } = bundledUrls;
 
-  const result = checkExistingVideos(validUrls);
+  const result = await checkExistingVideos(validUrls);
 
   return {
     statusCode: 200,
-    body: JSON.stringify(result),
+    body: result,
   };
 };
