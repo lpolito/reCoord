@@ -41,7 +41,7 @@ functions:
 
   align:
     runtime: nodejs12.x
-    handler: align/dist/index.align_handler
+    handler: align/dist/index.alignHandler
     timeout: 60
     memorySize: 1024
     environment:
