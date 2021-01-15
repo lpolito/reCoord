@@ -59,7 +59,7 @@ export const alignHandler = async (event: any) => {
   // const { body } = event;
   const { urls } = body;
 
-  if (!urls || !Array.isArray(urls) || urls.length === 0) {
+  if (!urls || !Array.isArray(urls) || urls.length <= 1) {
     return {
       statusCode: 400,
       body: 'bad request',
@@ -71,19 +71,50 @@ export const alignHandler = async (event: any) => {
 
   const { [UNKNOWN]: unknownUrls, ...validUrls } = bundledUrls;
 
-  const { data: videos, errors } = await checkExistingVideos(validUrls);
+  const { data: existingVideos, errors } = await checkExistingVideos(validUrls);
 
-  // TODO fingerprint all videos not found in database. Need some sort of async process to do that.
+  if (errors && errors.length > 0) {
+    return {
+      statusCode: 500,
+      body: errors,
+    };
+  }
+
+  const videosToFingerprint = parsedUrls.filter(
+    ({ origin, originId }) =>
+      !existingVideos.some(
+        video => origin === video.origin && originId === video.originId
+      )
+  );
+
+  // TODO Send off fingerprint requests.
+
+  if (videosToFingerprint.length > 0) {
+    return {
+      statusCode: 200,
+      body: {
+        code: 'analyzing videos',
+        existingVideos,
+        videosToFingerprint,
+        errors,
+        unknownUrls,
+      },
+    };
+  }
 
   // Any videos we already have the fingerprints for need to be matched and aligned.
-  const matches = findMatches(videos);
+  const matches = existingVideos.length > 1 ? findMatches(existingVideos) : [];
 
   // TODO return unknownURLs as errored videos
   return {
     statusCode: 200,
     body: {
-      videos,
+      code: 'have matches',
+      existingVideos,
+      videosToFingerprint,
+      matches,
       errors,
+      unknownUrls,
     },
   };
 };
