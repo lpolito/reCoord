@@ -17,7 +17,7 @@ setup(
         "future==0.17.1",
         "isort==4.3.21",
         "itsdangerous==1.1.0",
-        "Jinja2==2.10.1",
+        "Jinja2==2.11.3",
         "kiwisolver==1.1.0",
         "lazy-object-proxy==1.4.2",
         "MarkupSafe==1.1.1",
